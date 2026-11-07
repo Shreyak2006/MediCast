@@ -1,15 +1,21 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import NavBar from './components/NavBar'
+import DashboardPage from './pages/DashboardPage'
+import InventoryPage from './pages/InventoryPage'
+
 function App() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
-      <section className="w-full max-w-xl rounded-2xl bg-white p-10 text-center shadow-sm ring-1 ring-slate-200">
-        <h1 className="text-4xl font-semibold tracking-tight text-brand-700">
-          MediCast
-        </h1>
-        <p className="mt-3 text-slate-600">
-          React, Vite and Tailwind CSS are ready to go.
-        </p>
-      </section>
-    </main>
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <NavBar />
+      <main className="mx-auto max-w-4xl px-6 py-10">
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </main>
+    </div>
   )
 }
 
