@@ -32,6 +32,12 @@ function NavBar() {
           >
             Dashboard
           </NavLink>
+          <NavLink
+            to="/calculator"
+            className={({ isActive }) => linkClass(isActive)}
+          >
+            Calculator
+          </NavLink>
         </div>
       </nav>
     </header>

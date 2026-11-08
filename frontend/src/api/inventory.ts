@@ -3,6 +3,17 @@ export type InventoryItem = {
   quantity: number
 }
 
+export type CalculationInput = {
+  medicine: string
+  current_stock: number
+  yearly_sales: number
+  days: number
+}
+
+export type CalculationResponse = {
+  status: string
+}
+
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 ).replace(/\/+$/, '')
@@ -34,5 +45,15 @@ export function addMedicine(medicine: string): Promise<InventoryItem> {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ medicine }),
+  })
+}
+
+export function sendCalculation(
+  input: CalculationInput,
+): Promise<CalculationResponse> {
+  return request<CalculationResponse>('/api/calculate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
   })
 }
