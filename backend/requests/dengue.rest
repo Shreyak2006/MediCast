@@ -1,0 +1,86 @@
+@baseUrl = http://localhost:8000
+
+### 1. Dengue, state given, month defaults to today, rainfall looked up automatically
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "Dengue medicines",
+  "current_stock": 30,
+  "yearly_sales": 1200,
+  "days": 30,
+  "state": "Kerala"
+}
+
+### 2. Dengue, explicit month (11 means the lookup uses October)
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "Dengue medicines",
+  "current_stock": 30,
+  "yearly_sales": 1200,
+  "days": 30,
+  "state": "Kerala",
+  "month": 11
+}
+
+### 3. Dengue, manual rainfall override (0.3 means 30% above normal); this wins over the lookup
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "Dengue medicines",
+  "current_stock": 30,
+  "yearly_sales": 1200,
+  "days": 30,
+  "state": "Kerala",
+  "month": 11,
+  "rain_prev_departure": 0.3
+}
+
+### 4. Dengue, no state (no lookup, falls back to the average month)
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "Dengue medicines",
+  "current_stock": 30,
+  "yearly_sales": 1200,
+  "days": 30
+}
+
+### 5. State not in the data (should still work, adjustment off)
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "Dengue medicines",
+  "current_stock": 30,
+  "yearly_sales": 1200,
+  "days": 30,
+  "state": "Atlantis",
+  "month": 11
+}
+
+### 6. Non-dengue medicine (should keep the old behaviour)
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "TB medicines",
+  "current_stock": 90,
+  "yearly_sales": 1200,
+  "days": 30
+}
+
+### 7. Validation error (days must be greater than 0, expect 422)
+POST {{baseUrl}}/api/calculate
+Content-Type: application/json
+
+{
+  "medicine": "Dengue medicines",
+  "current_stock": 30,
+  "yearly_sales": 1200,
+  "days": 0
+}

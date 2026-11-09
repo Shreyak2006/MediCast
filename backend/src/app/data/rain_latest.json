@@ -1,0 +1,1522 @@
+[
+  {
+    "state": "andaman and nicobar islands",
+    "month": "2026-08",
+    "actual_sum": 526.3,
+    "normal_sum": 500.6,
+    "departure": 0.05133839392728712,
+    "days_present": 13,
+    "districts": 3,
+    "is_complete": false
+  },
+  {
+    "state": "andaman and nicobar islands",
+    "month": "2026-09",
+    "actual_sum": 1406.8,
+    "normal_sum": 1252.6,
+    "departure": 0.12310394379690248,
+    "days_present": 30,
+    "districts": 3,
+    "is_complete": true
+  },
+  {
+    "state": "andaman and nicobar islands",
+    "month": "2026-10",
+    "actual_sum": 858.0,
+    "normal_sum": 835.5,
+    "departure": 0.026929982046678635,
+    "days_present": 30,
+    "districts": 3,
+    "is_complete": false
+  },
+  {
+    "state": "andaman and nicobar islands",
+    "month": "2026-11",
+    "actual_sum": 102.8,
+    "normal_sum": 181.9,
+    "departure": -0.4348543155579989,
+    "days_present": 8,
+    "districts": 3,
+    "is_complete": false
+  },
+  {
+    "state": "andhra pradesh",
+    "month": "2026-08",
+    "actual_sum": 692.3,
+    "normal_sum": 1780.2,
+    "departure": -0.6111111111111112,
+    "days_present": 13,
+    "districts": 26,
+    "is_complete": false
+  },
+  {
+    "state": "andhra pradesh",
+    "month": "2026-09",
+    "actual_sum": 5832.4,
+    "normal_sum": 4279.1,
+    "departure": 0.3629968918697855,
+    "days_present": 30,
+    "districts": 26,
+    "is_complete": true
+  },
+  {
+    "state": "andhra pradesh",
+    "month": "2026-10",
+    "actual_sum": 4225.9,
+    "normal_sum": 4181.9,
+    "departure": 0.01052153327434898,
+    "days_present": 30,
+    "districts": 26,
+    "is_complete": false
+  },
+  {
+    "state": "andhra pradesh",
+    "month": "2026-11",
+    "actual_sum": 2420.2,
+    "normal_sum": 1047.1,
+    "departure": 1.3113360710533857,
+    "days_present": 8,
+    "districts": 26,
+    "is_complete": false
+  },
+  {
+    "state": "arunachal pradesh",
+    "month": "2026-08",
+    "actual_sum": 958.8000000000001,
+    "normal_sum": 2336.9,
+    "departure": -0.589712867474004,
+    "days_present": 13,
+    "districts": 16,
+    "is_complete": false
+  },
+  {
+    "state": "arunachal pradesh",
+    "month": "2026-09",
+    "actual_sum": 2062.2,
+    "normal_sum": 5387.0,
+    "departure": -0.6171895303508447,
+    "days_present": 30,
+    "districts": 16,
+    "is_complete": true
+  },
+  {
+    "state": "arunachal pradesh",
+    "month": "2026-10",
+    "actual_sum": 664.9,
+    "normal_sum": 2486.4,
+    "departure": -0.7325852638352638,
+    "days_present": 30,
+    "districts": 16,
+    "is_complete": false
+  },
+  {
+    "state": "arunachal pradesh",
+    "month": "2026-11",
+    "actual_sum": 76.8,
+    "normal_sum": 213.4,
+    "departure": -0.6401124648547329,
+    "days_present": 8,
+    "districts": 16,
+    "is_complete": false
+  },
+  {
+    "state": "assam",
+    "month": "2026-08",
+    "actual_sum": 3435.5,
+    "normal_sum": 4800.5,
+    "departure": -0.2843453806895115,
+    "days_present": 13,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "assam",
+    "month": "2026-09",
+    "actual_sum": 5297.6,
+    "normal_sum": 9431.9,
+    "departure": -0.43833161929197717,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": true
+  },
+  {
+    "state": "assam",
+    "month": "2026-10",
+    "actual_sum": 1410.1,
+    "normal_sum": 4005.0,
+    "departure": -0.6479151061173534,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "assam",
+    "month": "2026-11",
+    "actual_sum": 240.3,
+    "normal_sum": 205.6,
+    "departure": 0.16877431906614795,
+    "days_present": 8,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "bihar",
+    "month": "2026-08",
+    "actual_sum": 2446.5,
+    "normal_sum": 4081.0,
+    "departure": -0.40051457975986277,
+    "days_present": 13,
+    "districts": 38,
+    "is_complete": false
+  },
+  {
+    "state": "bihar",
+    "month": "2026-09",
+    "actual_sum": 7873.0,
+    "normal_sum": 8182.7,
+    "departure": -0.03784814303347304,
+    "days_present": 30,
+    "districts": 38,
+    "is_complete": true
+  },
+  {
+    "state": "bihar",
+    "month": "2026-10",
+    "actual_sum": 1693.3,
+    "normal_sum": 2141.4,
+    "departure": -0.20925562715980206,
+    "days_present": 30,
+    "districts": 38,
+    "is_complete": false
+  },
+  {
+    "state": "bihar",
+    "month": "2026-11",
+    "actual_sum": 87.2,
+    "normal_sum": 46.9,
+    "departure": 0.8592750533049042,
+    "days_present": 8,
+    "districts": 38,
+    "is_complete": false
+  },
+  {
+    "state": "chandigarh",
+    "month": "2026-08",
+    "actual_sum": 122.60000000000001,
+    "normal_sum": 94.7,
+    "departure": 0.2946145723336854,
+    "days_present": 13,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "chandigarh",
+    "month": "2026-09",
+    "actual_sum": 132.2,
+    "normal_sum": 131.4,
+    "departure": 0.00608828006088267,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": true
+  },
+  {
+    "state": "chandigarh",
+    "month": "2026-10",
+    "actual_sum": 21.9,
+    "normal_sum": 18.1,
+    "departure": 0.2099447513812153,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "chandigarh",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 1.2,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "chhatisgarh",
+    "month": "2026-08",
+    "actual_sum": 5019.6,
+    "normal_sum": 4182.9,
+    "departure": 0.20002868823065356,
+    "days_present": 13,
+    "districts": 31,
+    "is_complete": false
+  },
+  {
+    "state": "chhatisgarh",
+    "month": "2026-09",
+    "actual_sum": 8340.8,
+    "normal_sum": 6364.4,
+    "departure": 0.3105398780717742,
+    "days_present": 30,
+    "districts": 31,
+    "is_complete": true
+  },
+  {
+    "state": "chhatisgarh",
+    "month": "2026-10",
+    "actual_sum": 1588.0,
+    "normal_sum": 1778.4,
+    "departure": -0.10706252811515973,
+    "days_present": 30,
+    "districts": 31,
+    "is_complete": false
+  },
+  {
+    "state": "chhatisgarh",
+    "month": "2026-11",
+    "actual_sum": 126.0,
+    "normal_sum": 91.6,
+    "departure": 0.3755458515283844,
+    "days_present": 8,
+    "districts": 31,
+    "is_complete": false
+  },
+  {
+    "state": "chhattisgarh",
+    "month": "2026-08",
+    "actual_sum": 105.7,
+    "normal_sum": 147.5,
+    "departure": -0.28338983050847455,
+    "days_present": 13,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "chhattisgarh",
+    "month": "2026-09",
+    "actual_sum": 126.5,
+    "normal_sum": 201.7,
+    "departure": -0.37283093703520076,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": true
+  },
+  {
+    "state": "chhattisgarh",
+    "month": "2026-10",
+    "actual_sum": 64.8,
+    "normal_sum": 40.5,
+    "departure": 0.6,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "chhattisgarh",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 0.8,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "goa",
+    "month": "2026-08",
+    "actual_sum": 353.9,
+    "normal_sum": 434.6,
+    "departure": -0.18568798895536134,
+    "days_present": 13,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "goa",
+    "month": "2026-09",
+    "actual_sum": 364.9,
+    "normal_sum": 638.7,
+    "departure": -0.42868326287772046,
+    "days_present": 30,
+    "districts": 2,
+    "is_complete": true
+  },
+  {
+    "state": "goa",
+    "month": "2026-10",
+    "actual_sum": 110.4,
+    "normal_sum": 326.7,
+    "departure": -0.6620752984389348,
+    "days_present": 30,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "goa",
+    "month": "2026-11",
+    "actual_sum": 7.1,
+    "normal_sum": 23.0,
+    "departure": -0.691304347826087,
+    "days_present": 8,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "gujarat",
+    "month": "2026-08",
+    "actual_sum": 185.7,
+    "normal_sum": 3130.8,
+    "departure": -0.9406860866232274,
+    "days_present": 13,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "gujarat",
+    "month": "2026-09",
+    "actual_sum": 4256.0,
+    "normal_sum": 4697.5,
+    "departure": -0.09398616285258116,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": true
+  },
+  {
+    "state": "gujarat",
+    "month": "2026-10",
+    "actual_sum": 13.8,
+    "normal_sum": 744.1,
+    "departure": -0.9814541056309637,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "gujarat",
+    "month": "2026-11",
+    "actual_sum": 1.8,
+    "normal_sum": 90.0,
+    "departure": -0.98,
+    "days_present": 8,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "haryana",
+    "month": "2026-08",
+    "actual_sum": 839.3000000000001,
+    "normal_sum": 1331.7,
+    "departure": -0.3697529473605166,
+    "days_present": 13,
+    "districts": 22,
+    "is_complete": false
+  },
+  {
+    "state": "haryana",
+    "month": "2026-09",
+    "actual_sum": 1131.8,
+    "normal_sum": 1823.3,
+    "departure": -0.3792573904458948,
+    "days_present": 30,
+    "districts": 22,
+    "is_complete": true
+  },
+  {
+    "state": "haryana",
+    "month": "2026-10",
+    "actual_sum": 826.8,
+    "normal_sum": 218.1,
+    "departure": 2.7909215955983493,
+    "days_present": 30,
+    "districts": 22,
+    "is_complete": false
+  },
+  {
+    "state": "haryana",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 22.2,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 22,
+    "is_complete": false
+  },
+  {
+    "state": "himachal pradesh",
+    "month": "2026-08",
+    "actual_sum": 1311.6,
+    "normal_sum": 1226.0,
+    "departure": 0.06982055464926583,
+    "days_present": 13,
+    "districts": 12,
+    "is_complete": false
+  },
+  {
+    "state": "himachal pradesh",
+    "month": "2026-09",
+    "actual_sum": 1563.5,
+    "normal_sum": 1585.2,
+    "departure": -0.013689124400706564,
+    "days_present": 30,
+    "districts": 12,
+    "is_complete": true
+  },
+  {
+    "state": "himachal pradesh",
+    "month": "2026-10",
+    "actual_sum": 342.2,
+    "normal_sum": 280.8,
+    "departure": 0.21866096866096857,
+    "days_present": 30,
+    "districts": 12,
+    "is_complete": false
+  },
+  {
+    "state": "himachal pradesh",
+    "month": "2026-11",
+    "actual_sum": 3.8000000000000003,
+    "normal_sum": 48.8,
+    "departure": -0.9221311475409837,
+    "days_present": 8,
+    "districts": 12,
+    "is_complete": false
+  },
+  {
+    "state": "jammu and kashmir",
+    "month": "2026-08",
+    "actual_sum": 1210.0,
+    "normal_sum": 1289.4,
+    "departure": -0.061579029005739166,
+    "days_present": 13,
+    "districts": 20,
+    "is_complete": false
+  },
+  {
+    "state": "jammu and kashmir",
+    "month": "2026-09",
+    "actual_sum": 1377.7,
+    "normal_sum": 1838.6,
+    "departure": -0.25067986511476115,
+    "days_present": 30,
+    "districts": 20,
+    "is_complete": true
+  },
+  {
+    "state": "jammu and kashmir",
+    "month": "2026-10",
+    "actual_sum": 914.9,
+    "normal_sum": 618.7,
+    "departure": 0.4787457572329076,
+    "days_present": 30,
+    "districts": 20,
+    "is_complete": false
+  },
+  {
+    "state": "jammu and kashmir",
+    "month": "2026-11",
+    "actual_sum": 1.2,
+    "normal_sum": 230.2,
+    "departure": -0.9947871416159861,
+    "days_present": 8,
+    "districts": 20,
+    "is_complete": false
+  },
+  {
+    "state": "jharkhand",
+    "month": "2026-08",
+    "actual_sum": 3126.3,
+    "normal_sum": 2592.2,
+    "departure": 0.20604120052465102,
+    "days_present": 13,
+    "districts": 24,
+    "is_complete": false
+  },
+  {
+    "state": "jharkhand",
+    "month": "2026-09",
+    "actual_sum": 6167.7,
+    "normal_sum": 5567.0,
+    "departure": 0.10790371834021911,
+    "days_present": 30,
+    "districts": 24,
+    "is_complete": true
+  },
+  {
+    "state": "jharkhand",
+    "month": "2026-10",
+    "actual_sum": 1470.9,
+    "normal_sum": 1846.5,
+    "departure": -0.20341186027619818,
+    "days_present": 30,
+    "districts": 24,
+    "is_complete": false
+  },
+  {
+    "state": "jharkhand",
+    "month": "2026-11",
+    "actual_sum": 74.4,
+    "normal_sum": 93.7,
+    "departure": -0.2059765208110992,
+    "days_present": 8,
+    "districts": 24,
+    "is_complete": false
+  },
+  {
+    "state": "karnataka",
+    "month": "2026-08",
+    "actual_sum": 1946.2,
+    "normal_sum": 2548.9,
+    "departure": -0.23645494134724784,
+    "days_present": 13,
+    "districts": 31,
+    "is_complete": false
+  },
+  {
+    "state": "karnataka",
+    "month": "2026-09",
+    "actual_sum": 2438.4,
+    "normal_sum": 5206.7,
+    "departure": -0.5316803349530412,
+    "days_present": 30,
+    "districts": 31,
+    "is_complete": true
+  },
+  {
+    "state": "karnataka",
+    "month": "2026-10",
+    "actual_sum": 2611.9,
+    "normal_sum": 4057.3,
+    "departure": -0.35624676509008457,
+    "days_present": 30,
+    "districts": 31,
+    "is_complete": false
+  },
+  {
+    "state": "karnataka",
+    "month": "2026-11",
+    "actual_sum": 319.9,
+    "normal_sum": 600.3,
+    "departure": -0.4670997834416125,
+    "days_present": 8,
+    "districts": 31,
+    "is_complete": false
+  },
+  {
+    "state": "kerala",
+    "month": "2026-08",
+    "actual_sum": 1958.7,
+    "normal_sum": 1993.8,
+    "departure": -0.017604574179957824,
+    "days_present": 13,
+    "districts": 14,
+    "is_complete": false
+  },
+  {
+    "state": "kerala",
+    "month": "2026-09",
+    "actual_sum": 1108.4,
+    "normal_sum": 3764.9,
+    "departure": -0.7055964301840686,
+    "days_present": 30,
+    "districts": 14,
+    "is_complete": true
+  },
+  {
+    "state": "kerala",
+    "month": "2026-10",
+    "actual_sum": 3807.0,
+    "normal_sum": 4139.0,
+    "departure": -0.08021261174196666,
+    "days_present": 30,
+    "districts": 14,
+    "is_complete": false
+  },
+  {
+    "state": "kerala",
+    "month": "2026-11",
+    "actual_sum": 655.8,
+    "normal_sum": 904.6,
+    "departure": -0.27503869113420304,
+    "days_present": 8,
+    "districts": 14,
+    "is_complete": false
+  },
+  {
+    "state": "ladakh",
+    "month": "2026-08",
+    "actual_sum": 2.5,
+    "normal_sum": 2.5,
+    "departure": 0.0,
+    "days_present": 13,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "ladakh",
+    "month": "2026-09",
+    "actual_sum": 0.2,
+    "normal_sum": 9.1,
+    "departure": -0.9780219780219781,
+    "days_present": 30,
+    "districts": 2,
+    "is_complete": true
+  },
+  {
+    "state": "ladakh",
+    "month": "2026-10",
+    "actual_sum": 1.3,
+    "normal_sum": 4.7,
+    "departure": -0.723404255319149,
+    "days_present": 30,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "ladakh",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 3.3000000000000003,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "lakshadweep",
+    "month": "2026-08",
+    "actual_sum": 71.8,
+    "normal_sum": 109.6,
+    "departure": -0.3448905109489051,
+    "days_present": 13,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "lakshadweep",
+    "month": "2026-09",
+    "actual_sum": 94.3,
+    "normal_sum": 169.7,
+    "departure": -0.44431349440188567,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": true
+  },
+  {
+    "state": "lakshadweep",
+    "month": "2026-10",
+    "actual_sum": 134.9,
+    "normal_sum": 146.6,
+    "departure": -0.07980900409276936,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "lakshadweep",
+    "month": "2026-11",
+    "actual_sum": 20.0,
+    "normal_sum": 45.2,
+    "departure": -0.5575221238938053,
+    "days_present": 8,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "madhya pradesh",
+    "month": "2026-08",
+    "actual_sum": 7198.7,
+    "normal_sum": 6772.1,
+    "departure": 0.06299375378390742,
+    "days_present": 13,
+    "districts": 52,
+    "is_complete": false
+  },
+  {
+    "state": "madhya pradesh",
+    "month": "2026-09",
+    "actual_sum": 10119.2,
+    "normal_sum": 8531.6,
+    "departure": 0.1860846734492944,
+    "days_present": 30,
+    "districts": 52,
+    "is_complete": true
+  },
+  {
+    "state": "madhya pradesh",
+    "month": "2026-10",
+    "actual_sum": 402.4,
+    "normal_sum": 1644.9,
+    "departure": -0.7553650677852757,
+    "days_present": 30,
+    "districts": 52,
+    "is_complete": false
+  },
+  {
+    "state": "madhya pradesh",
+    "month": "2026-11",
+    "actual_sum": 1.9,
+    "normal_sum": 70.3,
+    "departure": -0.9729729729729729,
+    "days_present": 8,
+    "districts": 52,
+    "is_complete": false
+  },
+  {
+    "state": "maharashtra",
+    "month": "2026-08",
+    "actual_sum": 1579.5,
+    "normal_sum": 4247.7,
+    "departure": -0.6281517056289286,
+    "days_present": 13,
+    "districts": 36,
+    "is_complete": false
+  },
+  {
+    "state": "maharashtra",
+    "month": "2026-09",
+    "actual_sum": 3639.7,
+    "normal_sum": 7106.2,
+    "departure": -0.4878134586698939,
+    "days_present": 30,
+    "districts": 36,
+    "is_complete": true
+  },
+  {
+    "state": "maharashtra",
+    "month": "2026-10",
+    "actual_sum": 139.1,
+    "normal_sum": 2648.6,
+    "departure": -0.9474816884391755,
+    "days_present": 30,
+    "districts": 36,
+    "is_complete": false
+  },
+  {
+    "state": "maharashtra",
+    "month": "2026-11",
+    "actual_sum": 67.1,
+    "normal_sum": 149.5,
+    "departure": -0.551170568561873,
+    "days_present": 8,
+    "districts": 36,
+    "is_complete": false
+  },
+  {
+    "state": "manipur",
+    "month": "2026-08",
+    "actual_sum": 424.3,
+    "normal_sum": 1009.0,
+    "departure": -0.5794846382556987,
+    "days_present": 13,
+    "districts": 9,
+    "is_complete": false
+  },
+  {
+    "state": "manipur",
+    "month": "2026-09",
+    "actual_sum": 679.9,
+    "normal_sum": 2434.5,
+    "departure": -0.7207229410556583,
+    "days_present": 30,
+    "districts": 9,
+    "is_complete": true
+  },
+  {
+    "state": "manipur",
+    "month": "2026-10",
+    "actual_sum": 441.5,
+    "normal_sum": 1204.6,
+    "departure": -0.6334882948696663,
+    "days_present": 30,
+    "districts": 9,
+    "is_complete": false
+  },
+  {
+    "state": "manipur",
+    "month": "2026-11",
+    "actual_sum": 5.7,
+    "normal_sum": 276.4,
+    "departure": -0.9793777134587555,
+    "days_present": 8,
+    "districts": 9,
+    "is_complete": false
+  },
+  {
+    "state": "meghalaya",
+    "month": "2026-08",
+    "actual_sum": 930.7,
+    "normal_sum": 2631.8,
+    "departure": -0.6463637054487423,
+    "days_present": 13,
+    "districts": 11,
+    "is_complete": false
+  },
+  {
+    "state": "meghalaya",
+    "month": "2026-09",
+    "actual_sum": 1602.9,
+    "normal_sum": 5332.0,
+    "departure": -0.6993810952738184,
+    "days_present": 30,
+    "districts": 11,
+    "is_complete": true
+  },
+  {
+    "state": "meghalaya",
+    "month": "2026-10",
+    "actual_sum": 380.9,
+    "normal_sum": 2775.6,
+    "departure": -0.86276841043378,
+    "days_present": 30,
+    "districts": 11,
+    "is_complete": false
+  },
+  {
+    "state": "meghalaya",
+    "month": "2026-11",
+    "actual_sum": 21.6,
+    "normal_sum": 92.4,
+    "departure": -0.7662337662337663,
+    "days_present": 8,
+    "districts": 11,
+    "is_complete": false
+  },
+  {
+    "state": "mizoram",
+    "month": "2026-08",
+    "actual_sum": 1535.6,
+    "normal_sum": 1377.6,
+    "departure": 0.11469221835075494,
+    "days_present": 13,
+    "districts": 8,
+    "is_complete": false
+  },
+  {
+    "state": "mizoram",
+    "month": "2026-09",
+    "actual_sum": 2525.1,
+    "normal_sum": 2859.9,
+    "departure": -0.11706703031574536,
+    "days_present": 30,
+    "districts": 8,
+    "is_complete": true
+  },
+  {
+    "state": "mizoram",
+    "month": "2026-10",
+    "actual_sum": 1262.8,
+    "normal_sum": 1542.3,
+    "departure": -0.18122284899176555,
+    "days_present": 30,
+    "districts": 8,
+    "is_complete": false
+  },
+  {
+    "state": "mizoram",
+    "month": "2026-11",
+    "actual_sum": 2.6,
+    "normal_sum": 143.3,
+    "departure": -0.9818562456385206,
+    "days_present": 8,
+    "districts": 8,
+    "is_complete": false
+  },
+  {
+    "state": "nagaland",
+    "month": "2026-08",
+    "actual_sum": 1113.5,
+    "normal_sum": 1160.1,
+    "departure": -0.04016895095250402,
+    "days_present": 13,
+    "districts": 11,
+    "is_complete": false
+  },
+  {
+    "state": "nagaland",
+    "month": "2026-09",
+    "actual_sum": 2020.9,
+    "normal_sum": 2268.7,
+    "departure": -0.10922554767047196,
+    "days_present": 30,
+    "districts": 11,
+    "is_complete": true
+  },
+  {
+    "state": "nagaland",
+    "month": "2026-10",
+    "actual_sum": 677.1999999999999,
+    "normal_sum": 1205.7,
+    "departure": -0.4383345774239032,
+    "days_present": 30,
+    "districts": 11,
+    "is_complete": false
+  },
+  {
+    "state": "nagaland",
+    "month": "2026-11",
+    "actual_sum": 126.6,
+    "normal_sum": 126.89999999999999,
+    "departure": -0.0023640661938534057,
+    "days_present": 8,
+    "districts": 11,
+    "is_complete": false
+  },
+  {
+    "state": "nct of delhi",
+    "month": "2026-08",
+    "actual_sum": 838.4,
+    "normal_sum": 775.0,
+    "departure": 0.0818064516129032,
+    "days_present": 13,
+    "districts": 10,
+    "is_complete": false
+  },
+  {
+    "state": "nct of delhi",
+    "month": "2026-09",
+    "actual_sum": 611.8,
+    "normal_sum": 1171.4,
+    "departure": -0.4777189687553356,
+    "days_present": 30,
+    "districts": 10,
+    "is_complete": true
+  },
+  {
+    "state": "nct of delhi",
+    "month": "2026-10",
+    "actual_sum": 773.7,
+    "normal_sum": 146.4,
+    "departure": 4.284836065573771,
+    "days_present": 30,
+    "districts": 10,
+    "is_complete": false
+  },
+  {
+    "state": "nct of delhi",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 12.7,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 10,
+    "is_complete": false
+  },
+  {
+    "state": "odisha",
+    "month": "2026-08",
+    "actual_sum": 4439.8,
+    "normal_sum": 4309.1,
+    "departure": 0.03033115963890367,
+    "days_present": 13,
+    "districts": 30,
+    "is_complete": false
+  },
+  {
+    "state": "odisha",
+    "month": "2026-09",
+    "actual_sum": 9342.9,
+    "normal_sum": 7116.0,
+    "departure": 0.31294266441821245,
+    "days_present": 30,
+    "districts": 30,
+    "is_complete": true
+  },
+  {
+    "state": "odisha",
+    "month": "2026-10",
+    "actual_sum": 3676.3,
+    "normal_sum": 3346.5,
+    "departure": 0.09855072463768122,
+    "days_present": 30,
+    "districts": 30,
+    "is_complete": false
+  },
+  {
+    "state": "odisha",
+    "month": "2026-11",
+    "actual_sum": 315.4,
+    "normal_sum": 351.6,
+    "departure": -0.10295790671217304,
+    "days_present": 8,
+    "districts": 30,
+    "is_complete": false
+  },
+  {
+    "state": "puducherry",
+    "month": "2026-08",
+    "actual_sum": 145.6,
+    "normal_sum": 341.59999999999997,
+    "departure": -0.5737704918032787,
+    "days_present": 13,
+    "districts": 4,
+    "is_complete": false
+  },
+  {
+    "state": "puducherry",
+    "month": "2026-09",
+    "actual_sum": 554.6999999999999,
+    "normal_sum": 704.8,
+    "departure": -0.21296821793416576,
+    "days_present": 30,
+    "districts": 4,
+    "is_complete": true
+  },
+  {
+    "state": "puducherry",
+    "month": "2026-10",
+    "actual_sum": 888.9,
+    "normal_sum": 1050.4,
+    "departure": -0.15375095201827885,
+    "days_present": 30,
+    "districts": 4,
+    "is_complete": false
+  },
+  {
+    "state": "puducherry",
+    "month": "2026-11",
+    "actual_sum": 333.8,
+    "normal_sum": 403.8,
+    "departure": -0.1733531451213472,
+    "days_present": 8,
+    "districts": 4,
+    "is_complete": false
+  },
+  {
+    "state": "punjab",
+    "month": "2026-08",
+    "actual_sum": 787.4,
+    "normal_sum": 1121.5,
+    "departure": -0.2979045920641998,
+    "days_present": 13,
+    "districts": 22,
+    "is_complete": false
+  },
+  {
+    "state": "punjab",
+    "month": "2026-09",
+    "actual_sum": 736.0,
+    "normal_sum": 1787.2,
+    "departure": -0.5881826320501343,
+    "days_present": 30,
+    "districts": 22,
+    "is_complete": true
+  },
+  {
+    "state": "punjab",
+    "month": "2026-10",
+    "actual_sum": 565.6,
+    "normal_sum": 177.3,
+    "departure": 2.1900733220530175,
+    "days_present": 30,
+    "districts": 22,
+    "is_complete": false
+  },
+  {
+    "state": "punjab",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 35.2,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 22,
+    "is_complete": false
+  },
+  {
+    "state": "rajasthan",
+    "month": "2026-08",
+    "actual_sum": 1006.3,
+    "normal_sum": 2358.9,
+    "departure": -0.573402857263979,
+    "days_present": 13,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "rajasthan",
+    "month": "2026-09",
+    "actual_sum": 2869.0,
+    "normal_sum": 2636.6,
+    "departure": 0.08814382158840935,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": true
+  },
+  {
+    "state": "rajasthan",
+    "month": "2026-10",
+    "actual_sum": 271.6,
+    "normal_sum": 438.7,
+    "departure": -0.380898108046501,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "rajasthan",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 32.8,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "sikkim",
+    "month": "2026-08",
+    "actual_sum": 172.5,
+    "normal_sum": 370.9,
+    "departure": -0.5349150714478296,
+    "days_present": 13,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "sikkim",
+    "month": "2026-09",
+    "actual_sum": 649.2,
+    "normal_sum": 671.3,
+    "departure": -0.03292119767615062,
+    "days_present": 30,
+    "districts": 2,
+    "is_complete": true
+  },
+  {
+    "state": "sikkim",
+    "month": "2026-10",
+    "actual_sum": 93.7,
+    "normal_sum": 209.5,
+    "departure": -0.552744630071599,
+    "days_present": 30,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "sikkim",
+    "month": "2026-11",
+    "actual_sum": 0.6,
+    "normal_sum": 14.1,
+    "departure": -0.9574468085106383,
+    "days_present": 8,
+    "districts": 2,
+    "is_complete": false
+  },
+  {
+    "state": "tamil nadu",
+    "month": "2026-08",
+    "actual_sum": 823.2,
+    "normal_sum": 1559.5,
+    "departure": -0.47213850593138823,
+    "days_present": 13,
+    "districts": 37,
+    "is_complete": false
+  },
+  {
+    "state": "tamil nadu",
+    "month": "2026-09",
+    "actual_sum": 3383.5,
+    "normal_sum": 4397.4,
+    "departure": -0.23056806294628637,
+    "days_present": 30,
+    "districts": 37,
+    "is_complete": true
+  },
+  {
+    "state": "tamil nadu",
+    "month": "2026-10",
+    "actual_sum": 8096.9,
+    "normal_sum": 6405.7,
+    "departure": 0.26401486176374167,
+    "days_present": 30,
+    "districts": 37,
+    "is_complete": false
+  },
+  {
+    "state": "tamil nadu",
+    "month": "2026-11",
+    "actual_sum": 1165.2,
+    "normal_sum": 2410.9,
+    "departure": -0.5166950101621801,
+    "days_present": 8,
+    "districts": 37,
+    "is_complete": false
+  },
+  {
+    "state": "tamilnadu",
+    "month": "2026-08",
+    "actual_sum": 50.900000000000006,
+    "normal_sum": 43.5,
+    "departure": 0.17011494252873577,
+    "days_present": 13,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "tamilnadu",
+    "month": "2026-09",
+    "actual_sum": 63.7,
+    "normal_sum": 113.5,
+    "departure": -0.4387665198237885,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": true
+  },
+  {
+    "state": "tamilnadu",
+    "month": "2026-10",
+    "actual_sum": 247.1,
+    "normal_sum": 226.9,
+    "departure": 0.08902600264433666,
+    "days_present": 30,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "tamilnadu",
+    "month": "2026-11",
+    "actual_sum": 27.8,
+    "normal_sum": 137.8,
+    "departure": -0.7982583454281568,
+    "days_present": 8,
+    "districts": 1,
+    "is_complete": false
+  },
+  {
+    "state": "telangana",
+    "month": "2026-08",
+    "actual_sum": 1508.1,
+    "normal_sum": 2887.8,
+    "departure": -0.47776854352794523,
+    "days_present": 13,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "telangana",
+    "month": "2026-09",
+    "actual_sum": 4012.1,
+    "normal_sum": 5187.7,
+    "departure": -0.22661294986217398,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": true
+  },
+  {
+    "state": "telangana",
+    "month": "2026-10",
+    "actual_sum": 275.6,
+    "normal_sum": 3093.2,
+    "departure": -0.9109013319539636,
+    "days_present": 30,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "telangana",
+    "month": "2026-11",
+    "actual_sum": 411.8,
+    "normal_sum": 365.3,
+    "departure": 0.12729263618943334,
+    "days_present": 8,
+    "districts": 33,
+    "is_complete": false
+  },
+  {
+    "state": "the dadra and nagar haveli and daman and diu",
+    "month": "2026-08",
+    "actual_sum": 113.89999999999999,
+    "normal_sum": 521.7,
+    "departure": -0.7816752923135902,
+    "days_present": 13,
+    "districts": 3,
+    "is_complete": false
+  },
+  {
+    "state": "the dadra and nagar haveli and daman and diu",
+    "month": "2026-09",
+    "actual_sum": 742.1,
+    "normal_sum": 801.3,
+    "departure": -0.07387994508922992,
+    "days_present": 30,
+    "districts": 3,
+    "is_complete": true
+  },
+  {
+    "state": "the dadra and nagar haveli and daman and diu",
+    "month": "2026-10",
+    "actual_sum": 0.2,
+    "normal_sum": 114.1,
+    "departure": -0.9982471516213848,
+    "days_present": 30,
+    "districts": 3,
+    "is_complete": false
+  },
+  {
+    "state": "the dadra and nagar haveli and daman and diu",
+    "month": "2026-11",
+    "actual_sum": 0.0,
+    "normal_sum": 18.2,
+    "departure": -1.0,
+    "days_present": 8,
+    "districts": 3,
+    "is_complete": false
+  },
+  {
+    "state": "tripura",
+    "month": "2026-08",
+    "actual_sum": 1211.0,
+    "normal_sum": 1056.1,
+    "departure": 0.14667171669349505,
+    "days_present": 13,
+    "districts": 8,
+    "is_complete": false
+  },
+  {
+    "state": "tripura",
+    "month": "2026-09",
+    "actual_sum": 1361.2,
+    "normal_sum": 2040.5,
+    "departure": -0.3329086008331291,
+    "days_present": 30,
+    "districts": 8,
+    "is_complete": true
+  },
+  {
+    "state": "tripura",
+    "month": "2026-10",
+    "actual_sum": 335.7,
+    "normal_sum": 1247.2,
+    "departure": -0.7308370750481077,
+    "days_present": 30,
+    "districts": 8,
+    "is_complete": false
+  },
+  {
+    "state": "tripura",
+    "month": "2026-11",
+    "actual_sum": 34.3,
+    "normal_sum": 89.8,
+    "departure": -0.6180400890868597,
+    "days_present": 8,
+    "districts": 8,
+    "is_complete": false
+  },
+  {
+    "state": "uttar pradesh",
+    "month": "2026-08",
+    "actual_sum": 9762.4,
+    "normal_sum": 6585.9,
+    "departure": 0.4823182860353179,
+    "days_present": 13,
+    "districts": 75,
+    "is_complete": false
+  },
+  {
+    "state": "uttar pradesh",
+    "month": "2026-09",
+    "actual_sum": 17759.0,
+    "normal_sum": 11230.8,
+    "departure": 0.5812764896534531,
+    "days_present": 30,
+    "districts": 75,
+    "is_complete": true
+  },
+  {
+    "state": "uttar pradesh",
+    "month": "2026-10",
+    "actual_sum": 1871.3,
+    "normal_sum": 2062.0,
+    "departure": -0.09248302618816685,
+    "days_present": 30,
+    "districts": 75,
+    "is_complete": false
+  },
+  {
+    "state": "uttar pradesh",
+    "month": "2026-11",
+    "actual_sum": 15.9,
+    "normal_sum": 47.300000000000004,
+    "departure": -0.66384778012685,
+    "days_present": 8,
+    "districts": 75,
+    "is_complete": false
+  },
+  {
+    "state": "uttarakhand",
+    "month": "2026-08",
+    "actual_sum": 1760.1,
+    "normal_sum": 1799.7,
+    "departure": -0.02200366727787972,
+    "days_present": 13,
+    "districts": 13,
+    "is_complete": false
+  },
+  {
+    "state": "uttarakhand",
+    "month": "2026-09",
+    "actual_sum": 4107.5,
+    "normal_sum": 2395.6,
+    "departure": 0.7146017699115045,
+    "days_present": 30,
+    "districts": 13,
+    "is_complete": true
+  },
+  {
+    "state": "uttarakhand",
+    "month": "2026-10",
+    "actual_sum": 585.0,
+    "normal_sum": 384.6,
+    "departure": 0.5210608424336972,
+    "days_present": 30,
+    "districts": 13,
+    "is_complete": false
+  },
+  {
+    "state": "uttarakhand",
+    "month": "2026-11",
+    "actual_sum": 7.8999999999999995,
+    "normal_sum": 30.5,
+    "departure": -0.740983606557377,
+    "days_present": 8,
+    "districts": 13,
+    "is_complete": false
+  },
+  {
+    "state": "west bengal",
+    "month": "2026-08",
+    "actual_sum": 1942.8,
+    "normal_sum": 3003.0,
+    "departure": -0.35304695304695305,
+    "days_present": 13,
+    "districts": 20,
+    "is_complete": false
+  },
+  {
+    "state": "west bengal",
+    "month": "2026-09",
+    "actual_sum": 6103.8,
+    "normal_sum": 6443.5,
+    "departure": -0.05271979514239153,
+    "days_present": 30,
+    "districts": 20,
+    "is_complete": true
+  },
+  {
+    "state": "west bengal",
+    "month": "2026-10",
+    "actual_sum": 1392.6,
+    "normal_sum": 2721.4,
+    "departure": -0.4882780921584479,
+    "days_present": 30,
+    "districts": 20,
+    "is_complete": false
+  },
+  {
+    "state": "west bengal",
+    "month": "2026-11",
+    "actual_sum": 71.9,
+    "normal_sum": 152.9,
+    "departure": -0.5297580117724002,
+    "days_present": 8,
+    "districts": 20,
+    "is_complete": false
+  }
+]
