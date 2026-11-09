@@ -1,4 +1,4 @@
-from ..services.dengue_data import calculate_dengue
+from .dengue_data import calculate_dengue
 def calculate(
     *,
     medicine: str,
