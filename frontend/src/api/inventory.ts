@@ -12,6 +12,14 @@ export type CalculationInput = {
 
 export type CalculationResponse = {
   status: string
+  daily_average?: number
+  seasonal_factor?: number
+  expected_daily_use?: number
+  target_stock?: number
+  shortfall?: number
+  baseline_source?: string
+  adjustment_applied?: boolean
+  capped?: boolean
 }
 
 const API_BASE_URL = (

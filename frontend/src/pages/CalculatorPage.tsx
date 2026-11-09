@@ -1,9 +1,29 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { getInventory, sendCalculation } from '../api/inventory'
-import type { InventoryItem } from '../api/inventory'
+import type { CalculationResponse, InventoryItem } from '../api/inventory'
 
 const WHOLE_NUMBER = /^\d+$/
+
+function formatNumber(value: number, digits = 0) {
+  return value.toLocaleString(undefined, {
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  })
+}
+
+function formatSource(source: string) {
+  return source.replaceAll('_', ' ')
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-xs font-medium text-slate-500">{label}</dt>
+      <dd className="mt-1 text-lg font-semibold text-slate-900">{value}</dd>
+    </div>
+  )
+}
 
 type FieldErrors = {
   currentStock?: string
@@ -29,6 +49,7 @@ function CalculatorPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [status, setStatus] = useState<Status | null>(null)
+  const [result, setResult] = useState<CalculationResponse | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -65,6 +86,7 @@ function CalculatorPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setStatus(null)
+    setResult(null)
 
     const stockValue = currentStock.trim()
     const salesValue = yearlySales.trim()
@@ -95,12 +117,13 @@ function CalculatorPage() {
     setIsSubmitting(true)
 
     try {
-      await sendCalculation({
+      const val = await sendCalculation({
         medicine,
         current_stock: Number(stockValue),
         yearly_sales: Number(salesValue),
         days: Number(daysValue),
       })
+      setResult(val)
       setStatus({ type: 'success', message: 'Request sent successfully.' })
     } catch {
       setStatus({
@@ -142,6 +165,7 @@ function CalculatorPage() {
             onChange={(event) => {
               setMedicine(event.target.value)
               setStatus(null)
+              setResult(null)
             }}
             disabled={formDisabled}
             className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
@@ -287,6 +311,70 @@ function CalculatorPage() {
           </p>
         )}
       </form>
+
+      {result && (
+        <div className="mt-6 max-w-md rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold text-slate-900">Result</h2>
+            <span
+              className={`rounded-full px-3 py-1 text-xs font-medium ${
+                result.status.toLowerCase().includes('sufficient')
+                  ? 'bg-emerald-100 text-emerald-800'
+                  : 'bg-amber-100 text-amber-800'
+              }`}
+            >
+              {result.status}
+            </span>
+          </div>
+
+          {result.target_stock !== undefined ? (
+            <>
+              <dl className="mt-4 grid grid-cols-2 gap-4">
+                <Metric
+                  label="Target stock"
+                  value={formatNumber(result.target_stock)}
+                />
+                <Metric
+                  label="Shortfall"
+                  value={formatNumber(result.shortfall ?? 0)}
+                />
+                <Metric
+                  label="Daily average"
+                  value={formatNumber(result.daily_average ?? 0, 1)}
+                />
+                <Metric
+                  label="Expected daily use"
+                  value={formatNumber(result.expected_daily_use ?? 0, 2)}
+                />
+                <Metric
+                  label="Seasonal factor"
+                  value={formatNumber(result.seasonal_factor ?? 0, 2)}
+                />
+                <Metric
+                  label="Baseline"
+                  value={formatSource(result.baseline_source ?? 'unknown')}
+                />
+              </dl>
+
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
+                <span className="rounded-full bg-slate-100 px-3 py-1">
+                  Rainfall adjustment:{' '}
+                  {result.adjustment_applied ? 'applied' : 'not applied'}
+                </span>
+                {result.capped && (
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-amber-800">
+                    Capped
+                  </span>
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="mt-3 text-sm text-slate-600">
+              Request received. No calculation details were returned.
+            </p>
+          )}
+        </div>
+      )}
     </section>
   )
 }
