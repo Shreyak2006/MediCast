@@ -1,0 +1,1021 @@
+{
+  "seasonal_table": [
+    {
+      "state": "andhra pradesh",
+      "month_num": 3,
+      "mean_log_cases": 3.960041599526617
+    },
+    {
+      "state": "andhra pradesh",
+      "month_num": 4,
+      "mean_log_cases": 3.58351893845611
+    },
+    {
+      "state": "andhra pradesh",
+      "month_num": 5,
+      "mean_log_cases": 3.2411344968941216
+    },
+    {
+      "state": "andhra pradesh",
+      "month_num": 6,
+      "mean_log_cases": 2.70805020110221
+    },
+    {
+      "state": "andhra pradesh",
+      "month_num": 7,
+      "mean_log_cases": 3.343388085120877
+    },
+    {
+      "state": "andhra pradesh",
+      "month_num": 8,
+      "mean_log_cases": 3.5150787233366914
+    },
+    {
+      "state": "andhra pradesh",
+      "month_num": 9,
+      "mean_log_cases": 3.6829064186047358
+    },
+    {
+      "state": "arunachal pradesh",
+      "month_num": 6,
+      "mean_log_cases": 6.6618269403729435
+    },
+    {
+      "state": "arunachal pradesh",
+      "month_num": 8,
+      "mean_log_cases": 3.4608290920755644
+    },
+    {
+      "state": "arunachal pradesh",
+      "month_num": 9,
+      "mean_log_cases": 5.974165589723059
+    },
+    {
+      "state": "arunachal pradesh",
+      "month_num": 10,
+      "mean_log_cases": 2.6208735075298213
+    },
+    {
+      "state": "arunachal pradesh",
+      "month_num": 12,
+      "mean_log_cases": 3.332204510175204
+    },
+    {
+      "state": "assam",
+      "month_num": 1,
+      "mean_log_cases": 3.0456549410388494
+    },
+    {
+      "state": "assam",
+      "month_num": 4,
+      "mean_log_cases": 5.749392985908253
+    },
+    {
+      "state": "assam",
+      "month_num": 6,
+      "mean_log_cases": 3.524627420627918
+    },
+    {
+      "state": "assam",
+      "month_num": 7,
+      "mean_log_cases": 4.42141697485966
+    },
+    {
+      "state": "assam",
+      "month_num": 8,
+      "mean_log_cases": 3.0229256025514655
+    },
+    {
+      "state": "assam",
+      "month_num": 9,
+      "mean_log_cases": 2.3666329443341483
+    },
+    {
+      "state": "assam",
+      "month_num": 10,
+      "mean_log_cases": 2.8748080344595563
+    },
+    {
+      "state": "bihar",
+      "month_num": 6,
+      "mean_log_cases": 6.371937550170172
+    },
+    {
+      "state": "bihar",
+      "month_num": 7,
+      "mean_log_cases": 4.638625538629405
+    },
+    {
+      "state": "bihar",
+      "month_num": 8,
+      "mean_log_cases": 3.4276041683559697
+    },
+    {
+      "state": "bihar",
+      "month_num": 9,
+      "mean_log_cases": 3.3169085928002557
+    },
+    {
+      "state": "bihar",
+      "month_num": 10,
+      "mean_log_cases": 3.933224442021587
+    },
+    {
+      "state": "bihar",
+      "month_num": 11,
+      "mean_log_cases": 3.448852471564318
+    },
+    {
+      "state": "chandigarh",
+      "month_num": 8,
+      "mean_log_cases": 4.470257728330883
+    },
+    {
+      "state": "chandigarh",
+      "month_num": 9,
+      "mean_log_cases": 5.142545633484113
+    },
+    {
+      "state": "chandigarh",
+      "month_num": 10,
+      "mean_log_cases": 2.727660557678851
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 5,
+      "mean_log_cases": 4.219507705176107
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 7,
+      "mean_log_cases": 1.9459101490553132
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 8,
+      "mean_log_cases": 3.899432358331506
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 9,
+      "mean_log_cases": 3.1817820581850262
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 10,
+      "mean_log_cases": 1.791759469228055
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 11,
+      "mean_log_cases": 1.791759469228055
+    },
+    {
+      "state": "chhattisgarh",
+      "month_num": 12,
+      "mean_log_cases": 1.9356005054539454
+    },
+    {
+      "state": "delhi",
+      "month_num": 1,
+      "mean_log_cases": 6.658011045870748
+    },
+    {
+      "state": "delhi",
+      "month_num": 7,
+      "mean_log_cases": 8.899439432871457
+    },
+    {
+      "state": "delhi",
+      "month_num": 8,
+      "mean_log_cases": 3.8918202981106265
+    },
+    {
+      "state": "delhi",
+      "month_num": 9,
+      "mean_log_cases": 3.1354942159291497
+    },
+    {
+      "state": "delhi",
+      "month_num": 10,
+      "mean_log_cases": 2.5649493574615367
+    },
+    {
+      "state": "goa",
+      "month_num": 2,
+      "mean_log_cases": 2.4849066497880004
+    },
+    {
+      "state": "goa",
+      "month_num": 3,
+      "mean_log_cases": 1.791759469228055
+    },
+    {
+      "state": "goa",
+      "month_num": 4,
+      "mean_log_cases": 2.8903717578961645
+    },
+    {
+      "state": "goa",
+      "month_num": 5,
+      "mean_log_cases": 3.4782727215757845
+    },
+    {
+      "state": "goa",
+      "month_num": 6,
+      "mean_log_cases": 3.784189633918261
+    },
+    {
+      "state": "goa",
+      "month_num": 7,
+      "mean_log_cases": 3.2188758248682006
+    },
+    {
+      "state": "goa",
+      "month_num": 8,
+      "mean_log_cases": 5.19295685089021
+    },
+    {
+      "state": "gujarat",
+      "month_num": 4,
+      "mean_log_cases": 4.204692619390966
+    },
+    {
+      "state": "gujarat",
+      "month_num": 5,
+      "mean_log_cases": 2.850221786695343
+    },
+    {
+      "state": "gujarat",
+      "month_num": 6,
+      "mean_log_cases": 2.787974551573158
+    },
+    {
+      "state": "gujarat",
+      "month_num": 7,
+      "mean_log_cases": 2.302585092994046
+    },
+    {
+      "state": "gujarat",
+      "month_num": 8,
+      "mean_log_cases": 3.58351893845611
+    },
+    {
+      "state": "gujarat",
+      "month_num": 9,
+      "mean_log_cases": 4.02535169073515
+    },
+    {
+      "state": "gujarat",
+      "month_num": 10,
+      "mean_log_cases": 5.170483995038151
+    },
+    {
+      "state": "gujarat",
+      "month_num": 11,
+      "mean_log_cases": 5.840641657373398
+    },
+    {
+      "state": "gujarat",
+      "month_num": 12,
+      "mean_log_cases": 3.9318256327243257
+    },
+    {
+      "state": "haryana",
+      "month_num": 7,
+      "mean_log_cases": 3.880659590473994
+    },
+    {
+      "state": "haryana",
+      "month_num": 10,
+      "mean_log_cases": 4.179684553111335
+    },
+    {
+      "state": "himachal pradesh",
+      "month_num": 6,
+      "mean_log_cases": 5.834810737062605
+    },
+    {
+      "state": "himachal pradesh",
+      "month_num": 7,
+      "mean_log_cases": 5.958424693029782
+    },
+    {
+      "state": "himachal pradesh",
+      "month_num": 8,
+      "mean_log_cases": 4.8337560112032705
+    },
+    {
+      "state": "himachal pradesh",
+      "month_num": 9,
+      "mean_log_cases": 5.0238805208462765
+    },
+    {
+      "state": "himachal pradesh",
+      "month_num": 10,
+      "mean_log_cases": 3.4339872044851463
+    },
+    {
+      "state": "jammu and kashmir",
+      "month_num": 8,
+      "mean_log_cases": 6.769641976852503
+    },
+    {
+      "state": "jammu and kashmir",
+      "month_num": 9,
+      "mean_log_cases": 3.8314689252307677
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 1,
+      "mean_log_cases": 2.70805020110221
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 6,
+      "mean_log_cases": 2.1972245773362196
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 7,
+      "mean_log_cases": 3.607619989365049
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 8,
+      "mean_log_cases": 3.295836866004329
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 9,
+      "mean_log_cases": 3.530233577973053
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 10,
+      "mean_log_cases": 4.1654303550186675
+    },
+    {
+      "state": "jharkhand",
+      "month_num": 11,
+      "mean_log_cases": 3.1843222397359745
+    },
+    {
+      "state": "karnataka",
+      "month_num": 1,
+      "mean_log_cases": 3.2943378594325123
+    },
+    {
+      "state": "karnataka",
+      "month_num": 2,
+      "mean_log_cases": 2.7903368937460518
+    },
+    {
+      "state": "karnataka",
+      "month_num": 3,
+      "mean_log_cases": 3.2754110232807108
+    },
+    {
+      "state": "karnataka",
+      "month_num": 4,
+      "mean_log_cases": 3.270406516719871
+    },
+    {
+      "state": "karnataka",
+      "month_num": 5,
+      "mean_log_cases": 4.253378724904729
+    },
+    {
+      "state": "karnataka",
+      "month_num": 6,
+      "mean_log_cases": 4.649320865289882
+    },
+    {
+      "state": "karnataka",
+      "month_num": 7,
+      "mean_log_cases": 4.0050087374420205
+    },
+    {
+      "state": "karnataka",
+      "month_num": 8,
+      "mean_log_cases": 4.509745098686371
+    },
+    {
+      "state": "karnataka",
+      "month_num": 9,
+      "mean_log_cases": 3.321815577958561
+    },
+    {
+      "state": "karnataka",
+      "month_num": 10,
+      "mean_log_cases": 3.6299254168682054
+    },
+    {
+      "state": "karnataka",
+      "month_num": 11,
+      "mean_log_cases": 3.8546011505484303
+    },
+    {
+      "state": "karnataka",
+      "month_num": 12,
+      "mean_log_cases": 2.90426731017504
+    },
+    {
+      "state": "kerala",
+      "month_num": 1,
+      "mean_log_cases": 3.258096538021482
+    },
+    {
+      "state": "kerala",
+      "month_num": 2,
+      "mean_log_cases": 3.267202672601314
+    },
+    {
+      "state": "kerala",
+      "month_num": 3,
+      "mean_log_cases": 3.9051120246882207
+    },
+    {
+      "state": "kerala",
+      "month_num": 4,
+      "mean_log_cases": 4.446186837926815
+    },
+    {
+      "state": "kerala",
+      "month_num": 5,
+      "mean_log_cases": 3.9197701833367806
+    },
+    {
+      "state": "kerala",
+      "month_num": 6,
+      "mean_log_cases": 3.5664632048909723
+    },
+    {
+      "state": "kerala",
+      "month_num": 8,
+      "mean_log_cases": 2.772588722239781
+    },
+    {
+      "state": "kerala",
+      "month_num": 9,
+      "mean_log_cases": 3.6888794541139363
+    },
+    {
+      "state": "kerala",
+      "month_num": 10,
+      "mean_log_cases": 3.091386628229712
+    },
+    {
+      "state": "kerala",
+      "month_num": 11,
+      "mean_log_cases": 2.484906649788
+    },
+    {
+      "state": "kerala",
+      "month_num": 12,
+      "mean_log_cases": 3.0881498992077385
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 1,
+      "mean_log_cases": 3.713572066704308
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 3,
+      "mean_log_cases": 4.962844630259907
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 4,
+      "mean_log_cases": 3.688879454113936
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 5,
+      "mean_log_cases": 3.1066970786451003
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 6,
+      "mean_log_cases": 3.6120124041429156
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 7,
+      "mean_log_cases": 2.743170372988152
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 8,
+      "mean_log_cases": 3.9318256327243257
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 9,
+      "mean_log_cases": 4.10802797867546
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 10,
+      "mean_log_cases": 3.3107683261300584
+    },
+    {
+      "state": "madhya pradesh",
+      "month_num": 11,
+      "mean_log_cases": 3.042174628627691
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 1,
+      "mean_log_cases": 3.307365427174845
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 2,
+      "mean_log_cases": 2.3607604856637057
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 3,
+      "mean_log_cases": 3.796540300097642
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 4,
+      "mean_log_cases": 4.371948213368675
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 5,
+      "mean_log_cases": 3.8776308464316553
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 6,
+      "mean_log_cases": 4.339853431373563
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 7,
+      "mean_log_cases": 3.9421150706601398
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 8,
+      "mean_log_cases": 4.641026084869624
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 9,
+      "mean_log_cases": 4.805587436753105
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 10,
+      "mean_log_cases": 4.594161201449524
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 11,
+      "mean_log_cases": 3.9976917151745077
+    },
+    {
+      "state": "maharashtra",
+      "month_num": 12,
+      "mean_log_cases": 3.084000846608556
+    },
+    {
+      "state": "manipur",
+      "month_num": 5,
+      "mean_log_cases": 3.4011973816621555
+    },
+    {
+      "state": "manipur",
+      "month_num": 6,
+      "mean_log_cases": 5.10594547390058
+    },
+    {
+      "state": "manipur",
+      "month_num": 7,
+      "mean_log_cases": 3.4011973816621555
+    },
+    {
+      "state": "manipur",
+      "month_num": 8,
+      "mean_log_cases": 2.833213344056216
+    },
+    {
+      "state": "manipur",
+      "month_num": 9,
+      "mean_log_cases": 4.5217885770490405
+    },
+    {
+      "state": "manipur",
+      "month_num": 10,
+      "mean_log_cases": 3.181929876981937
+    },
+    {
+      "state": "meghalaya",
+      "month_num": 6,
+      "mean_log_cases": 4.844187086458591
+    },
+    {
+      "state": "meghalaya",
+      "month_num": 8,
+      "mean_log_cases": 4.1588830833596715
+    },
+    {
+      "state": "mizoram",
+      "month_num": 8,
+      "mean_log_cases": 3.8918202981106265
+    },
+    {
+      "state": "mizoram",
+      "month_num": 10,
+      "mean_log_cases": 4.472405552082767
+    },
+    {
+      "state": "mizoram",
+      "month_num": 11,
+      "mean_log_cases": 1.6094379124341003
+    },
+    {
+      "state": "mizoram",
+      "month_num": 12,
+      "mean_log_cases": 3.6635616461296463
+    },
+    {
+      "state": "nagaland",
+      "month_num": 7,
+      "mean_log_cases": 2.1972245773362196
+    },
+    {
+      "state": "nagaland",
+      "month_num": 8,
+      "mean_log_cases": 1.0986122886681096
+    },
+    {
+      "state": "nagaland",
+      "month_num": 10,
+      "mean_log_cases": 1.5416576044280903
+    },
+    {
+      "state": "nagaland",
+      "month_num": 11,
+      "mean_log_cases": 4.90527477843843
+    },
+    {
+      "state": "odisha",
+      "month_num": 7,
+      "mean_log_cases": 4.454347296253507
+    },
+    {
+      "state": "odisha",
+      "month_num": 9,
+      "mean_log_cases": 5.739792912179234
+    },
+    {
+      "state": "puducherry",
+      "month_num": 2,
+      "mean_log_cases": 2.3978952727983707
+    },
+    {
+      "state": "puducherry",
+      "month_num": 6,
+      "mean_log_cases": 1.6094379124341003
+    },
+    {
+      "state": "puducherry",
+      "month_num": 7,
+      "mean_log_cases": 3.4965075614664802
+    },
+    {
+      "state": "puducherry",
+      "month_num": 8,
+      "mean_log_cases": 3.1780538303479458
+    },
+    {
+      "state": "puducherry",
+      "month_num": 9,
+      "mean_log_cases": 3.68214521834143
+    },
+    {
+      "state": "puducherry",
+      "month_num": 10,
+      "mean_log_cases": 4.541740764326185
+    },
+    {
+      "state": "puducherry",
+      "month_num": 11,
+      "mean_log_cases": 3.912023005428146
+    },
+    {
+      "state": "punjab",
+      "month_num": 5,
+      "mean_log_cases": 3.295836866004329
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 4,
+      "mean_log_cases": 4.360067017706464
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 5,
+      "mean_log_cases": 5.313205979041787
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 6,
+      "mean_log_cases": 3.4965075614664802
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 8,
+      "mean_log_cases": 5.030437921392435
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 9,
+      "mean_log_cases": 4.368972229738434
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 10,
+      "mean_log_cases": 3.490100330920839
+    },
+    {
+      "state": "rajasthan",
+      "month_num": 11,
+      "mean_log_cases": 2.9513166667006834
+    },
+    {
+      "state": "sikkim",
+      "month_num": 1,
+      "mean_log_cases": 3.7612001156935624
+    },
+    {
+      "state": "sikkim",
+      "month_num": 8,
+      "mean_log_cases": 5.043425116919247
+    },
+    {
+      "state": "sikkim",
+      "month_num": 9,
+      "mean_log_cases": 4.532599493153256
+    },
+    {
+      "state": "sikkim",
+      "month_num": 10,
+      "mean_log_cases": 4.110873864173311
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 1,
+      "mean_log_cases": 4.072985268632649
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 2,
+      "mean_log_cases": 3.5653155924627726
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 3,
+      "mean_log_cases": 3.61212563208592
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 4,
+      "mean_log_cases": 3.6726244823700567
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 5,
+      "mean_log_cases": 3.59193478186642
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 6,
+      "mean_log_cases": 3.9734556084238726
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 7,
+      "mean_log_cases": 3.774167554417143
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 8,
+      "mean_log_cases": 3.781669398242147
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 9,
+      "mean_log_cases": 4.11925478382303
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 10,
+      "mean_log_cases": 3.875128304260777
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 11,
+      "mean_log_cases": 3.095821141299673
+    },
+    {
+      "state": "tamil nadu",
+      "month_num": 12,
+      "mean_log_cases": 3.491297486751018
+    },
+    {
+      "state": "telangana",
+      "month_num": 2,
+      "mean_log_cases": 4.0943445622221
+    },
+    {
+      "state": "telangana",
+      "month_num": 3,
+      "mean_log_cases": 2.639057329615259
+    },
+    {
+      "state": "telangana",
+      "month_num": 4,
+      "mean_log_cases": 3.4329674415969307
+    },
+    {
+      "state": "telangana",
+      "month_num": 5,
+      "mean_log_cases": 4.499809670330265
+    },
+    {
+      "state": "telangana",
+      "month_num": 6,
+      "mean_log_cases": 6.124683390894205
+    },
+    {
+      "state": "telangana",
+      "month_num": 7,
+      "mean_log_cases": 3.7444608364743943
+    },
+    {
+      "state": "telangana",
+      "month_num": 8,
+      "mean_log_cases": 3.450260270727069
+    },
+    {
+      "state": "telangana",
+      "month_num": 9,
+      "mean_log_cases": 4.0784497120680765
+    },
+    {
+      "state": "telangana",
+      "month_num": 10,
+      "mean_log_cases": 3.2779564952184193
+    },
+    {
+      "state": "telangana",
+      "month_num": 11,
+      "mean_log_cases": 6.3835066348840055
+    },
+    {
+      "state": "the dadra and nagar haveli and daman and diu",
+      "month_num": 9,
+      "mean_log_cases": 4.024713528555347
+    },
+    {
+      "state": "the dadra and nagar haveli and daman and diu",
+      "month_num": 10,
+      "mean_log_cases": 3.0433873634561537
+    },
+    {
+      "state": "uttar pradesh",
+      "month_num": 7,
+      "mean_log_cases": 6.839476438228843
+    },
+    {
+      "state": "uttar pradesh",
+      "month_num": 8,
+      "mean_log_cases": 3.8878901172208846
+    },
+    {
+      "state": "uttar pradesh",
+      "month_num": 9,
+      "mean_log_cases": 4.309522905612466
+    },
+    {
+      "state": "uttar pradesh",
+      "month_num": 10,
+      "mean_log_cases": 4.363848519184836
+    },
+    {
+      "state": "uttar pradesh",
+      "month_num": 11,
+      "mean_log_cases": 3.044522437723423
+    },
+    {
+      "state": "uttarakhand",
+      "month_num": 7,
+      "mean_log_cases": 3.7376696182833684
+    },
+    {
+      "state": "uttarakhand",
+      "month_num": 8,
+      "mean_log_cases": 3.81328510314533
+    },
+    {
+      "state": "uttarakhand",
+      "month_num": 9,
+      "mean_log_cases": 3.9224649106468186
+    },
+    {
+      "state": "uttarakhand",
+      "month_num": 10,
+      "mean_log_cases": 3.1146655855962853
+    },
+    {
+      "state": "west bengal",
+      "month_num": 2,
+      "mean_log_cases": 4.948759890378168
+    },
+    {
+      "state": "west bengal",
+      "month_num": 3,
+      "mean_log_cases": 2.833213344056216
+    },
+    {
+      "state": "west bengal",
+      "month_num": 5,
+      "mean_log_cases": 7.068172000388042
+    },
+    {
+      "state": "west bengal",
+      "month_num": 6,
+      "mean_log_cases": 6.203869604293953
+    },
+    {
+      "state": "west bengal",
+      "month_num": 7,
+      "mean_log_cases": 5.038956168812642
+    },
+    {
+      "state": "west bengal",
+      "month_num": 8,
+      "mean_log_cases": 6.353417812194392
+    },
+    {
+      "state": "west bengal",
+      "month_num": 9,
+      "mean_log_cases": 5.921431225399772
+    },
+    {
+      "state": "west bengal",
+      "month_num": 10,
+      "mean_log_cases": 5.615066256899655
+    },
+    {
+      "state": "west bengal",
+      "month_num": 11,
+      "mean_log_cases": 3.424867577533627
+    },
+    {
+      "state": "west bengal",
+      "month_num": 12,
+      "mean_log_cases": 4.0943445622221
+    }
+  ],
+  "month_fallback": {
+    "1": 3.6872558179978063,
+    "2": 3.0950527684505924,
+    "3": 3.562463664502949,
+    "4": 3.9990341615885656,
+    "5": 3.8699960301565612,
+    "6": 4.222140373732067,
+    "7": 4.105027919945637,
+    "8": 4.220364888753889,
+    "9": 4.142886965893564,
+    "10": 3.7812849162186573,
+    "11": 3.5053618897852297,
+    "12": 3.181451684130423
+  },
+  "overall_mean": 3.9053034122268007,
+  "slope": -0.015194972358994713,
+  "intercept": -0.001884956807114697,
+  "clip_bounds": [
+    -1.0,
+    2.0
+  ],
+  "train_end_year": 2019,
+  "test_errors": {
+    "baseline": {
+      "mae_log_cases": 1.2598481123063856,
+      "mae_cases": 146.42680637443343
+    },
+    "weather_adjusted": {
+      "mae_log_cases": 1.2573207889002607,
+      "mae_cases": 146.24528820681277
+    }
+  }
+}
