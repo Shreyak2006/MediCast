@@ -1,9 +1,20 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import type { HospitalType } from '../context/auth'
 import { useAuth } from '../context/useAuth'
+import { DISTRICTS } from '../data/districts'
 
 type Mode = 'create' | 'join'
+
+const PINCODE_PATTERN = /^[1-9][0-9]{5}$/
+
+type DetailsErrors = {
+  state?: string
+  district?: string
+  pincode?: string
+  hospital_type?: string
+}
 
 function OrganizationPage() {
   const { createOrganization, joinOrganization } = useAuth()
@@ -13,13 +24,27 @@ function OrganizationPage() {
   const [organizationName, setOrganizationName] = useState('')
   const [joinCode, setJoinCode] = useState('')
   const [createdCode, setCreatedCode] = useState('')
+  const [joinRequestSent, setJoinRequestSent] = useState(false)
   const [error, setError] = useState('')
+
+  const [organizationState, setOrganizationState] = useState('')
+  const [district, setDistrict] = useState('')
+  const [pincode, setPincode] = useState('')
+  const [hospitalType, setHospitalType] = useState<HospitalType | ''>('')
+  const [detailsErrors, setDetailsErrors] = useState<DetailsErrors>({})
+
+  const districts = organizationState ? DISTRICTS[organizationState] ?? [] : []
 
   function chooseMode(nextMode: Mode) {
     setMode(nextMode)
     setError('')
     setOrganizationName('')
     setJoinCode('')
+    setOrganizationState('')
+    setDistrict('')
+    setPincode('')
+    setHospitalType('')
+    setDetailsErrors({})
   }
 
   function backToChoices() {
@@ -27,20 +52,63 @@ function OrganizationPage() {
     setError('')
     setOrganizationName('')
     setJoinCode('')
+    setOrganizationState('')
+    setDistrict('')
+    setPincode('')
+    setHospitalType('')
+    setDetailsErrors({})
+  }
+
+  function handleStateChange(value: string) {
+    setOrganizationState(value)
+    setDistrict('')
+    setDetailsErrors((current) => ({
+      ...current,
+      state: undefined,
+      district: undefined,
+    }))
   }
 
   function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const name = organizationName.trim()
+    const nextDetailsErrors: DetailsErrors = {}
 
     if (!name) {
       setError('Organization name is required.')
+    } else {
+      setError('')
+    }
+
+    if (!organizationState) {
+      nextDetailsErrors.state = 'State is required.'
+    }
+    if (!district) {
+      nextDetailsErrors.district = 'District is required.'
+    }
+    if (!PINCODE_PATTERN.test(pincode)) {
+      nextDetailsErrors.pincode = 'Enter a valid 6-digit pincode.'
+    }
+    if (!hospitalType) {
+      nextDetailsErrors.hospital_type = 'Hospital type is required.'
+    }
+
+    setDetailsErrors(nextDetailsErrors)
+
+    if (!name || !hospitalType || Object.keys(nextDetailsErrors).length > 0) {
       return
     }
 
-    setError('')
-    setCreatedCode(createOrganization(name))
+    setCreatedCode(
+      createOrganization({
+        name,
+        state: organizationState,
+        district,
+        pincode,
+        hospital_type: hospitalType,
+      }),
+    )
   }
 
   function handleJoin(event: FormEvent<HTMLFormElement>) {
@@ -54,14 +122,36 @@ function OrganizationPage() {
     }
 
     setError('')
-    joinOrganization(code)
-    navigate('/dashboard')
+    // TODO: Send a join request to the backend instead of joining locally.
+    setJoinRequestSent(true)
   }
 
   return (
     <section className="mx-auto max-w-3xl">
       <div>
-        {createdCode ? (
+        {joinRequestSent ? (
+          <div className="max-w-md rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+              Request sent
+            </h1>
+            <p className="mt-1 text-slate-600">
+              Your request to join {joinCode} has been sent. You can continue
+              once an admin approves it.
+            </p>
+
+            {/* TODO: Remove the local join once the request flow is wired up. */}
+            <button
+              type="button"
+              onClick={() => {
+                joinOrganization(joinCode)
+                navigate('/dashboard')
+              }}
+              className="mt-6 w-full rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700"
+            >
+              Next
+            </button>
+          </div>
+        ) : createdCode ? (
           <div className="max-w-md rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
             <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
               Organization created
@@ -194,6 +284,133 @@ function OrganizationPage() {
                     </p>
                   )}
                 </div>
+
+                {mode === 'create' && (
+                  <>
+                    <div className="mt-4">
+                      <label
+                        htmlFor="organization-state"
+                        className="block text-sm font-medium text-slate-700"
+                      >
+                        State
+                      </label>
+                      <select
+                        id="organization-state"
+                        value={organizationState}
+                        onChange={(event) =>
+                          handleStateChange(event.target.value)
+                        }
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+                      >
+                        <option value="">Select state</option>
+                        {Object.keys(DISTRICTS).map((state) => (
+                          <option key={state} value={state}>
+                            {state}
+                          </option>
+                        ))}
+                      </select>
+                      {detailsErrors.state && (
+                        <p role="alert" className="mt-2 text-sm text-red-600">
+                          {detailsErrors.state}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-4">
+                      <label
+                        htmlFor="organization-district"
+                        className="block text-sm font-medium text-slate-700"
+                      >
+                        District
+                      </label>
+                      <select
+                        id="organization-district"
+                        value={district}
+                        disabled={!organizationState}
+                        onChange={(event) => {
+                          setDistrict(event.target.value)
+                          setDetailsErrors((current) => ({
+                            ...current,
+                            district: undefined,
+                          }))
+                        }}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+                      >
+                        <option value="">Select district</option>
+                        {districts.map((item) => (
+                          <option key={item} value={item}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                      {detailsErrors.district && (
+                        <p role="alert" className="mt-2 text-sm text-red-600">
+                          {detailsErrors.district}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-4">
+                      <label
+                        htmlFor="organization-pincode"
+                        className="block text-sm font-medium text-slate-700"
+                      >
+                        Pincode
+                      </label>
+                      <input
+                        id="organization-pincode"
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={6}
+                        value={pincode}
+                        onChange={(event) => {
+                          setPincode(event.target.value.replace(/\D/g, ''))
+                          setDetailsErrors((current) => ({
+                            ...current,
+                            pincode: undefined,
+                          }))
+                        }}
+                        className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+                      />
+                      {detailsErrors.pincode && (
+                        <p role="alert" className="mt-2 text-sm text-red-600">
+                          {detailsErrors.pincode}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-4">
+                      <label
+                        htmlFor="organization-hospital-type"
+                        className="block text-sm font-medium text-slate-700"
+                      >
+                        Hospital type
+                      </label>
+                      <select
+                        id="organization-hospital-type"
+                        value={hospitalType}
+                        onChange={(event) => {
+                          setHospitalType(event.target.value as HospitalType)
+                          setDetailsErrors((current) => ({
+                            ...current,
+                            hospital_type: undefined,
+                          }))
+                        }}
+                        className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+                      >
+                        <option value="">Select hospital type</option>
+                        <option value="government">Government</option>
+                        <option value="private">Private</option>
+                        <option value="clinic">Clinic</option>
+                      </select>
+                      {detailsErrors.hospital_type && (
+                        <p role="alert" className="mt-2 text-sm text-red-600">
+                          {detailsErrors.hospital_type}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
 
                 <button
                   type="submit"
