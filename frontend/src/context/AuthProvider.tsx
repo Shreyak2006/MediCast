@@ -6,6 +6,7 @@ import type {
   AuthMember,
   AuthOrganization,
   AuthUser,
+  CreateOrganizationInput,
   Role,
 } from './auth'
 
@@ -159,11 +160,15 @@ function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  function createOrganization(name: string) {
+  function createOrganization(input: CreateOrganizationInput) {
     const code = generateOrganizationCode()
     const organization: AuthOrganization = {
-      name: name.trim(),
+      name: input.name.trim(),
       code,
+      state: input.state,
+      district: input.district,
+      pincode: input.pincode,
+      hospital_type: input.hospital_type,
     }
 
     setState((current) => {

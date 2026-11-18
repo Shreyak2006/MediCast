@@ -440,8 +440,10 @@ The project's PostgreSQL database (`Medicast`) already exists and is managed in 
 
 ```text
 backend/migrations/
-├── 001_init.sql          # Initial schema: tables, indexes, seeds, updated_at triggers
-└── 001_init.down.sql     # Reverses 001_init.sql
+├── 001_init.sql                  # Initial schema: tables, indexes, seeds, updated_at triggers
+├── 001_init.down.sql             # Reverses 001_init.sql
+├── 002_hospital_details.sql      # Adds pincode and hospital_type to hospitals
+└── 002_hospital_details.down.sql # Reverses 002_hospital_details.sql
 ```
 
 `001_init.sql` creates, in order:
@@ -465,7 +467,16 @@ Details:
 
 `001_init.down.sql` drops the three triggers, the function, and the five tables in reverse dependency order (`stock_movements`, `medicines`, `users`, `diseases`, `hospitals`). It drops nothing else.
 
-Both files wrap everything in a single transaction (`begin`/`commit`) and use plain `create table`/`drop` without `if not exists`/`if exists`, so running a file twice fails loudly instead of silently skipping.
+`002_hospital_details.sql` adds two columns to `hospitals` for the details collected by the frontend's create-organization form:
+
+| Column | Constraint |
+|---|---|
+| `pincode` | `not null`, checked against `^[1-9][0-9]{5}$` |
+| `hospital_type` | `not null`, checked against `government`, `private`, `clinic` |
+
+`002_hospital_details.down.sql` drops those two columns (and their check constraints) and nothing else.
+
+Each file wraps everything in a single transaction (`begin`/`commit`) and uses plain statements without `if not exists`/`if exists`, so running a file twice fails loudly instead of silently skipping.
 
 How to run:
 
@@ -473,9 +484,10 @@ How to run:
 2. Right-click the database and open **Query Tool**.
 3. Open `backend/migrations/001_init.sql` with the Query Tool's file-open button (or paste its contents) and execute (F5).
 4. Verify with `select * from diseases;` — it should return the two seeded rows.
-5. To undo everything, run `backend/migrations/001_init.down.sql` the same way.
+5. Open and execute `backend/migrations/002_hospital_details.sql` to add the new hospital columns.
+6. To undo, run `backend/migrations/002_hospital_details.down.sql` first, then `backend/migrations/001_init.down.sql`.
 
-The same files can also be applied from the command line with `psql -d Medicast -f backend/migrations/001_init.sql`.
+The same files can also be applied from the command line, for example `psql -d Medicast -f backend/migrations/002_hospital_details.sql`.
 
 dbmate (v2.35.0) is installed locally but is not used: these files do not follow dbmate's `<version>_<name>.up.sql` naming, no `DATABASE_URL` is configured, and dbmate would add its own `schema_migrations` tracking table. pgAdmin remains the intended workflow.
 

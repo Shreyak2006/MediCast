@@ -22,6 +22,13 @@ export type CalculationResponse = {
   capped?: boolean
 }
 
+export type PendingRequest = {
+  id: string
+  name: string
+  email: string
+  requestedAt: string
+}
+
 const API_BASE_URL = (
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
 ).replace(/\/+$/, '')
@@ -64,4 +71,34 @@ export function sendCalculation(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(input),
   })
+}
+
+// TODO: Replace with a GET request to the pending join requests endpoint.
+export function fetchPendingRequests(): Promise<PendingRequest[]> {
+  return Promise.resolve([
+    {
+      id: 'req-1',
+      name: 'Priya Nair',
+      email: 'priya.nair@example.com',
+      requestedAt: '2026-11-16',
+    },
+    {
+      id: 'req-2',
+      name: 'Arjun Rao',
+      email: 'arjun.rao@example.com',
+      requestedAt: '2026-11-15',
+    },
+  ])
+}
+
+// TODO: Replace with a POST request to the accept request endpoint.
+export function acceptRequest(requestId: string): Promise<void> {
+  void requestId
+  return Promise.resolve()
+}
+
+// TODO: Replace with a POST request to the reject request endpoint.
+export function rejectRequest(requestId: string): Promise<void> {
+  void requestId
+  return Promise.resolve()
 }

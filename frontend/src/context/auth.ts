@@ -7,9 +7,23 @@ export type AuthUser = {
   email: string
 }
 
+export type HospitalType = 'government' | 'private' | 'clinic'
+
+export type CreateOrganizationInput = {
+  name: string
+  state: string
+  district: string
+  pincode: string
+  hospital_type: HospitalType
+}
+
 export type AuthOrganization = {
   name: string
   code: string
+  state?: string
+  district?: string
+  pincode?: string
+  hospital_type?: HospitalType
 }
 
 export type AuthMember = {
@@ -26,7 +40,7 @@ export type AuthContextValue = {
   members: AuthMember[]
   login: (email: string) => void
   signup: (name: string, email: string) => void
-  createOrganization: (name: string) => string
+  createOrganization: (input: CreateOrganizationInput) => string
   joinOrganization: (code: string) => void
   addMember: (name: string, email: string) => void
   removeMember: (memberId: string) => void
