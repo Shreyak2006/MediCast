@@ -13,7 +13,11 @@ import ProfilePage from './pages/ProfilePage'
 import SignupPage from './pages/SignupPage'
 
 function RequireAuth() {
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return <p className="px-6 py-10 text-slate-600">Loading…</p>
+  }
 
   if (!user) {
     return <Navigate to="/login" replace />

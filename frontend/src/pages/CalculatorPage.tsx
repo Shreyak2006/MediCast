@@ -2,25 +2,41 @@ import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { getInventory, sendCalculation } from '../api/inventory'
 import type { CalculationResponse, InventoryItem } from '../api/inventory'
+import CoverageMeter from '../components/CoverageMeter'
+import SeasonalityChart from '../components/SeasonalityChart'
+import { useAuth } from '../context/useAuth'
+import { formatNumber } from '../lib/format'
 
 const WHOLE_NUMBER = /^\d+$/
 
-function formatNumber(value: number, digits = 0) {
-  return value.toLocaleString(undefined, {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits,
-  })
+function formatSource(source?: string) {
+  if (source === 'state_month') return 'state and month pattern'
+  if (source === 'month_fallback') return 'month pattern'
+  if (source === 'overall') return 'overall pattern'
+  return 'annual average'
 }
 
-function formatSource(source: string) {
-  return source.replaceAll('_', ' ')
+function StatusPill({ status }: { status: string }) {
+  const sufficient = status.toLowerCase().includes('sufficient')
+
+  return (
+    <span
+      className={`rounded-full px-3 py-1 text-xs font-medium ring-1 ring-inset ${
+        sufficient
+          ? 'bg-brand-50 text-brand-800 ring-brand-100'
+          : 'bg-amber-50 text-signal-low ring-amber-200'
+      }`}
+    >
+      {status}
+    </span>
+  )
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Derivation({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs font-medium text-slate-500">{label}</dt>
-      <dd className="mt-1 text-lg font-semibold text-slate-900">{value}</dd>
+      <dt className="text-xs text-muted">{label}</dt>
+      <dd className="tabular-data mt-1 text-sm font-medium text-ink">{value}</dd>
     </div>
   )
 }
@@ -37,6 +53,7 @@ type Status = {
 }
 
 function CalculatorPage() {
+  const { organization } = useAuth()
   const [medicines, setMedicines] = useState<InventoryItem[]>([])
   const [medicine, setMedicine] = useState('')
   const [isLoadingMedicines, setIsLoadingMedicines] = useState(true)
@@ -83,10 +100,14 @@ function CalculatorPage() {
     setErrors((current) => ({ ...current, [field]: undefined }))
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  function clearResult() {
     setStatus(null)
     setResult(null)
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    clearResult()
 
     const stockValue = currentStock.trim()
     const salesValue = yearlySales.trim()
@@ -124,7 +145,7 @@ function CalculatorPage() {
         days: Number(daysValue),
       })
       setResult(val)
-      setStatus({ type: 'success', message: 'Request sent successfully.' })
+      setStatus({ type: 'success', message: 'Calculation ready.' })
     } catch {
       setStatus({
         type: 'error',
@@ -140,241 +161,248 @@ function CalculatorPage() {
 
   return (
     <section>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+      <h1 className="text-2xl font-semibold tracking-tight text-ink">
         Calculator
       </h1>
-      <p className="mt-1 text-slate-600">
+      <p className="mt-1 text-muted">
         Send stock and sales data for a medicine.
       </p>
 
-      <form
-        onSubmit={handleSubmit}
-        noValidate
-        className="mt-6 max-w-md rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200"
-      >
-        <div>
-          <label
-            htmlFor="calculator-medicine"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Medicine
-          </label>
-          <select
-            id="calculator-medicine"
-            value={medicine}
-            onChange={(event) => {
-              setMedicine(event.target.value)
-              setStatus(null)
-              setResult(null)
-            }}
-            disabled={formDisabled}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
-          >
-            {isLoadingMedicines && <option value="">Loading medicines…</option>}
-            {!isLoadingMedicines && !hasMedicines && (
-              <option value="">No medicines yet</option>
-            )}
-            {medicines.map((item) => (
-              <option key={item.medicine} value={item.medicine}>
-                {item.medicine}
-              </option>
-            ))}
-          </select>
-
-          {medicinesError && (
-            <p role="alert" className="mt-2 text-sm text-red-600">
-              {medicinesError}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-4">
-          <label
-            htmlFor="current-stock"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Current stock
-          </label>
-          <input
-            id="current-stock"
-            type="number"
-            min="0"
-            step="1"
-            inputMode="numeric"
-            placeholder="e.g. 100"
-            value={currentStock}
-            onChange={(event) => {
-              setCurrentStock(event.target.value)
-              clearError('currentStock')
-            }}
-            disabled={formDisabled}
-            aria-invalid={Boolean(errors.currentStock)}
-            aria-describedby={
-              errors.currentStock ? 'current-stock-error' : undefined
-            }
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
-          />
-          {errors.currentStock && (
-            <p
-              id="current-stock-error"
-              role="alert"
-              className="mt-2 text-sm text-red-600"
-            >
-              {errors.currentStock}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-4">
-          <label
-            htmlFor="yearly-sales"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Average sold per year (total units per year)
-          </label>
-          <input
-            id="yearly-sales"
-            type="number"
-            min="1"
-            step="1"
-            inputMode="numeric"
-            placeholder="e.g. 1200"
-            value={yearlySales}
-            onChange={(event) => {
-              setYearlySales(event.target.value)
-              clearError('yearlySales')
-            }}
-            disabled={formDisabled}
-            aria-invalid={Boolean(errors.yearlySales)}
-            aria-describedby={
-              errors.yearlySales ? 'yearly-sales-error' : undefined
-            }
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
-          />
-          {errors.yearlySales && (
-            <p
-              id="yearly-sales-error"
-              role="alert"
-              className="mt-2 text-sm text-red-600"
-            >
-              {errors.yearlySales}
-            </p>
-          )}
-        </div>
-
-        <div className="mt-4">
-          <label
-            htmlFor="days"
-            className="block text-sm font-medium text-slate-700"
-          >
-            Days of stock to cover
-          </label>
-          <input
-            id="days"
-            type="number"
-            min="1"
-            step="1"
-            inputMode="numeric"
-            value={days}
-            onChange={(event) => {
-              setDays(event.target.value)
-              clearError('days')
-            }}
-            disabled={formDisabled}
-            aria-invalid={Boolean(errors.days)}
-            aria-describedby={errors.days ? 'days-error' : undefined}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-slate-500"
-          />
-          {errors.days && (
-            <p id="days-error" role="alert" className="mt-2 text-sm text-red-600">
-              {errors.days}
-            </p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting || formDisabled}
-          className="mt-6 w-full rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-60"
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
         >
-          {isSubmitting ? 'Sending…' : 'Calculate'}
-        </button>
-
-        {status && (
-          <p
-            role="status"
-            className={`mt-4 text-sm ${
-              status.type === 'success' ? 'text-emerald-700' : 'text-red-600'
-            }`}
-          >
-            {status.message}
-          </p>
-        )}
-      </form>
-
-      {result && (
-        <div className="mt-6 max-w-md rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-          <div className="flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold text-slate-900">Result</h2>
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-medium ${
-                result.status.toLowerCase().includes('sufficient')
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-amber-100 text-amber-800'
-              }`}
+          <div>
+            <label
+              htmlFor="calculator-medicine"
+              className="block text-sm font-medium text-slate-700"
             >
-              {result.status}
-            </span>
+              Medicine
+            </label>
+            <select
+              id="calculator-medicine"
+              value={medicine}
+              onChange={(event) => {
+                setMedicine(event.target.value)
+                clearResult()
+              }}
+              disabled={formDisabled}
+              className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+            >
+              {isLoadingMedicines && <option value="">Loading medicines…</option>}
+              {!isLoadingMedicines && !hasMedicines && (
+                <option value="">No medicines yet</option>
+              )}
+              {medicines.map((item) => (
+                <option key={item.medicine} value={item.medicine}>
+                  {item.medicine}
+                </option>
+              ))}
+            </select>
+
+            {medicinesError && (
+              <p role="alert" className="mt-2 text-sm text-red-600">
+                {medicinesError}
+              </p>
+            )}
           </div>
 
-          {result.target_stock !== undefined ? (
+          <div className="mt-4">
+            <label
+              htmlFor="current-stock"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Current stock
+            </label>
+            <input
+              id="current-stock"
+              type="number"
+              min="0"
+              step="1"
+              inputMode="numeric"
+              placeholder="e.g. 100"
+              value={currentStock}
+              onChange={(event) => {
+                setCurrentStock(event.target.value)
+                clearError('currentStock')
+                clearResult()
+              }}
+              disabled={formDisabled}
+              aria-invalid={Boolean(errors.currentStock)}
+              aria-describedby={
+                errors.currentStock ? 'current-stock-error' : undefined
+              }
+              className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+            />
+            {errors.currentStock && (
+              <p
+                id="current-stock-error"
+                role="alert"
+                className="mt-2 text-sm text-red-600"
+              >
+                {errors.currentStock}
+              </p>
+            )}
+          </div>
+
+          <div className="mt-4">
+            <label
+              htmlFor="yearly-sales"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Average sold per year
+            </label>
+            <input
+              id="yearly-sales"
+              type="number"
+              min="1"
+              step="1"
+              inputMode="numeric"
+              placeholder="e.g. 1200"
+              value={yearlySales}
+              onChange={(event) => {
+                setYearlySales(event.target.value)
+                clearError('yearlySales')
+                clearResult()
+              }}
+              disabled={formDisabled}
+              aria-invalid={Boolean(errors.yearlySales)}
+              aria-describedby={
+                errors.yearlySales ? 'yearly-sales-error' : undefined
+              }
+              className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+            />
+            {errors.yearlySales && (
+              <p
+                id="yearly-sales-error"
+                role="alert"
+                className="mt-2 text-sm text-red-600"
+              >
+                {errors.yearlySales}
+              </p>
+            )}
+          </div>
+
+          <div className="mt-4">
+            <label
+              htmlFor="days"
+              className="block text-sm font-medium text-slate-700"
+            >
+              Days of stock to cover
+            </label>
+            <input
+              id="days"
+              type="number"
+              min="1"
+              step="1"
+              inputMode="numeric"
+              value={days}
+              onChange={(event) => {
+                setDays(event.target.value)
+                clearError('days')
+                clearResult()
+              }}
+              disabled={formDisabled}
+              aria-invalid={Boolean(errors.days)}
+              aria-describedby={errors.days ? 'days-error' : undefined}
+              className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+            />
+            {errors.days && (
+              <p id="days-error" role="alert" className="mt-2 text-sm text-red-600">
+                {errors.days}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting || formDisabled}
+            className="mt-6 w-full rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+          >
+            {isSubmitting ? 'Calculating…' : 'Calculate'}
+          </button>
+
+          {status && (
+            <p
+              role={status.type === 'error' ? 'alert' : 'status'}
+              className={`mt-4 text-sm ${
+                status.type === 'error' ? 'text-red-600' : 'text-brand-800'
+              }`}
+            >
+              {status.message}
+            </p>
+          )}
+        </form>
+
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-medium text-muted">Forecast result</p>
+              <h2 className="mt-1 text-lg font-semibold text-ink">{medicine}</h2>
+            </div>
+            {result && <StatusPill status={result.status} />}
+          </div>
+
+          {result && result.target_stock !== undefined ? (
             <>
-              <dl className="mt-4 grid grid-cols-2 gap-4">
-                <Metric
-                  label="Target stock"
-                  value={formatNumber(result.target_stock)}
+              <div className="mt-6">
+                <p className="text-xs text-muted">Target stock</p>
+                <p className="tabular-data mt-1 text-4xl font-semibold tracking-tight text-ink">
+                  {formatNumber(result.target_stock)}
+                  <span className="ml-2 text-sm font-normal text-muted">
+                    units
+                  </span>
+                </p>
+              </div>
+
+              <div className="mt-6 border-t border-slate-200 pt-5">
+                <CoverageMeter
+                  current={Number(currentStock)}
+                  target={result.target_stock}
+                  shortfall={result.shortfall ?? 0}
                 />
-                <Metric
-                  label="Shortfall"
-                  value={formatNumber(result.shortfall ?? 0)}
-                />
-                <Metric
+              </div>
+
+              <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-slate-200 pt-5">
+                <Derivation
                   label="Daily average"
                   value={formatNumber(result.daily_average ?? 0, 1)}
                 />
-                <Metric
+                <Derivation
+                  label="Seasonal factor"
+                  value={`×${formatNumber(result.seasonal_factor ?? 0, 2)}`}
+                />
+                <Derivation
                   label="Expected daily use"
                   value={formatNumber(result.expected_daily_use ?? 0, 2)}
                 />
-                <Metric
-                  label="Seasonal factor"
-                  value={formatNumber(result.seasonal_factor ?? 0, 2)}
-                />
-                <Metric
-                  label="Baseline"
-                  value={formatSource(result.baseline_source ?? 'unknown')}
-                />
+                <Derivation label="Cover period" value={`${days} days`} />
               </dl>
 
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-600">
-                <span className="rounded-full bg-slate-100 px-3 py-1">
-                  Rainfall adjustment:{' '}
+              <div className="mt-6 space-y-1 border-t border-slate-200 pt-4 text-xs text-muted">
+                <p>Baseline: {formatSource(result.baseline_source)}</p>
+                <p>
+                  Rainfall adjustment{' '}
                   {result.adjustment_applied ? 'applied' : 'not applied'}
-                </span>
-                {result.capped && (
-                  <span className="rounded-full bg-amber-100 px-3 py-1 text-amber-800">
-                    Capped
-                  </span>
-                )}
+                  {result.capped ? ' · seasonal factor capped' : ''}
+                </p>
               </div>
             </>
           ) : (
-            <p className="mt-3 text-sm text-slate-600">
-              Request received. No calculation details were returned.
-            </p>
+            <div className="mt-6 rounded-lg bg-canvas px-4 py-5 text-sm text-muted">
+              {result
+                ? 'Request received. No calculation details were returned.'
+                : 'Enter stock and sales figures, then calculate to see the target.'}
+            </div>
           )}
         </div>
-      )}
+      </div>
+
+      <div className="mt-6">
+        <SeasonalityChart state={organization?.state} />
+      </div>
     </section>
   )
 }

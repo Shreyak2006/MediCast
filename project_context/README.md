@@ -192,21 +192,33 @@ Only complete state-months are used for the backend's automatic rainfall lookup.
 
 ## 3. Backend
 
-The backend is a FastAPI application under `backend/src/app/`. Hand-run SQL migrations for the PostgreSQL database live under `backend/migrations/` (see section 3.8).
+The backend is a FastAPI application under `backend/src/app/`. It has two storage paths: the calculation/inventory features use JSON files and an in-memory dict (sections 3.2–3.7), while authentication, organizations, and join requests use the PostgreSQL `Medicast` database (sections 3.8–3.9). Hand-run SQL migrations live under `backend/src/app/migrations/`.
 
 ### 3.1 Structure
 
 ```text
 backend/src/app/
 ├── main.py                    # FastAPI app setup and router registration
+├── config.py                  # DATABASE_URL settings (pydantic-settings, reads .env)
+├── db.py                      # psycopg connection helper (dict rows, commit/rollback)
+├── security.py                # PBKDF2 password hashing, bearer tokens, join codes
+├── dependencies.py            # get_token / get_current_user / get_admin_user guards
+├── auth_state.py              # Builds the shared user/org/role/members response
 ├── schemas.py                 # Pydantic request/response models
-├── store.py                   # In-memory inventory
+├── store.py                   # In-memory inventory (unchanged)
 ├── data/
 │   ├── dengue_model.json      # Copy of the trained model
 │   └── rain_latest.json       # Copy of the latest rainfall table
+├── migrations/
+│   ├── 001_init.sql / .down.sql
+│   ├── 002_hospital_details.sql / .down.sql
+│   └── 003_auth_join_requests.sql / .down.sql
 ├── routers/
-│   ├── inventory.py           # Inventory endpoints
-│   └── calculate.py           # /api/calculate endpoint
+│   ├── inventory.py           # Inventory endpoints (unchanged)
+│   ├── calculate.py           # /api/calculate endpoint (unchanged)
+│   ├── auth.py                # Signup, login, logout, /me
+│   ├── organizations.py       # Create, join, read, leave
+│   └── admin.py               # Join requests and member management
 └── services/
     ├── index.py               # Calculation dispatcher
     ├── dengue_data.py         # Dengue model loading and prediction logic
@@ -383,6 +395,13 @@ The function returns:
   - optional numeric fields returned by the dengue calculation
   - optional `baseline_source`, `adjustment_applied`, and `capped`
 
+For the database-backed features, `schemas.py` also defines:
+
+- `SignupRequest` (`name`, `email`, `password`), `LoginRequest` (`email`, `password`)
+- `UserResponse`, `OrganizationResponse`, `MemberResponse`, `PendingRequestResponse`
+- `AuthState` (`user`, `organization`, `role`, `members`, `pending_join_code`) and `AuthResponse` (adds `token`)
+- `OrganizationCreate` (`name`, `state`, `district`, `pincode`, `hospital_type`) and `JoinRequestCreate` (`code`)
+
 ### 3.6 `/api/calculate` route
 
 The route in `routers/calculate.py`:
@@ -432,18 +451,20 @@ Inventory endpoints are unchanged and use in-memory storage in `store.py`:
 - `POST /api/medicines`
 - `POST /api/inventory`
 
-The inventory resets when the backend restarts. Dengue calculations read `current_stock` from the request body; they do not read inventory storage directly.
+The inventory resets when the backend restarts. Dengue calculations read `current_stock` from the request body; they do not read inventory storage directly. The auth, organization, and admin endpoints are documented separately in section 3.9.
 
 ### 3.8 Database migrations
 
-The project's PostgreSQL database (`Medicast`) already exists and is managed in pgAdmin. `backend/migrations/` contains plain SQL migrations that are run by hand from pgAdmin's Query Tool. The backend has no migration runner and no database connection code, so the application does not read these tables yet.
+The project's PostgreSQL database (`Medicast`) already exists and is managed in pgAdmin. `backend/src/app/migrations/` contains plain SQL migrations that are run by hand from pgAdmin's Query Tool. The backend connects to this database with `psycopg` and reads/writes these tables for authentication, organizations, and join requests (plus the `sessions` and `join_requests` tables added by migration `003`).
 
 ```text
-backend/migrations/
-├── 001_init.sql                  # Initial schema: tables, indexes, seeds, updated_at triggers
-├── 001_init.down.sql             # Reverses 001_init.sql
-├── 002_hospital_details.sql      # Adds pincode and hospital_type to hospitals
-└── 002_hospital_details.down.sql # Reverses 002_hospital_details.sql
+backend/src/app/migrations/
+├── 001_init.sql                     # Initial schema: tables, indexes, seeds, updated_at triggers
+├── 001_init.down.sql                # Reverses 001_init.sql
+├── 002_hospital_details.sql         # Adds pincode and hospital_type to hospitals
+├── 002_hospital_details.down.sql    # Reverses 002_hospital_details.sql
+├── 003_auth_join_requests.sql       # Nullable hospital_id, sessions, join_requests
+└── 003_auth_join_requests.down.sql  # Reverses 003_auth_join_requests.sql
 ```
 
 `001_init.sql` creates, in order:
@@ -476,50 +497,116 @@ Details:
 
 `002_hospital_details.down.sql` drops those two columns (and their check constraints) and nothing else.
 
+`003_auth_join_requests.sql` supports the backend-backed auth and join-request flows:
+
+| Change | Purpose |
+|---|---|
+| `users.hospital_id` becomes nullable | An account is created at signup, before the user creates or joins an organization |
+| `sessions` table (`token`, `user_id`, `created_at`) | Stores the opaque bearer tokens issued at login/signup so logout can invalidate them |
+| `join_requests` table (`hospital_id`, `user_id`, `status`, `created_at`, `resolved_at`) | Records join requests until an admin approves or rejects them |
+
+`join_requests.status` is constrained to `pending`, `approved`, or `rejected`, and a partial unique index allows only one pending request per `(hospital_id, user_id)` pair. Foreign keys from the new tables cascade on delete.
+
+`003_auth_join_requests.down.sql` drops the two new tables and their indexes, then restores `NOT NULL` on `users.hospital_id`. That last step fails if any user still has no hospital, so those users must be assigned or removed first.
+
 Each file wraps everything in a single transaction (`begin`/`commit`) and uses plain statements without `if not exists`/`if exists`, so running a file twice fails loudly instead of silently skipping.
 
 How to run:
 
 1. In pgAdmin, connect to the server and click the `Medicast` database in the tree to select it.
 2. Right-click the database and open **Query Tool**.
-3. Open `backend/migrations/001_init.sql` with the Query Tool's file-open button (or paste its contents) and execute (F5).
+3. Open `backend/src/app/migrations/001_init.sql` with the Query Tool's file-open button (or paste its contents) and execute (F5).
 4. Verify with `select * from diseases;` — it should return the two seeded rows.
-5. Open and execute `backend/migrations/002_hospital_details.sql` to add the new hospital columns.
-6. To undo, run `backend/migrations/002_hospital_details.down.sql` first, then `backend/migrations/001_init.down.sql`.
+5. Open and execute `002_hospital_details.sql` to add the new hospital columns.
+6. Open and execute `003_auth_join_requests.sql` to add the auth and join-request schema.
+7. To undo, run the `.down.sql` files in reverse order: `003`, then `002`, then `001`.
 
-The same files can also be applied from the command line, for example `psql -d Medicast -f backend/migrations/002_hospital_details.sql`.
+The same files can also be applied from the command line, for example `psql -d Medicast -f backend/src/app/migrations/003_auth_join_requests.sql`. The local `Medicast` database already has migrations 001–003 applied.
 
-dbmate (v2.35.0) is installed locally but is not used: these files do not follow dbmate's `<version>_<name>.up.sql` naming, no `DATABASE_URL` is configured, and dbmate would add its own `schema_migrations` tracking table. pgAdmin remains the intended workflow.
+The backend reads the connection string from the `DATABASE_URL` environment variable (or `backend/.env`; see `backend/.env.example`). It defaults to `postgresql://postgres:postgres@localhost:5432/Medicast` for local development. dbmate is not used: these files do not follow dbmate's `<version>_<name>.up.sql` naming and dbmate would add its own `schema_migrations` tracking table. pgAdmin/psql remain the intended workflow.
+
+### 3.9 Authentication, organizations, and join requests
+
+**Configuration and helpers**
+
+- `config.py` reads `DATABASE_URL` with pydantic-settings (environment variable or `backend/.env`).
+- `db.py` opens one `psycopg` connection per request using dict rows, committing on success and rolling back on error.
+- `security.py` hashes passwords with PBKDF2-HMAC-SHA256 (200,000 iterations, random salt), generates opaque tokens with `secrets.token_urlsafe(32)`, and generates `ORG-XXXXX` join codes.
+- `dependencies.py` reads the `Authorization: Bearer <token>` header, resolves the session against the `sessions` table, and exposes `get_current_user` and `get_admin_user` guards.
+- `auth_state.py` builds the shared response: current user, organization, role, members, and any pending join code. The database stores roles as `admin`/`staff`; the API maps `staff` to `member` for the frontend.
+
+**Endpoints**
+
+| Method | Path | Access | Purpose |
+|---|---|---|---|
+| `POST` | `/api/auth/signup` | Public | Create a user with a hashed password and a session; returns token + auth state |
+| `POST` | `/api/auth/login` | Public | Verify password and issue a session |
+| `POST` | `/api/auth/logout` | Token | Delete the session row |
+| `GET` | `/api/auth/me` | Token | Restore the current auth state |
+| `POST` | `/api/organizations` | Token, no org | Create a hospital from the form, make the creator admin, return the join code |
+| `POST` | `/api/organizations/join` | Token, no org | Verify a code and create a pending join request |
+| `GET` | `/api/organizations/me` | Token | Current organization or `null` |
+| `GET` | `/api/organizations/me/members` | Token | Members of the current hospital |
+| `POST` | `/api/organizations/me/leave` | Token, member | Clear hospital membership (admins cannot leave) |
+| `GET` | `/api/admin/join-requests` | Admin | Pending requests for the admin's hospital |
+| `POST` | `/api/admin/join-requests/{id}/accept` | Admin | Add the requester as a staff member and mark the request approved |
+| `POST` | `/api/admin/join-requests/{id}/reject` | Admin | Mark the request rejected |
+| `DELETE` | `/api/admin/members/{id}` | Admin | Remove a member (cannot remove self) |
+
+**Status codes and rules**
+
+- `401` for a missing/invalid token or bad credentials; `403` for non-admin access to admin routes.
+- `404` for an unknown organization code or join request; `409` for a duplicate email, already belonging to an organization, a duplicate pending request, or an already-resolved request.
+- Signup creates a user with a `null` `hospital_id`; creating an organization sets it and the `admin` role; accepting a join request sets it and the `staff` role; leaving or being removed clears it and resets the role to `staff`.
+- Password hashes are never returned by the API. The only credential returned is the opaque session token on signup/login, which the frontend sends on every subsequent request.
 
 ---
 
 ## 4. Frontend
 
-The frontend is a React + Vite + TypeScript application under `frontend/src/`. It is a thin client: it reads inventory data, posts calculation requests, and renders the returned metrics. It contains no model or rainfall logic of its own. Authentication and organization management are local-only dummy state (section 4.6).
+The frontend is a React + Vite + TypeScript application under `frontend/src/`. It reads inventory data, posts calculation requests, and renders the returned metrics. It contains no model or rainfall logic of its own; the demand charts and India map use static demo fixtures under `src/data/demoAnalytics.ts`. Authentication and organization management are backed by the API and PostgreSQL (section 4.6).
 
 ### 4.1 Structure
 
 ```text
 frontend/src/
 ├── api/
-│   └── inventory.ts         # Typed fetch client for all backend endpoints
+│   ├── http.ts              # Shared fetch client with bearer token and error mapping
+│   ├── types.ts             # Backend shapes -> frontend auth types
+│   ├── auth.ts              # Signup, login, session restore, logout
+│   ├── organizations.ts     # Create, join request, leave, remove member
+│   ├── admin.ts             # Pending join requests, accept/reject
+│   └── inventory.ts         # Typed client for the inventory/calculation endpoints
+├── lib/
+│   ├── cover.ts             # Days of cover + units needed for a 30-day target
+│   ├── format.ts            # Shared number and percent formatting
+│   └── localStock.ts        # Browser-local adjustment layer for admin removals
 ├── components/
 │   ├── NavBar.tsx           # Shared nav bar and profile dropdown
-│   └── MedicineCard.tsx     # Stock card used by the dashboard
+│   ├── StockLedger.tsx      # Stock table with share bars and admin actions
+│   ├── CoverStatus.tsx      # Cover badge with units needed/surplus
+│   ├── CoverageMeter.tsx    # Current vs target stock bar (calculator)
+│   ├── MonthlyUseChart.tsx  # Bar chart of demo medicine use
+│   ├── IndiaDengueMap.tsx   # India choropleth of demo dengue state data
+│   └── SeasonalityChart.tsx # 12-month line chart on the calculator
 ├── context/
 │   ├── auth.ts              # Auth context, user/organization/member types
-│   ├── AuthProvider.tsx     # Dummy auth, members, and localStorage persistence
+│   ├── AuthProvider.tsx     # Server-backed auth state; token in localStorage
 │   └── useAuth.ts           # Context hook
+├── data/
+│   ├── districts.ts         # Static state -> districts map (sample data)
+│   └── demoAnalytics.ts     # Frontend-only demo usage, state baselines, seasonality
+├── types/svg-maps-india.d.ts # Local type shim for @svg-maps/india
 ├── pages/
 │   ├── LandingPage.tsx      # Public hero page
 │   ├── LoginPage.tsx        # Login form
 │   ├── SignupPage.tsx       # Signup form
 │   ├── OrganizationPage.tsx # Create or join an organization
 │   ├── OrganizationInfoPage.tsx # Read-only organization and member view
-│   ├── DashboardPage.tsx    # Current stock levels (GET /api/inventory)
-│   ├── InventoryPage.tsx    # Add medicines and stock (POST /api/medicines, POST /api/inventory)
-│   ├── CalculatorPage.tsx   # Calculation form and result card
-│   ├── ProfilePage.tsx      # Dummy profile details
+│   ├── DashboardPage.tsx    # Stock ledger + demo demand charts (GET /api/inventory)
+│   ├── InventoryPage.tsx    # Read-only ledger for members; admin add/remove
+│   ├── CalculatorPage.tsx   # Forecast result + demo seasonality chart
+│   ├── ProfilePage.tsx      # Profile details from the API
 │   └── AdminPage.tsx        # Admin member management
 ├── medicines.ts             # Static medicine list ("TB medicines", "Dengue medicines")
 ├── App.tsx                  # Routes, guards, and authenticated layout
@@ -528,7 +615,7 @@ frontend/src/
 
 ### 4.2 API client
 
-All HTTP calls go through `frontend/src/api/inventory.ts`:
+HTTP calls are grouped by feature under `frontend/src/api/`. `inventory.ts` keeps the unchanged inventory/calculation calls; `auth.ts`, `organizations.ts`, and `admin.ts` cover the newly connected pages:
 
 | Function | Endpoint | Use |
 |---|---|---|
@@ -536,8 +623,17 @@ All HTTP calls go through `frontend/src/api/inventory.ts`:
 | `addMedicine()` | `POST /api/medicines` | Register a new medicine |
 | `addInventory()` | `POST /api/inventory` | Add stock for a medicine |
 | `sendCalculation()` | `POST /api/calculate` | Submit a calculation |
+| `signup()` / `login()` | `POST /api/auth/signup` / `/login` | Create a session |
+| `getMe()` | `GET /api/auth/me` | Restore the current session |
+| `logout()` | `POST /api/auth/logout` | End the session |
+| `createOrganization()` | `POST /api/organizations` | Create a hospital |
+| `joinOrganization()` | `POST /api/organizations/join` | Request to join |
+| `leaveOrganization()` | `POST /api/organizations/me/leave` | Leave a hospital |
+| `removeMember()` | `DELETE /api/admin/members/{id}` | Remove a member |
+| `fetchPendingRequests()` | `GET /api/admin/join-requests` | Admin pending list |
+| `acceptRequest()` / `rejectRequest()` | `POST /api/admin/join-requests/{id}/accept` / `/reject` | Resolve a request |
 
-The client uses a single `request()` helper. The backend base URL comes from the `VITE_API_BASE_URL` environment variable and defaults to `http://localhost:8000` (see `frontend/.env.example`).
+All calls share `api/http.ts`, which attaches the bearer token and surfaces backend error messages. The backend base URL comes from the `VITE_API_BASE_URL` environment variable and defaults to `http://localhost:8000` (see `frontend/.env.example`).
 
 The `CalculationResponse` type mirrors the backend's `CalculationResult`. Every field except `status` is optional because non-dengue medicines return only a status.
 
@@ -553,13 +649,16 @@ The `CalculationResponse` type mirrors the backend's `CalculationResult`. Every 
    - days of stock to cover (positive whole number, defaults to 30)
 3. Inputs are validated client-side before submitting.
 4. On submit, it posts only `medicine`, `current_stock`, `yearly_sales`, and `days` to `POST /api/calculate`.
-5. The result card shows:
-   - a status badge (green for `Stock sufficient`, amber otherwise)
-   - target stock, shortfall, daily average, expected daily use, and seasonal factor
-   - the baseline source with underscores replaced by spaces
-   - a `Rainfall adjustment: applied/not applied` badge
-   - a `Capped` badge when the seasonal factor was clamped
-6. For non-dengue medicines, the backend returns only `{"status": "received"}`; the card then shows a plain "Request received" message with no calculation details.
+5. The result panel shows:
+   - a status badge (teal for `Stock sufficient`, amber otherwise)
+   - target stock as the lead figure
+   - a `CoverageMeter` comparing current stock with the target, labeling either the shortfall or the surplus
+   - the derivation: daily average, seasonal factor as a multiplier, expected daily use, and cover period
+   - the baseline source as plain text (`state and month pattern`, `month pattern`, `overall pattern`, or `annual average`)
+   - a quiet provenance line for rainfall adjustment and seasonal-factor capping
+6. Changing any input clears the previous result so the coverage bar always uses the submitted figures.
+7. For non-dengue medicines, the backend returns only `{"status": "received"}`; the panel then shows a plain "Request received" message with no calculation details.
+8. A `SeasonalityChart` below the result shows a 12-month demo dengue pattern for the organization's state, falling back to the national demo average. It is static frontend data and does not change the calculation request.
 
 ### 4.4 Current limitation
 
@@ -575,9 +674,9 @@ State-aware baselines and the automatic rainfall lookup only take effect on dire
 
 The backend enables `CORSMiddleware` in `main.py` with `allow_origins=["*"]`, so the Vite dev server (default `http://localhost:5173`) can call the API directly without a proxy.
 
-### 4.6 Authentication and organization flow (frontend only)
+### 4.6 Authentication and organization flow
 
-Authentication is a frontend-only simulation. There is no backend auth, token, cookie, or password verification. Any input that passes the client-side checks succeeds.
+Authentication and organization management are backed by the API and PostgreSQL. An opaque bearer token is stored in `localStorage` under `medicast.token`; `AuthProvider` restores the session with `GET /api/auth/me` on startup. Passwords are hashed with PBKDF2, sessions live in the `sessions` table, and join requests live in `join_requests` until an admin approves or rejects them.
 
 Routes and access rules:
 
@@ -587,10 +686,10 @@ Routes and access rules:
 | `/login` | Public | Email and password form |
 | `/signup` | Public | Name, email, and password form |
 | `/organization` | Logged in | Choose Create Organization or Join Organization; NavBar is visible |
-| `/dashboard` | Logged in + organization | Existing dashboard page |
-| `/inventory` | Logged in + organization | Existing inventory page |
-| `/calculator` | Logged in + organization | Existing calculator page |
-| `/profile` | Logged in + organization | Dummy name, email, organization, and role |
+| `/dashboard` | Logged in + organization | Stock ledger + demo demand charts |
+| `/inventory` | Logged in + organization | Read-only for members; admin add/remove stock |
+| `/calculator` | Logged in + organization | Forecast result + demo seasonality chart |
+| `/profile` | Logged in + organization | Name, email, organization, and role from the API |
 | `/organization-info` | Logged in + organization | Read-only organization details and member list |
 | `/admin` | Logged in + organization + admin role | Admin member management |
 
@@ -601,7 +700,7 @@ Guards live in `App.tsx`:
 - `RequireOrganization` redirects logged-in users without an organization to `/organization` for all organization-dependent pages.
 - `AdminOnly` redirects non-admins from `/admin` to `/dashboard`.
 
-The existing Dashboard, Inventory, and Calculator pages are unchanged; `AuthLayout` only wraps them with the shared NavBar and page container.
+Dashboard, Inventory, and Calculator keep their original endpoints and data logic, but their presentation has been expanded with frontend-only charts, cover estimates, and demo datasets (section 4.7). `AuthLayout` wraps all of them with the shared NavBar and page container.
 
 Client-side validation:
 
@@ -609,36 +708,55 @@ Client-side validation:
 - Signup requires a non-empty name, a non-empty email, and a password.
 - Email must match a basic `name@domain.tld` pattern.
 - Password must be at least 8 characters.
-- Adding a member requires a non-empty name and a valid email.
+- The backend re-validates every field and returns readable errors for invalid credentials, duplicate emails, unknown codes, and duplicate requests.
 
-Auth state shape:
+Auth state shape (returned by `GET /api/auth/me` and the signup/login responses):
 
 ```ts
 {
-  user: { name: string; email: string } | null
-  organization: { name: string; code: string } | null
-  role: 'admin' | 'member' | null
-  members: Array<{
+  user: { id: string; name: string; email: string } | null
+  organization: {
     id: string
     name: string
-    email: string
-    role: 'admin' | 'member'
-  }>
+    code: string
+    state?: string
+    district?: string
+    pincode?: string
+    hospital_type?: 'government' | 'private' | 'clinic'
+  } | null
+  role: 'admin' | 'member' | null
+  members: Array<{ id: string; name: string; email: string; role: 'admin' | 'member' }>
+  pendingJoinCode: string | null
 }
 ```
 
-The state is persisted in `localStorage` under the key `medicast.auth` and is read when the app starts, so a refresh does not log the user out or lose member changes.
+Only the token is persisted in `localStorage`; everything else is fetched from the server on startup and after changes. The database stores roles as `admin`/`staff`; the API maps `staff` to `member` for the UI.
 
 Flow details:
 
-1. Login and signup set the dummy user, clear any previous organization/role/members, and navigate to `/organization`.
-2. Create Organization asks for a name, generates a code such as `ORG-4X7K2`, stores the organization, sets the current user's role to `admin`, seeds the members list with the current admin plus four dummy members, and shows the code before the user continues to `/dashboard`.
-3. Join Organization asks for a code. Any non-empty code is accepted; it is uppercased, stored as the organization code with the name `Organization <CODE>`, and the current user is added with the `member` role. The seeded member list includes one dummy admin plus three dummy members.
-4. The members list is stored in the same auth context and persisted with the rest of the state. Member changes are local only; no invites or emails are sent.
-5. Logout is available from the NavBar profile dropdown, removes the stored auth state, and navigates to `/`.
+1. Login and signup call `POST /api/auth/login` or `POST /api/auth/signup`, store the returned token, and navigate to `/organization`.
+2. Create Organization posts the name, state, district, pincode, and hospital type to `POST /api/organizations`. The server generates a unique code such as `ORG-4X7K2`, creates the hospital row, makes the creator an admin, and returns the code before the user continues to `/dashboard`.
+3. Join Organization posts the code to `POST /api/organizations/join`. The server verifies the code and creates a pending `join_requests` row. The "Request sent" screen offers a **Check approval status** action that re-fetches the session; access is granted only after an admin accepts.
+4. The admin panel lists pending requests from `GET /api/admin/join-requests`. Accepting updates the user's hospital and role; rejecting marks the request resolved. Members are removed with `DELETE /api/admin/members/{id}`, with a browser confirm and the current admin's own button disabled.
+5. Logout calls `POST /api/auth/logout` to delete the server-side session, clears the token, and navigates to `/`.
 6. The NavBar shows links to Dashboard, Inventory, and Calculate, highlights the active link, and opens a profile dropdown with Profile, Organization, Admin Panel (admins only), and Logout. The dropdown closes on an outside click or Escape.
-7. The admin panel shows the organization name and code, a members table, and an Add Member form. Removal requires a browser confirm, and the current admin's own Remove button is disabled. New members are added with the `member` role.
-8. `/organization-info` is read-only for all roles. Members see a Leave Organization button that clears the organization, role, and members list and redirects to `/organization`; admins do not see this button.
+7. `/organization-info` is read-only for all roles. Members see a Leave Organization button that posts to `/api/organizations/me/leave` and redirects to `/organization`; admins do not see this button.
+
+### 4.7 Demo analytics and inventory permissions
+
+The visual additions are entirely frontend-side and use `frontend/src/data/demoAnalytics.ts`:
+
+- **Dashboard** shows a month selector, a bar chart of demo medicine use, and an India choropleth of synthetic dengue state baselines with a top-five list and the organization's state outlined in amber. Map outlines come from `@svg-maps/india` and carry CC BY 4.0 attribution in the UI.
+- **Inventory** shows a `CoverStatus` badge per medicine: green for 30+ days, amber for 14–29 days, red for under 14 days. The estimate divides current displayed stock by daily use derived from the demo last-month usage. Each badge states the units needed to reach a 30-day target (or the surplus above it), a **How much medicine is needed** panel totals those shortfalls, and the add modal can prefill the suggested amount. The Dashboard summary also shows the combined 30-day gap. These are planning aids, not orders or dispensing logs.
+- **Calculator** shows a 12-month demo seasonality line for the organization's state, or the national demo average when no state is set. The selected month is marked with an amber reference line.
+- Charts use `recharts`. No new backend endpoint, migration, or data artifact was introduced for these visuals.
+
+Inventory mutation is role-gated:
+
+- **Admins** see **Add stock** and **Remove stock** buttons plus both actions in every ledger row. Additions call `POST /api/inventory`. Because the API has no remove operation, removals are stored as negative per-medicine deltas in `localStorage` under `medicast.inventoryAdjustments` and applied on top of fetched stock.
+- **Members** see a read-only ledger with no mutation controls and a notice directing them to an admin.
+
+The browser-local adjustment layer is a deliberate demo compromise: removals persist across refreshes in that browser only and are not shared with other users or the server.
 
 ---
 
@@ -677,7 +795,7 @@ Raw daily rainfall CSV -------------+
                        JSON calculation result
                                      |
                                      v
-                   CalculatorPage result card
+                   CalculatorPage result panel
 
 
 Raw 2026 rainfall CSV
@@ -703,6 +821,34 @@ POST /api/calculate
 JSON result rendered in CalculatorPage
 ```
 
+The auth/organization flow uses PostgreSQL instead of the JSON artifacts:
+
+```text
+LoginPage / SignupPage
+        |
+        v
+POST /api/auth/login or /signup
+        |
+        v
+sessions + users tables (PBKDF2 password hash, opaque bearer token)
+        |
+        v
+AuthProvider stores token, fetches GET /api/auth/me
+        |
+        +--> POST /api/organizations ---------> hospitals + users (creator = admin)
+        |
+        +--> POST /api/organizations/join ---> join_requests (pending)
+        |                                          |
+        |                                          v
+        |                              GET /api/admin/join-requests
+        |                                          |
+        |                                          v
+        |                         POST .../accept or .../reject
+        |                                          |
+        v                                          v
+ProfilePage / OrganizationInfoPage / AdminPage  (server-backed state)
+```
+
 In short:
 
 - `dataProcessing/` is the offline data and training pipeline.
@@ -710,4 +856,4 @@ In short:
 - The backend performs lightweight lookups and arithmetic, with no data science libraries or runtime access to the raw data.
 - The rainfall lookup fills `rain_prev_departure` automatically when a state is provided and the request does not supply it.
 - The frontend is a thin client: it reads inventory, posts calculation requests, and renders the returned metrics, with no model or rainfall logic of its own.
-- `backend/migrations/` contains hand-run SQL migrations that prepare the PostgreSQL `Medicast` database (pgAdmin); the backend does not connect to it yet, and inventory still lives in the in-memory store.
+- `backend/src/app/migrations/` contains hand-run SQL migrations that prepare the PostgreSQL `Medicast` database (pgAdmin); the backend connects to it for auth, organization, and join-request data, while inventory still lives in the in-memory store.

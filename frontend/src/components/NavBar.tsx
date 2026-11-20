@@ -54,10 +54,13 @@ function NavBar() {
     }
   }, [isMenuOpen])
 
-  function handleLogout() {
+  async function handleLogout() {
     setIsMenuOpen(false)
-    logout()
-    window.location.replace('/')
+    try {
+      await logout()
+    } finally {
+      window.location.replace('/')
+    }
   }
 
   return (

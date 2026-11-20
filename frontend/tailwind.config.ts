@@ -15,6 +15,13 @@ const config = {
           800: '#115e59',
           900: '#134e4a',
         },
+        canvas: '#f5f7f6',
+        ink: '#102a27',
+        muted: '#5b6b68',
+        signal: {
+          ok: '#0d9488',
+          low: '#b45309',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],

@@ -3,24 +3,31 @@ import {
   acceptRequest,
   fetchPendingRequests,
   rejectRequest,
-} from '../api/inventory'
-import type { PendingRequest } from '../api/inventory'
+} from '../api/admin'
+import type { PendingRequest } from '../context/auth'
 import type { AuthMember } from '../context/auth'
 import { useAuth } from '../context/useAuth'
 
 function AdminPage() {
-  const { organization, user, members, addMember, removeMember } = useAuth()
+  const { organization, user, members, refresh, removeMember } = useAuth()
 
   const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([])
   const [busyRequestIds, setBusyRequestIds] = useState<string[]>([])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     let cancelled = false
 
     async function loadPendingRequests() {
-      const requests = await fetchPendingRequests()
-      if (!cancelled) {
-        setPendingRequests(requests)
+      try {
+        const requests = await fetchPendingRequests()
+        if (!cancelled) {
+          setPendingRequests(requests)
+        }
+      } catch {
+        if (!cancelled) {
+          setError('Unable to load join requests.')
+        }
       }
     }
 
@@ -35,9 +42,13 @@ function AdminPage() {
     return member.email.toLowerCase() === user?.email.toLowerCase()
   }
 
-  function handleRemoveMember(member: AuthMember) {
+  async function handleRemoveMember(member: AuthMember) {
     if (window.confirm(`Remove ${member.name} from the organization?`)) {
-      removeMember(member.id)
+      try {
+        await removeMember(member.id)
+      } catch {
+        setError(`Unable to remove ${member.name}.`)
+      }
     }
   }
 
@@ -50,7 +61,7 @@ function AdminPage() {
     try {
       if (action === 'accept') {
         await acceptRequest(request.id)
-        addMember(request.name, request.email)
+        await refresh()
       } else {
         await rejectRequest(request.id)
       }
@@ -58,6 +69,8 @@ function AdminPage() {
       setPendingRequests((current) =>
         current.filter((item) => item.id !== request.id),
       )
+    } catch {
+      setError(`Unable to ${action} the request from ${request.name}.`)
     } finally {
       setBusyRequestIds((current) =>
         current.filter((id) => id !== request.id),
@@ -73,6 +86,12 @@ function AdminPage() {
       <p className="mt-1 text-slate-600">
         Manage your organization and its members.
       </p>
+
+      {error && (
+        <p role="alert" className="mt-3 text-sm text-red-600">
+          {error}
+        </p>
+      )}
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
         <div>

@@ -5,8 +5,8 @@ function OrganizationInfoPage() {
   const { organization, role, members, leaveOrganization } = useAuth()
   const navigate = useNavigate()
 
-  function handleLeave() {
-    leaveOrganization()
+  async function handleLeave() {
+    await leaveOrganization()
     navigate('/organization', { replace: true })
   }
 

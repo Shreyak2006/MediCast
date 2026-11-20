@@ -2,13 +2,14 @@
 
 This guide covers the React frontend in `frontend/src/`: what each page does, how the routes are guarded, and the end-to-end workflows a user can follow. For the backend/data side, see [`README.md`](README.md); for notebooks, see [`dataProcessing_README.md`](dataProcessing_README.md).
 
-> **Scope note:** authentication, organizations, members, and join requests are all frontend-only simulations today. There is no backend auth, no organization endpoint, and no database write from these flows. State lives in React context and `localStorage`.
+> **Scope note:** authentication, organizations, members, and join requests are backed by the FastAPI backend and PostgreSQL. React context holds server state; only the opaque session token is stored in `localStorage`. Dashboard, Inventory, and Calculator still call the unchanged in-memory inventory/calculation endpoints; their charts, cover estimates, and demo datasets are frontend-only.
 
 ---
 
 ## 1. Stack and setup
 
 - React 19, Vite 8, TypeScript, Tailwind CSS v4 via `@tailwindcss/vite`, React Router v7.
+- Charts use `recharts`; the India map uses `@svg-maps/india` (CC BY 4.0, attributed in the UI).
 - Run from `frontend/`:
 
 ```bash
@@ -27,15 +28,33 @@ npm run preview  # serve the production build
 
 ```text
 frontend/src/
-├── api/inventory.ts          # Typed fetch helpers (inventory, calculation, request stubs)
+├── api/
+│   ├── http.ts               # Shared fetch client with bearer token + error mapping
+│   ├── types.ts              # Backend response shapes -> frontend types
+│   ├── auth.ts               # signup, login, getMe, logout
+│   ├── organizations.ts      # create, join request, leave, remove member
+│   ├── admin.ts              # pending join requests, accept/reject
+│   └── inventory.ts          # Inventory + calculation helpers (unchanged pages)
 ├── components/
 │   ├── NavBar.tsx            # Shared nav + profile dropdown
-│   └── MedicineCard.tsx      # Stock card on the dashboard
+│   ├── StockLedger.tsx       # Stock table with share bars and admin add/remove actions
+│   ├── CoverStatus.tsx       # Cover badge with units needed/surplus
+│   ├── CoverageMeter.tsx     # Current vs target stock bar on the calculator
+│   ├── MonthlyUseChart.tsx   # Bar chart of demo medicine use
+│   ├── IndiaDengueMap.tsx    # India choropleth of demo dengue state data
+│   └── SeasonalityChart.tsx  # 12-month line chart on the calculator
 ├── context/
 │   ├── auth.ts               # Auth types and context definition
-│   ├── AuthProvider.tsx      # Dummy auth, org/member state, localStorage persistence
+│   ├── AuthProvider.tsx      # Server-backed session, org/member state, token persistence
 │   └── useAuth.ts            # Context hook
-├── data/districts.ts         # Static state -> districts map (sample data)
+├── data/
+│   ├── districts.ts          # Static state -> districts map (sample data)
+│   └── demoAnalytics.ts      # Frontend-only demo usage, state baselines, seasonality
+├── lib/
+│   ├── cover.ts              # Days of cover + units needed for a 30-day target
+│   ├── format.ts             # Shared number and percent formatting
+│   └── localStock.ts         # Browser-local adjustment layer for admin removals
+├── types/svg-maps-india.d.ts # Local type shim for @svg-maps/india
 ├── pages/
 │   ├── LandingPage.tsx
 │   ├── LoginPage.tsx
@@ -63,9 +82,9 @@ Guards live in `App.tsx`.
 | `/login` | Public | Login form |
 | `/signup` | Public | Signup form |
 | `/organization` | Logged in | Create or join an organization; success screens |
-| `/dashboard` | Logged in + organization | Current stock levels |
-| `/inventory` | Logged in + organization | Add stock, list medicines |
-| `/calculator` | Logged in + organization | Calculate a stock recommendation |
+| `/dashboard` | Logged in + organization | Stock ledger + demo demand charts |
+| `/inventory` | Logged in + organization | Read-only ledger for members; admin add/remove stock |
+| `/calculator` | Logged in + organization | Calculate a stock recommendation + demo seasonality |
 | `/profile` | Logged in + organization | Session details |
 | `/organization-info` | Logged in + organization | Read-only org details and members |
 | `/admin` | Logged in + organization + admin role | Pending requests and member management |
@@ -86,10 +105,10 @@ Guards live in `App.tsx`.
 Public hero with the MediCast pitch and Login / Sign Up buttons.
 
 ### LoginPage (`/login`)
-Email + password form. Requires a non-empty, well-formed email and a password of at least 8 characters. On submit it calls `login(email)` and navigates to `/organization`. The password is not checked by any server.
+Email + password form. Requires a non-empty, well-formed email and a password of at least 8 characters. On submit it calls `login(email, password)`, which posts to `/api/auth/login`; invalid credentials are shown inline. On success it navigates to `/organization`.
 
 ### SignupPage (`/signup`)
-Name + email + password form with the same email/password rules plus a required name. Calls `signup(name, email)` and navigates to `/organization`.
+Name + email + password form with the same email/password rules plus a required name. Calls `signup(name, email, password)`, which posts to `/api/auth/signup`; duplicate emails are shown inline. On success it navigates to `/organization`.
 
 ### OrganizationPage (`/organization`)
 Three states, all rendered by this one page:
@@ -103,16 +122,16 @@ Three states, all rendered by this one page:
    - Hospital type (required select: Government / Private / Clinic, stored as `government` / `private` / `clinic`).
    
    Each field has its own inline error and invalid submissions are blocked. On success `createOrganization({ name, state, district, pincode, hospital_type })` is called and the page shows the generated code (e.g. `ORG-4X7K2`) with a **Continue to Dashboard** button.
-3. **Join form** — a non-empty organization code is accepted. Submitting shows a **Request sent** card naming the code. Its **Next** button currently calls `joinOrganization(code)` and navigates to `/dashboard`; this is a frontend placeholder for the future approval flow.
+3. **Join form** — a non-empty organization code is sent to the backend. Submitting shows a **Request sent** card naming the code. Its **Check approval status** button re-fetches the session and navigates to `/dashboard` once an admin has accepted the request.
 
 ### DashboardPage (`/dashboard`)
-Loads `GET /api/inventory` on mount and renders one `MedicineCard` per medicine with its quantity. Has loading, error, and empty states. Predicted demand / reorder flags are not implemented yet.
+Loads `GET /api/inventory` on mount. A compact summary line shows the medicine count, total units, and the number of units needed to reach a 30-day cover target; `StockLedger` renders each medicine with its quantity and a bar for its share of tracked stock. Below it, a **Demand intelligence** panel adds a month selector, `MonthlyUseChart` for demo medicine use, and `IndiaDengueMap` for demo state-level dengue data. The organization's state is outlined on the map. Loading, error, and empty states are unchanged.
 
 ### InventoryPage (`/inventory`)
-Lists medicines and their stock. An **Add medicine** button opens a modal with a medicine select and quantity input; submitting posts to `POST /api/inventory` via `addInventory()` and updates the local list. The `addMedicine()` helper exists but is not used by any page yet.
+Shows the same `StockLedger` with a **Stock ledger** summary and a `CoverStatus` estimate per medicine. Below the ledger, a **How much medicine is needed** panel totals the units required to bring every medicine up to the 30-day target and lists each shortfall. Admins get **Add stock** and **Remove stock** buttons globally and two actions per row; clicking a medicine name opens the add modal. The modal previews `current → after` units and cover status, and offers a **Use suggested N units** shortcut when stock is below target. Adds call `POST /api/inventory`; removals are applied through the browser-local adjustment layer because the API has no remove endpoint. Members see a read-only ledger with no mutation controls. The `addMedicine()` helper exists but is not used by any page yet.
 
 ### CalculatorPage (`/calculator`)
-Loads medicines from `GET /api/inventory` for the dropdown. The form collects current stock, average yearly sales, and days of stock to cover (default 30), validates them client-side, and posts `medicine`, `current_stock`, `yearly_sales`, `days` to `POST /api/calculate`. The result card shows status, target stock, shortfall, daily average, expected daily use, seasonal factor, baseline source, and rainfall/capping badges. Non-dengue medicines return only a status and get a plain "Request received" message.
+Loads medicines from `GET /api/inventory` for the dropdown. A two-column layout puts the validated input form on the left and the forecast result on the right. The form collects current stock, average yearly sales, and days of stock to cover (default 30), then posts `medicine`, `current_stock`, `yearly_sales`, `days` to `POST /api/calculate`. The result panel leads with target stock, uses `CoverageMeter` to show current stock against that target plus any shortfall or surplus, and lists the derivation and provenance. Changing any input clears the previous result. A `SeasonalityChart` below the result shows a 12-month demo dengue pattern for the organization's state, falling back to the national demo average. Non-dengue medicines return only a status and get a plain "Request received" message.
 
 > The UI does not send `state`, `month`, or `rain_prev_departure`, so web calculations never use state-specific baselines or the rainfall adjustment. Direct API calls can supply them.
 
@@ -120,13 +139,24 @@ Loads medicines from `GET /api/inventory` for the dropdown. The form collects cu
 Read-only display of the current user's name, email, organization name, and role.
 
 ### OrganizationInfoPage (`/organization-info`)
-Read-only organization name, code, and member table. Members see a **Leave Organization** button, which clears organization/role/members and returns to `/organization`; admins do not.
+Read-only organization name, code, and member table from the API. Members see a **Leave Organization** button, which posts to `/api/organizations/me/leave` and returns to `/organization`; admins do not.
 
 ### AdminPage (`/admin`)
 - Organization card with name and join code.
-- **Pending Requests** table (Name, Email, Requested, Action), styled like the Members table. Shows "No pending requests." when empty. Each row has **Accept** (primary) and **Reject** (outline) buttons; both are disabled for that row while the action is in flight. Accept calls `acceptRequest(id)` then adds the person to Members with the member role; Reject calls `rejectRequest(id)`. Either way the row is removed locally on success.
+- **Pending Requests** table (Name, Email, Requested, Action), styled like the Members table. Shows "No pending requests." when empty. Each row has **Accept** (primary) and **Reject** (outline) buttons; both are disabled for that row while the action is in flight. Accept calls `acceptRequest(id)` and refreshes the session so the new member appears in the Members table; Reject calls `rejectRequest(id)`. Either way the row is removed locally on success.
 - **Members** table with a **Remove** button per row (browser confirm required). The current user's own Remove button is disabled.
 - The former "Add Member" form was removed; accepted requests are now the intended way to add members.
+
+### Data representation
+
+The three feature pages share a quiet clinical visual language, with charts used only where they add meaning:
+
+- **Dashboard and Inventory** use `StockLedger`, a table on desktop and stacked rows on mobile. Quantities are right-aligned with tabular numerals. Each row's bar is the medicine's share of total tracked units, labeled as a percentage — not capacity, which the API does not provide.
+- **Dashboard** adds `MonthlyUseChart` (horizontal-value bar chart) and `IndiaDengueMap` (state choropleth with top-5 list). Both are driven entirely by `data/demoAnalytics.ts` and are labeled "Demo data" so they cannot be mistaken for live surveillance.
+- **Inventory** adds `CoverStatus`: green for 30+ days of cover, amber for 14–29 days, red for under 14 days. Each badge states how many units are needed to reach the 30-day target, or how many units are above it. A restock panel totals the shortfall per medicine, and the add modal can fill in the suggested amount. Everything is derived from demo last-month usage and the current displayed stock; no order is sent to the backend.
+- **Calculator** uses a two-column form/result layout. `CoverageMeter` compares current stock with target stock, and `SeasonalityChart` adds a 12-month trend line with an amber reference line for the selected month.
+- Charts use `recharts`; the map uses `@svg-maps/india` with attribution in the UI. No backend data file or endpoint was added for these visuals.
+- Status is always written in words as well as color, numeric values use `.tabular-data`, and transitions respect `prefers-reduced-motion`.
 
 ---
 
@@ -138,29 +168,29 @@ Read-only organization name, code, and member table. Members see a **Leave Organ
 3. Choose **Create Organization**.
 4. Fill name, state, district, pincode, and hospital type; fix any inline errors.
 5. Submit → the generated join code is shown.
-6. Click **Continue to Dashboard** → the user is an admin with a seeded member list.
+6. Click **Continue to Dashboard** → the user is an admin of the new hospital.
 
 ### 5.2 Join an existing organization
 1. From `/organization`, choose **Join Organization** and enter a code.
-2. Submit → **Request sent** card (nothing is persisted yet).
-3. Click **Next** → the local auth state is populated with the joined organization and the user lands on `/dashboard` as a member.
+2. Submit → the code is sent to `POST /api/organizations/join` and a **Request sent** card appears.
+3. An admin sees the request in the Admin panel and accepts it.
+4. Click **Check approval status** → the session is re-fetched; once approved the app navigates to `/dashboard` as a member. Until then, the route guards keep the user on `/organization`.
 
-The TODOs in `OrganizationPage.tsx` mark where a real join-request API call and a real "next step" belong.
-
-### 5.3 Record incoming stock
-1. Go to `/inventory`.
-2. Click **Add medicine** and select a medicine.
-3. Enter a positive whole-number quantity and submit.
-4. The list refreshes locally with the new total; the backend in-memory store is updated via `POST /api/inventory`.
+### 5.3 Adjust stock (admins only)
+1. Go to `/inventory`. Members see a read-only ledger and no action buttons.
+2. Click **Add stock** / **Remove stock**, or use the **Add** / **Remove** action in a ledger row.
+3. Enter a positive whole-number quantity, or use **Use suggested N units** to fill the 30-day gap. Removal is capped at the displayed quantity. The modal previews `current → after` units and cover status.
+4. Submit → an add calls `POST /api/inventory` and updates the server's in-memory store; a removal updates the browser-local adjustment key and refreshes the displayed ledger. The restock panel and dashboard summary update with the new shortfall.
 
 ### 5.4 Run a calculation
 1. Go to `/calculator`.
 2. Pick a medicine, enter current stock, yearly sales, and days to cover.
-3. Submit → the result card renders the recommendation returned by the backend.
+3. Submit → the result panel shows the target stock, a current-vs-target coverage bar, and the numbers behind the forecast.
+4. The seasonality chart below shows the demo monthly pattern for the organization's state, or the national demo average if no state is set.
 
 ### 5.5 Handle join requests as an admin
 1. Log in as the organization creator and open `/admin` from the profile dropdown.
-2. Review the **Pending Requests** table (currently hardcoded stub data).
+2. Review the **Pending Requests** table (fetched from `GET /api/admin/join-requests`).
 3. Click **Accept** to add the person as a member, or **Reject** to drop the request. The row disappears in both cases.
 4. Use the **Members** table to remove existing members if needed.
 
@@ -169,43 +199,53 @@ The TODOs in `OrganizationPage.tsx` mark where a real join-request API call and 
 2. A member can click **Leave Organization** and is returned to `/organization` to create or join another.
 
 ### 5.7 Log out
-Open the profile dropdown → **Logout**. Auth state is cleared from `localStorage` and the browser is sent to `/`.
+Open the profile dropdown → **Logout**. `POST /api/auth/logout` deletes the server-side session, the token is removed from `localStorage`, and the browser is sent to `/`.
 
 ---
 
 ## 6. State and persistence
 
-`AuthProvider` holds `user`, `organization`, `role`, and `members`. It is persisted under the `medicast.auth` key in `localStorage` and restored on page load, so refreshes keep the session.
+`AuthProvider` holds `user`, `organization`, `role`, `members`, and `pendingJoinCode`, all returned by the API. Only the opaque session token is persisted under `medicast.token` in `localStorage`; on page load the session is restored with `GET /api/auth/me`, so refreshes keep the session without trusting locally cached state.
 
-- `login(email)` derives a display name from the email address; `signup(name, email)` uses the given name.
-- `createOrganization(input)` generates an `ORG-XXXXX` code, sets the creator as `admin`, stores `state`/`district`/`pincode`/`hospital_type` on the organization, and seeds a member list with the admin plus four dummy members.
-- `joinOrganization(code)` sets the role to `member` and creates an organization named `Organization <CODE>` with a seeded member list including a dummy admin.
-- `addMember(name, email)` adds a `member`; `removeMember(id)` cannot remove the current user; `leaveOrganization()` is member-only.
+A second, unrelated `localStorage` key, `medicast.inventoryAdjustments`, stores admin-only stock removals as negative per-medicine deltas. They are applied on top of the API response after every fetch. This keeps the demo frontend-only, but removals are not shared between users or persisted on the server.
+
+- `login(email, password)` and `signup(name, email, password)` store the returned token and adopt the server's auth state.
+- `createOrganization(input)` has the server create the hospital, returns its generated `ORG-XXXXX` code, and makes the creator an admin.
+- `joinOrganization(code)` records a pending request; the user only gains membership after an admin accepts it.
+- `refresh()` re-fetches `/api/auth/me` (used by the "Check approval status" action and after admin actions).
+- `removeMember(id)` cannot remove the current user; `leaveOrganization()` is member-only.
 
 ---
 
 ## 7. API helpers
 
-All helpers are in `frontend/src/api/inventory.ts`.
+Inventory and calculation helpers live in `api/inventory.ts`; auth, organization, and admin helpers live in the other modules under `api/`. All calls go through `api/http.ts`, which adds the bearer token and surfaces backend error messages.
 
-| Helper | Call | Status |
+| Helper | Call | Module |
 |---|---|---|
-| `getInventory()` | `GET /api/inventory` | Live |
-| `addInventory(input)` | `POST /api/inventory` | Live |
-| `addMedicine(name)` | `POST /api/medicines` | Live; not wired into a page |
-| `sendCalculation(input)` | `POST /api/calculate` | Live |
-| `fetchPendingRequests()` | returns two hardcoded `{ id, name, email, requestedAt }` rows | Stub with TODO |
-| `acceptRequest(requestId)` | resolved promise | Stub with TODO |
-| `rejectRequest(requestId)` | resolved promise | Stub with TODO |
+| `getInventory()` | `GET /api/inventory` | inventory.ts |
+| `addInventory(input)` | `POST /api/inventory` | inventory.ts |
+| `addMedicine(name)` | `POST /api/medicines` | inventory.ts |
+| `sendCalculation(input)` | `POST /api/calculate` | inventory.ts |
+| `signup(name, email, password)` | `POST /api/auth/signup` | auth.ts |
+| `login(email, password)` | `POST /api/auth/login` | auth.ts |
+| `getMe()` | `GET /api/auth/me` | auth.ts |
+| `logout()` | `POST /api/auth/logout` | auth.ts |
+| `createOrganization(input)` | `POST /api/organizations` | organizations.ts |
+| `joinOrganization(code)` | `POST /api/organizations/join` | organizations.ts |
+| `leaveOrganization()` | `POST /api/organizations/me/leave` | organizations.ts |
+| `removeMember(id)` | `DELETE /api/admin/members/{id}` | organizations.ts |
+| `fetchPendingRequests()` | `GET /api/admin/join-requests` | admin.ts |
+| `acceptRequest(id)` | `POST /api/admin/join-requests/{id}/accept` | admin.ts |
+| `rejectRequest(id)` | `POST /api/admin/join-requests/{id}/reject` | admin.ts |
 
 ---
 
 ## 8. Known placeholders
 
-- **Auth is simulated.** No tokens, passwords, server sessions, or role enforcement outside the frontend guards.
-- **Join requests are not sent anywhere.** The "Request sent" screen and admin pending list are local UI only.
-- **`Next` on the request-sent screen fakes approval** by joining locally; this exists so the rest of the app can be demoed.
-- **State/district data is sample data** in `src/data/districts.ts`, with a TODO to replace it.
-- **Pending request actions are stubs**, including the hardcoded request rows and their dates.
-- **Calculator sends no `state` or `month`**, so it never exercises the backend's state-aware baseline or rainfall adjustment.
+- **State/district data is sample data** in `src/data/districts.ts`; the create-organization form submits it as text and the backend stores it on the hospital row.
+- **Calculator sends no `state` or `month`**, so it never exercises the backend's state-aware baseline or rainfall adjustment (unchanged page).
+- **Demand charts and the India map use static demo data** from `src/data/demoAnalytics.ts`; they are not live usage or surveillance data.
+- **Cover estimates and suggested order quantities use the demo dataset** because the API supplies current stock but no dispensing history.
+- **Inventory remains in memory** and resets when the backend restarts. Admin removals are browser-local adjustments and are not synced to the server.
 - **No automated frontend tests** are configured yet; `npm run build` (TypeScript + Vite) and `npm run lint` are the current checks.
