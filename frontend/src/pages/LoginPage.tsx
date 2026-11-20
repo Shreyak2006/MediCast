@@ -17,12 +17,14 @@ function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<FieldErrors>({})
+  const [formError, setFormError] = useState('')
 
   function clearError(field: keyof FieldErrors) {
     setErrors((current) => ({ ...current, [field]: undefined }))
+    setFormError('')
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const emailValue = email.trim()
@@ -46,8 +48,14 @@ function LoginPage() {
       return
     }
 
-    login(emailValue)
-    navigate('/organization')
+    try {
+      await login(emailValue, password)
+      navigate('/organization')
+    } catch (error) {
+      setFormError(
+        error instanceof Error ? error.message : 'Unable to log in. Please try again.',
+      )
+    }
   }
 
   return (
@@ -135,6 +143,12 @@ function LoginPage() {
               </p>
             )}
           </div>
+
+          {formError && (
+            <p role="alert" className="mt-4 text-sm text-red-600">
+              {formError}
+            </p>
+          )}
 
           <button
             type="submit"

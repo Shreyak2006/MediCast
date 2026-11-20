@@ -3,6 +3,7 @@ import { createContext } from 'react'
 export type Role = 'admin' | 'member'
 
 export type AuthUser = {
+  id: string
   name: string
   email: string
 }
@@ -18,6 +19,7 @@ export type CreateOrganizationInput = {
 }
 
 export type AuthOrganization = {
+  id: string
   name: string
   code: string
   state?: string
@@ -33,19 +35,31 @@ export type AuthMember = {
   role: Role
 }
 
-export type AuthContextValue = {
+export type PendingRequest = {
+  id: string
+  name: string
+  email: string
+  requestedAt: string
+}
+
+export type AuthState = {
   user: AuthUser | null
   organization: AuthOrganization | null
   role: Role | null
   members: AuthMember[]
-  login: (email: string) => void
-  signup: (name: string, email: string) => void
-  createOrganization: (input: CreateOrganizationInput) => string
-  joinOrganization: (code: string) => void
-  addMember: (name: string, email: string) => void
-  removeMember: (memberId: string) => void
-  leaveOrganization: () => void
-  logout: () => void
+  pendingJoinCode: string | null
+}
+
+export type AuthContextValue = AuthState & {
+  isLoading: boolean
+  login: (email: string, password: string) => Promise<void>
+  signup: (name: string, email: string, password: string) => Promise<void>
+  createOrganization: (input: CreateOrganizationInput) => Promise<string>
+  joinOrganization: (code: string) => Promise<void>
+  refresh: () => Promise<AuthState>
+  removeMember: (memberId: string) => Promise<void>
+  leaveOrganization: () => Promise<void>
+  logout: () => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined)

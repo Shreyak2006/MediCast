@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { HospitalType } from '../context/auth'
@@ -17,14 +17,21 @@ type DetailsErrors = {
 }
 
 function OrganizationPage() {
-  const { createOrganization, joinOrganization } = useAuth()
+  const {
+    createOrganization,
+    joinOrganization,
+    refresh,
+    organization,
+    pendingJoinCode,
+  } = useAuth()
   const navigate = useNavigate()
 
   const [mode, setMode] = useState<Mode | null>(null)
   const [organizationName, setOrganizationName] = useState('')
-  const [joinCode, setJoinCode] = useState('')
+  const [joinCode, setJoinCode] = useState(pendingJoinCode ?? '')
   const [createdCode, setCreatedCode] = useState('')
-  const [joinRequestSent, setJoinRequestSent] = useState(false)
+  const [joinRequestSent, setJoinRequestSent] = useState(Boolean(pendingJoinCode))
+  const [statusMessage, setStatusMessage] = useState('')
   const [error, setError] = useState('')
 
   const [organizationState, setOrganizationState] = useState('')
@@ -34,6 +41,12 @@ function OrganizationPage() {
   const [detailsErrors, setDetailsErrors] = useState<DetailsErrors>({})
 
   const districts = organizationState ? DISTRICTS[organizationState] ?? [] : []
+
+  useEffect(() => {
+    if (organization && !createdCode && !joinRequestSent) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [organization, createdCode, joinRequestSent, navigate])
 
   function chooseMode(nextMode: Mode) {
     setMode(nextMode)
@@ -69,7 +82,7 @@ function OrganizationPage() {
     }))
   }
 
-  function handleCreate(event: FormEvent<HTMLFormElement>) {
+  async function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const name = organizationName.trim()
@@ -100,18 +113,25 @@ function OrganizationPage() {
       return
     }
 
-    setCreatedCode(
-      createOrganization({
+    try {
+      const code = await createOrganization({
         name,
         state: organizationState,
         district,
         pincode,
         hospital_type: hospitalType,
-      }),
-    )
+      })
+      setCreatedCode(code)
+    } catch (createError) {
+      setError(
+        createError instanceof Error
+          ? createError.message
+          : 'Unable to create the organization. Please try again.',
+      )
+    }
   }
 
-  function handleJoin(event: FormEvent<HTMLFormElement>) {
+  async function handleJoin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const code = joinCode.trim()
@@ -122,8 +142,40 @@ function OrganizationPage() {
     }
 
     setError('')
-    // TODO: Send a join request to the backend instead of joining locally.
-    setJoinRequestSent(true)
+
+    try {
+      await joinOrganization(code)
+      setJoinRequestSent(true)
+      setStatusMessage('')
+    } catch (joinError) {
+      setError(
+        joinError instanceof Error
+          ? joinError.message
+          : 'Unable to send the join request. Please try again.',
+      )
+    }
+  }
+
+  async function handleCheckStatus() {
+    setStatusMessage('')
+
+    try {
+      const current = await refresh()
+
+      if (current.organization) {
+        navigate('/dashboard', { replace: true })
+      } else if (current.pendingJoinCode) {
+        setStatusMessage('Your request is still pending approval.')
+      } else {
+        setStatusMessage(
+          'This request is no longer pending. You can join another organization.',
+        )
+        setJoinRequestSent(false)
+        setJoinCode('')
+      }
+    } catch {
+      setStatusMessage('Unable to check the request status right now.')
+    }
   }
 
   return (
@@ -135,20 +187,22 @@ function OrganizationPage() {
               Request sent
             </h1>
             <p className="mt-1 text-slate-600">
-              Your request to join {joinCode} has been sent. You can continue
-              once an admin approves it.
+              Your request to join {pendingJoinCode || joinCode} has been sent.
+              You can continue once an admin approves it.
             </p>
 
-            {/* TODO: Remove the local join once the request flow is wired up. */}
+            {statusMessage && (
+              <p role="status" className="mt-3 text-sm text-slate-600">
+                {statusMessage}
+              </p>
+            )}
+
             <button
               type="button"
-              onClick={() => {
-                joinOrganization(joinCode)
-                navigate('/dashboard')
-              }}
+              onClick={handleCheckStatus}
               className="mt-6 w-full rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700"
             >
-              Next
+              Check approval status
             </button>
           </div>
         ) : createdCode ? (

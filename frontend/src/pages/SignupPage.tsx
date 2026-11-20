@@ -19,12 +19,14 @@ function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<FieldErrors>({})
+  const [formError, setFormError] = useState('')
 
   function clearError(field: keyof FieldErrors) {
     setErrors((current) => ({ ...current, [field]: undefined }))
+    setFormError('')
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const nameValue = name.trim()
@@ -53,8 +55,16 @@ function SignupPage() {
       return
     }
 
-    signup(nameValue, emailValue)
-    navigate('/organization')
+    try {
+      await signup(nameValue, emailValue, password)
+      navigate('/organization')
+    } catch (error) {
+      setFormError(
+        error instanceof Error
+          ? error.message
+          : 'Unable to create your account. Please try again.',
+      )
+    }
   }
 
   return (
@@ -177,6 +187,12 @@ function SignupPage() {
               </p>
             )}
           </div>
+
+          {formError && (
+            <p role="alert" className="mt-4 text-sm text-red-600">
+              {formError}
+            </p>
+          )}
 
           <button
             type="submit"

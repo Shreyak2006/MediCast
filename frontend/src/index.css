@@ -1,2 +1,8 @@
 @import 'tailwindcss';
 @config '../tailwind.config.ts';
+
+@layer utilities {
+  .tabular-data {
+    font-variant-numeric: tabular-nums;
+  }
+}
