@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { backendConnected } from '../config'
 import { useAuth } from '../context/useAuth'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -201,6 +202,13 @@ function SignupPage() {
             Sign Up
           </button>
         </form>
+
+        {!backendConnected && (
+          <p className="mt-4 rounded-lg bg-canvas px-4 py-3 text-xs text-muted ring-1 ring-slate-200">
+            Demo mode (backend disconnected): this creates a demo member account
+            in this browser. Log in instead to use the demo admin account.
+          </p>
+        )}
 
         <p className="mt-4 text-sm text-slate-600">
           Already have an account?{' '}

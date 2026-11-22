@@ -43,7 +43,13 @@ function OrganizationPage() {
   const districts = organizationState ? DISTRICTS[organizationState] ?? [] : []
 
   useEffect(() => {
-    if (organization && !createdCode && !joinRequestSent) {
+    // In dev, keep this page reachable from the page dock even with an org.
+    if (
+      !import.meta.env.DEV &&
+      organization &&
+      !createdCode &&
+      !joinRequestSent
+    ) {
       navigate('/dashboard', { replace: true })
     }
   }, [organization, createdCode, joinRequestSent, navigate])

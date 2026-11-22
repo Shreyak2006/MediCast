@@ -145,7 +145,13 @@ function CalculatorPage() {
         days: Number(daysValue),
       })
       setResult(val)
-      setStatus({ type: 'success', message: 'Calculation ready.' })
+      setStatus({
+        type: 'success',
+        message:
+          val.source === 'local'
+            ? 'Local estimate ready — the calculation backend is unavailable.'
+            : 'Calculation ready from the backend.',
+      })
     } catch {
       setStatus({
         type: 'error',
@@ -165,7 +171,8 @@ function CalculatorPage() {
         Calculator
       </h1>
       <p className="mt-1 text-muted">
-        Send stock and sales data for a medicine.
+        Send stock and sales data for a medicine. The calculation backend is
+        tried first; a labeled local estimate is used if it is unavailable.
       </p>
 
       <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
@@ -342,7 +349,20 @@ function CalculatorPage() {
               <p className="text-xs font-medium text-muted">Forecast result</p>
               <h2 className="mt-1 text-lg font-semibold text-ink">{medicine}</h2>
             </div>
-            {result && <StatusPill status={result.status} />}
+            <div className="flex flex-col items-end gap-2">
+              {result && <StatusPill status={result.status} />}
+              {result && (
+                <span
+                  className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
+                    result.source === 'local'
+                      ? 'bg-amber-50 text-signal-low ring-amber-200'
+                      : 'bg-slate-50 text-muted ring-slate-200'
+                  }`}
+                >
+                  {result.source === 'local' ? 'Local estimate' : 'Backend result'}
+                </span>
+              )}
+            </div>
           </div>
 
           {result && result.target_stock !== undefined ? (

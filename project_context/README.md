@@ -564,22 +564,26 @@ The backend reads the connection string from the `DATABASE_URL` environment vari
 
 ## 4. Frontend
 
-The frontend is a React + Vite + TypeScript application under `frontend/src/`. It reads inventory data, posts calculation requests, and renders the returned metrics. It contains no model or rainfall logic of its own; the demand charts and India map use static demo fixtures under `src/data/demoAnalytics.ts`. Authentication and organization management are backed by the API and PostgreSQL (section 4.6).
+The frontend is a React + Vite + TypeScript application under `frontend/src/`. It renders stock data, calculation results, and demo analytics. It contains no model or rainfall logic of its own; the demand charts and India map use static demo fixtures under `src/data/demoAnalytics.ts`.
+
+**Connection mode (section 4.8):** the frontend is standalone by default. Auth, organizations, members, admin actions, and inventory all use a browser-local demo fixture, so no backend or database is needed to run it. Setting `VITE_BACKEND_CONNECTED=true` switches those areas back to the API and PostgreSQL (section 4.6). The Calculator is the exception: it always tries `POST /api/calculate` first and falls back to a labeled local estimate when the backend is unreachable.
 
 ### 4.1 Structure
 
 ```text
 frontend/src/
+├── config.ts                # backendConnected switch + API base URL
 ├── api/
 │   ├── http.ts              # Shared fetch client with bearer token and error mapping
 │   ├── types.ts             # Backend shapes -> frontend auth types
-│   ├── auth.ts              # Signup, login, session restore, logout
-│   ├── organizations.ts     # Create, join request, leave, remove member
-│   ├── admin.ts             # Pending join requests, accept/reject
-│   └── inventory.ts         # Typed client for the inventory/calculation endpoints
+│   ├── auth.ts              # Signup, login, session restore, logout (demo or API)
+│   ├── organizations.ts     # Create, join request, leave, remove member (demo or API)
+│   ├── admin.ts             # Pending join requests, accept/reject (demo or API)
+│   └── inventory.ts         # Inventory helpers (demo or API) + backend-first calculator call
 ├── lib/
 │   ├── cover.ts             # Days of cover + units needed for a 30-day target
 │   ├── format.ts            # Shared number and percent formatting
+│   ├── localCalculate.ts    # Offline calculator fallback estimate
 │   └── localStock.ts        # Browser-local adjustment layer for admin removals
 ├── components/
 │   ├── NavBar.tsx           # Shared nav bar and profile dropdown
@@ -595,7 +599,8 @@ frontend/src/
 │   └── useAuth.ts           # Context hook
 ├── data/
 │   ├── districts.ts         # Static state -> districts map (sample data)
-│   └── demoAnalytics.ts     # Frontend-only demo usage, state baselines, seasonality
+│   ├── demoAnalytics.ts     # Frontend-only demo usage, state baselines, seasonality
+│   └── demoState.ts         # Browser-local auth/org/member/inventory fixture
 ├── types/svg-maps-india.d.ts # Local type shim for @svg-maps/india
 ├── pages/
 │   ├── LandingPage.tsx      # Public hero page
@@ -633,7 +638,7 @@ HTTP calls are grouped by feature under `frontend/src/api/`. `inventory.ts` keep
 | `fetchPendingRequests()` | `GET /api/admin/join-requests` | Admin pending list |
 | `acceptRequest()` / `rejectRequest()` | `POST /api/admin/join-requests/{id}/accept` / `/reject` | Resolve a request |
 
-All calls share `api/http.ts`, which attaches the bearer token and surfaces backend error messages. The backend base URL comes from the `VITE_API_BASE_URL` environment variable and defaults to `http://localhost:8000` (see `frontend/.env.example`).
+All calls share `api/http.ts`, which attaches the bearer token and surfaces backend error messages. The backend base URL comes from the `VITE_API_BASE_URL` environment variable and defaults to `http://localhost:8000`. A second variable, `VITE_BACKEND_CONNECTED`, defaults to `false`; in that mode the helpers above return demo data from `data/demoState.ts` instead of making a request (see `frontend/.env.example` and section 4.8). `sendCalculation()` is the exception: it always posts to `/api/calculate` and only calls `lib/localCalculate.ts` if the request fails or times out.
 
 The `CalculationResponse` type mirrors the backend's `CalculationResult`. Every field except `status` is optional because non-dengue medicines return only a status.
 
@@ -757,6 +762,39 @@ Inventory mutation is role-gated:
 - **Members** see a read-only ledger with no mutation controls and a notice directing them to an admin.
 
 The browser-local adjustment layer is a deliberate demo compromise: removals persist across refreshes in that browser only and are not shared with other users or the server.
+
+### 4.8 Standalone mode and reconnection
+
+The frontend is standalone by default. `frontend/src/config.ts` reads
+`VITE_BACKEND_CONNECTED`, which defaults to `false`. In that mode the helpers in
+`src/api/` return a browser-local fixture from `src/data/demoState.ts` instead
+of calling the API: a seeded admin, organization, members, pending request, and
+inventory. `AuthProvider` restores that state on startup, so the app opens on
+the dashboard with no backend or database running. Login/signup, create/join
+organization, admin actions, and stock changes all update this fixture in
+`localStorage` (`medicast.demo` plus the existing `medicast.inventoryAdjustments`
+and `medicast.token` keys).
+
+The Calculator is the one page that stays connected in both modes:
+`sendCalculation()` always posts to `/api/calculate` with a 2.5-second timeout.
+If the request fails, it uses `src/lib/localCalculate.ts`, which mirrors the
+backend arithmetic with the demo seasonal shape. Results carry a `source`
+field and the UI shows a **Local estimate** or **Backend result** badge so the
+two are never confused. Non-dengue medicines still return only
+`{"status": "received"}` in either mode.
+
+To reconnect:
+
+1. Start the backend on `http://localhost:8000` (root README).
+2. `cp frontend/.env.example frontend/.env` and set
+   `VITE_BACKEND_CONNECTED=true` (`VITE_API_BASE_URL` stays as needed).
+3. Restart Vite — `.env` is read only at startup — and sign in with a real
+   account. The demo token is not a server session, so the first API call clears
+   it and returns the user to `/login`.
+
+Setting the flag back to `false` (or deleting `.env`) restores standalone mode;
+no code changes are needed. See `frontend/README.md` for the full checklist and
+the localStorage reset snippet.
 
 ---
 

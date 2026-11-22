@@ -1,8 +1,14 @@
+import { backendConnected } from '../config'
+import { readDemoState, updateDemoState } from '../data/demoState'
 import type { PendingRequest } from '../context/auth'
 import { apiRequest } from './http'
 import type { BackendPendingRequest } from './types'
 
 export async function fetchPendingRequests(): Promise<PendingRequest[]> {
+  if (!backendConnected) {
+    return readDemoState().pendingRequests
+  }
+
   const requests =
     await apiRequest<BackendPendingRequest[]>('/api/admin/join-requests')
 
@@ -15,12 +21,49 @@ export async function fetchPendingRequests(): Promise<PendingRequest[]> {
 }
 
 export async function acceptRequest(requestId: string): Promise<void> {
+  if (!backendConnected) {
+    updateDemoState((current) => {
+      const request = current.pendingRequests.find(
+        (item) => item.id === requestId,
+      )
+
+      if (!request) return current
+
+      return {
+        ...current,
+        pendingRequests: current.pendingRequests.filter(
+          (item) => item.id !== requestId,
+        ),
+        members: [
+          ...current.members,
+          {
+            id: `demo-${Date.now()}`,
+            name: request.name,
+            email: request.email,
+            role: 'member' as const,
+          },
+        ],
+      }
+    })
+    return
+  }
+
   await apiRequest(`/api/admin/join-requests/${requestId}/accept`, {
     method: 'POST',
   })
 }
 
 export async function rejectRequest(requestId: string): Promise<void> {
+  if (!backendConnected) {
+    updateDemoState((current) => ({
+      ...current,
+      pendingRequests: current.pendingRequests.filter(
+        (item) => item.id !== requestId,
+      ),
+    }))
+    return
+  }
+
   await apiRequest(`/api/admin/join-requests/${requestId}/reject`, {
     method: 'POST',
   })

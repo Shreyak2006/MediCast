@@ -15,6 +15,11 @@ import SignupPage from './pages/SignupPage'
 function RequireAuth() {
   const { user, isLoading } = useAuth()
 
+  // The dev-only page dock must be able to open every page directly.
+  if (import.meta.env.DEV) {
+    return <Outlet />
+  }
+
   if (isLoading) {
     return <p className="px-6 py-10 text-slate-600">Loading…</p>
   }
@@ -40,6 +45,10 @@ function AuthLayout() {
 function RequireOrganization() {
   const { organization } = useAuth()
 
+  if (import.meta.env.DEV) {
+    return <Outlet />
+  }
+
   if (!organization) {
     return <Navigate to="/organization" replace />
   }
@@ -49,6 +58,10 @@ function RequireOrganization() {
 
 function AdminOnly() {
   const { role } = useAuth()
+
+  if (import.meta.env.DEV) {
+    return <Outlet />
+  }
 
   if (role !== 'admin') {
     return <Navigate to="/dashboard" replace />

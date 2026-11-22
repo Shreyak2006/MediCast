@@ -6,6 +6,7 @@ import CoverStatus from '../components/CoverStatus'
 import StockLedger from '../components/StockLedger'
 import type { StockAction } from '../components/StockLedger'
 import { useAuth } from '../context/useAuth'
+import { backendConnected } from '../config'
 import { getCoverInfo } from '../lib/cover'
 import {
   applyLocalAdjustment,
@@ -294,8 +295,9 @@ function InventoryPage() {
             </p>
             {isAdmin && (
               <p className="mt-1 text-xs text-muted">
-                Admin removals are saved in this browser only; admin additions
-                sync to the server.
+                {backendConnected
+                  ? 'Admin removals are saved in this browser only; admin additions sync to the server.'
+                  : 'Demo mode: all stock changes are saved in this browser only.'}
               </p>
             )}
           </div>

@@ -59,6 +59,8 @@ npm run dev
 
 The frontend dev server will typically start at `http://localhost:5173` (Vite's default).
 
+The frontend runs **standalone by default**: no backend or `.env` file is needed, and all page data is local demo data. The Calculator tries `POST /api/calculate` anyway and falls back to a labeled local estimate when the backend is unavailable. See [`frontend/README.md`](frontend/README.md) for demo behavior, localStorage reset steps, and the `VITE_BACKEND_CONNECTED=true` checklist to reconnect everything later.
+
 ## Project Structure
 
 ```
@@ -78,6 +80,6 @@ MediCast/
 - Frontend uses Vite 8, React 19, TypeScript, Tailwind CSS v4 with `@tailwindcss/vite`.
 - The backend is configured with build system `uv_build` and module name `app`.
 - Authentication, organizations, and join requests are stored in PostgreSQL (see `backend/.env.example` for `DATABASE_URL`); inventory and calculation still use the in-memory store and JSON model artifacts.
-- Copy `frontend/.env.example` to `frontend/.env` to override the default backend URL (`VITE_API_BASE_URL=http://localhost:8000`).
+- `frontend/.env.example` contains `VITE_BACKEND_CONNECTED=false` (standalone) and `VITE_API_BASE_URL=http://localhost:8000`. Set the first to `true` and restart Vite to send auth/org/admin/inventory traffic to the backend again.
 - See `project_context/README.md` and `project_context/frontend_README.md` for the full architecture and page-by-page behavior.
 

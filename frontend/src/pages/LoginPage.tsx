@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { backendConnected } from '../config'
 import { useAuth } from '../context/useAuth'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -157,6 +158,14 @@ function LoginPage() {
             Login
           </button>
         </form>
+
+        {!backendConnected && (
+          <p className="mt-4 rounded-lg bg-canvas px-4 py-3 text-xs text-muted ring-1 ring-slate-200">
+            Demo mode (backend disconnected): any valid email with a password of
+            8+ characters signs you in as the demo admin. Nothing is sent to a
+            server.
+          </p>
+        )}
 
         <p className="mt-4 text-sm text-slate-600">
           Don&apos;t have an account?{' '}
