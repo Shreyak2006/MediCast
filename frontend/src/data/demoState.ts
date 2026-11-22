@@ -15,8 +15,10 @@ import type {
 } from '../context/auth'
 
 export const DEMO_STORAGE_KEY = 'medicast.demo'
+const DEMO_VERSION = 2
 
 export type DemoState = {
+  version: number
   signedOut: boolean
   user: AuthUser
   organization: AuthOrganization | null
@@ -33,15 +35,36 @@ const DEMO_ADMIN: AuthUser = {
   email: 'admin@demo.medicast.local',
 }
 
-const DEMO_MEMBER: AuthMember = {
-  id: 'demo-member',
-  name: 'Demo Member',
-  email: 'member@demo.medicast.local',
-  role: 'member',
-}
+const DEMO_MEMBERS: AuthMember[] = [
+  {
+    id: 'demo-member',
+    name: 'Demo Member',
+    email: 'member@demo.medicast.local',
+    role: 'member',
+  },
+  {
+    id: 'demo-meera',
+    name: 'Meera Sharma',
+    email: 'meera.sharma@demo.medicast.local',
+    role: 'member',
+  },
+  {
+    id: 'demo-arjun',
+    name: 'Arjun Patel',
+    email: 'arjun.patel@demo.medicast.local',
+    role: 'member',
+  },
+  {
+    id: 'demo-sneha',
+    name: 'Sneha Iyer',
+    email: 'sneha.iyer@demo.medicast.local',
+    role: 'member',
+  },
+]
 
 /** The seed shown on a fresh browser. Quantities mirror backend/src/app/store.py. */
 const SEED: DemoState = {
+  version: DEMO_VERSION,
   signedOut: false,
   user: DEMO_ADMIN,
   organization: {
@@ -54,19 +77,38 @@ const SEED: DemoState = {
     hospital_type: 'government',
   },
   role: 'admin',
-  members: [{ ...DEMO_ADMIN, role: 'admin' }, DEMO_MEMBER],
+  members: [{ ...DEMO_ADMIN, role: 'admin' }, ...DEMO_MEMBERS],
   pendingJoinCode: null,
   pendingRequests: [
     {
       id: 'demo-request-1',
       name: 'Asha Nair',
-      email: 'asha@demo.medicast.local',
+      email: 'asha.nair@demo.medicast.local',
       requestedAt: '2026-11-20',
+    },
+    {
+      id: 'demo-request-2',
+      name: 'Rahul Menon',
+      email: 'rahul.menon@demo.medicast.local',
+      requestedAt: '2026-11-19',
+    },
+    {
+      id: 'demo-request-3',
+      name: 'Priya Desai',
+      email: 'priya.desai@demo.medicast.local',
+      requestedAt: '2026-11-18',
+    },
+    {
+      id: 'demo-request-4',
+      name: 'Vikram Rao',
+      email: 'vikram.rao@demo.medicast.local',
+      requestedAt: '2026-11-17',
     },
   ],
   inventory: [
     { medicine: 'TB medicines', quantity: 90 },
     { medicine: 'Dengue medicines', quantity: 30 },
+    { medicine: 'Malaria medicines', quantity: 75 },
   ],
 }
 
@@ -79,6 +121,11 @@ export function readDemoState(): DemoState {
 
     const parsed: unknown = JSON.parse(raw)
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return SEED
+    }
+
+    // Upgrade stale fixtures so enriched demo data appears on the next load.
+    if ((parsed as Partial<DemoState>).version !== DEMO_VERSION) {
       return SEED
     }
 
