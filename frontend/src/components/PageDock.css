@@ -1,0 +1,121 @@
+/* Dev-only page dock. The panel is fixed and never participates in layout. */
+.pd-root {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2147483000;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #102a27;
+}
+
+.pd-panel {
+  width: 13rem;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border: 1px solid #dbe4e2;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 18%);
+}
+
+.pd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid #e8eeec;
+  padding: 0.7rem 0.85rem;
+}
+
+.pd-title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.pd-subtitle {
+  margin-top: 0.1rem;
+  color: #5b6b68;
+  font-size: 0.7rem;
+}
+
+.pd-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.pd-icon-button,
+.pd-restore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dbe4e2;
+  background: #ffffff;
+  color: #115e59;
+  cursor: pointer;
+}
+
+.pd-icon-button {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.45rem;
+}
+
+.pd-restore {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 20%);
+}
+
+.pd-icon-button:hover,
+.pd-restore:hover {
+  background: #f0fdfa;
+}
+
+.pd-links {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.6rem 0.55rem 0.75rem;
+}
+
+.pd-group {
+  padding: 0.35rem 0.3rem 0.1rem;
+  color: #5b6b68;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pd-group-spaced {
+  margin-top: 0.4rem;
+  border-top: 1px solid #e8eeec;
+  padding-top: 0.65rem;
+}
+
+.pd-link {
+  display: block;
+  border-radius: 0.4rem;
+  padding: 0.35rem 0.4rem;
+  color: #334744;
+  text-decoration: none;
+}
+
+.pd-link:hover {
+  background: #f0fdfa;
+  color: #115e59;
+}
+
+.pd-link-active {
+  background: #ccfbf1;
+  color: #115e59;
+  font-weight: 600;
+}
+
+.pd-root :is(button, a):focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+}
