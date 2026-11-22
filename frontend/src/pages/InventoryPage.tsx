@@ -5,7 +5,7 @@ import type { InventoryItem } from '../api/inventory'
 import CoverStatus from '../components/CoverStatus'
 import StockLedger from '../components/StockLedger'
 import type { StockAction } from '../components/StockLedger'
-import { useAuth } from '../context/useAuth'
+import { useDisplayAuth } from '../context/useAuth'
 import { backendConnected } from '../config'
 import { getCoverInfo } from '../lib/cover'
 import {
@@ -48,7 +48,7 @@ function MinusIcon() {
 }
 
 function InventoryPage() {
-  const { role } = useAuth()
+  const { role } = useDisplayAuth()
   const isAdmin = role === 'admin'
 
   const [medicines, setMedicines] = useState<InventoryItem[]>([])

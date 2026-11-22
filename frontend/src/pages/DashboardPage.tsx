@@ -4,13 +4,13 @@ import type { InventoryItem } from '../api/inventory'
 import IndiaDengueMap from '../components/IndiaDengueMap'
 import MonthlyUseChart from '../components/MonthlyUseChart'
 import StockLedger from '../components/StockLedger'
-import { useAuth } from '../context/useAuth'
+import { useDisplayAuth } from '../context/useAuth'
 import { getRecentMonths } from '../data/demoAnalytics'
 import { getCoverInfo } from '../lib/cover'
 import { formatNumber } from '../lib/format'
 
 function DashboardPage() {
-  const { organization } = useAuth()
+  const { organization } = useDisplayAuth()
   const [items, setItems] = useState<InventoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')

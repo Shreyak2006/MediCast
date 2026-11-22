@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useAuth } from '../context/useAuth'
+import { useDisplayAuth } from '../context/useAuth'
 
 function linkClass(isActive: boolean) {
   return `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
@@ -23,7 +23,7 @@ function getInitials(name: string | undefined) {
 }
 
 function NavBar() {
-  const { user, role, logout } = useAuth()
+  const { user, role, logout } = useDisplayAuth()
   const menuRef = useRef<HTMLDivElement>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 

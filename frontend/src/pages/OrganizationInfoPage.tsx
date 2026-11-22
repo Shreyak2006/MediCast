@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/useAuth'
+import { useDisplayAuth } from '../context/useAuth'
 
 function OrganizationInfoPage() {
-  const { organization, role, members, leaveOrganization } = useAuth()
+  const { organization, role, members, leaveOrganization } = useDisplayAuth()
   const navigate = useNavigate()
 
   async function handleLeave() {

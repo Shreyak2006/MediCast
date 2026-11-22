@@ -45,8 +45,8 @@ request fails (or times out after 2.5 seconds). With the backend up it shows a
 
 Demo state is stored in `localStorage`:
 
-- `medicast.demo` — current demo user, organization, members, join requests, and
-  stock quantities.
+- `medicast.demo` — current demo user (including extra profile fields),
+  organization, members, join requests, and stock quantities.
 - `medicast.inventoryAdjustments` — browser-local stock removals (used in both
   modes because the API has no remove endpoint).
 - `medicast.token` — session token; harmless placeholder in demo mode.
@@ -64,6 +64,12 @@ location.reload()
 Logged out, the login screen accepts any valid email with a password of 8+
 characters and signs in as the demo admin. Signing up creates a demo member
 (read-only inventory) so role gating can be checked without a server.
+
+Signed out, pages still show dummy values: `useDisplayAuth()` supplies an
+always-present **test** profile, organization, admin role, and members, while
+the admin requests and inventory helpers supply test requests and stock. This
+lets the dev page dock open every page at any auth state. All of these fixtures
+live in `src/data/demoState.ts`.
 
 ## Reconnecting the backend later
 

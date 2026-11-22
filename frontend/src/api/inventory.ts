@@ -1,5 +1,6 @@
 import { API_BASE_URL, backendConnected } from '../config'
 import {
+  DEMO_TEST_INVENTORY,
   readDemoState,
   updateDemoState,
 } from '../data/demoState'
@@ -45,7 +46,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export function getInventory(): Promise<InventoryItem[]> {
   if (!backendConnected) {
-    return Promise.resolve(applyLocalAdjustments(readDemoState().inventory))
+    const state = readDemoState()
+    const inventory =
+      state.inventory.length > 0
+        ? state.inventory
+        : state.signedOut
+          ? DEMO_TEST_INVENTORY
+          : state.inventory
+    return Promise.resolve(applyLocalAdjustments(inventory))
   }
 
   return request<InventoryItem[]>('/api/inventory')

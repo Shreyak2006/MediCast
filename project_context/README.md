@@ -596,11 +596,11 @@ frontend/src/
 ├── context/
 │   ├── auth.ts              # Auth context, user/organization/member types
 │   ├── AuthProvider.tsx     # Server-backed auth state; token in localStorage
-│   └── useAuth.ts           # Context hook
+│   └── useAuth.ts           # Context hook + useDisplayAuth() signed-out demo fallback
 ├── data/
 │   ├── districts.ts         # Static state -> districts map (sample data)
 │   ├── demoAnalytics.ts     # Frontend-only demo usage, state baselines, seasonality
-│   └── demoState.ts         # Browser-local auth/org/member/inventory fixture
+│   └── demoState.ts         # Browser-local auth/org/member/request/inventory/profile fixture
 ├── types/svg-maps-india.d.ts # Local type shim for @svg-maps/india
 ├── pages/
 │   ├── LandingPage.tsx      # Public hero page
@@ -611,7 +611,7 @@ frontend/src/
 │   ├── DashboardPage.tsx    # Stock ledger + demo demand charts (GET /api/inventory)
 │   ├── InventoryPage.tsx    # Read-only ledger for members; admin add/remove
 │   ├── CalculatorPage.tsx   # Forecast result + demo seasonality chart
-│   ├── ProfilePage.tsx      # Profile details from the API
+│   ├── ProfilePage.tsx      # Profile details (API fields + demo profile fields)
 │   └── AdminPage.tsx        # Admin member management
 ├── medicines.ts             # Static medicine list ("TB medicines", "Dengue medicines")
 ├── App.tsx                  # Routes, guards, and authenticated layout
@@ -694,7 +694,7 @@ Routes and access rules:
 | `/dashboard` | Logged in + organization | Stock ledger + demo demand charts |
 | `/inventory` | Logged in + organization | Read-only for members; admin add/remove stock |
 | `/calculator` | Logged in + organization | Forecast result + demo seasonality chart |
-| `/profile` | Logged in + organization | Name, email, organization, and role from the API |
+| `/profile` | Logged in + organization | Name, email, organization, role, and demo profile fields (falls back to the "test" profile when signed out) |
 | `/organization-info` | Logged in + organization | Read-only organization details and member list |
 | `/admin` | Logged in + organization + admin role | Admin member management |
 
@@ -795,6 +795,25 @@ To reconnect:
 Setting the flag back to `false` (or deleting `.env`) restores standalone mode;
 no code changes are needed. See `frontend/README.md` for the full checklist and
 the localStorage reset snippet.
+
+#### Where to change the dummy data
+
+Everything shown in standalone mode lives under `frontend/src/data/` (plus a few
+small helper modules), so design work never requires a backend change. The dev
+page dock bypasses route guards, and `src/context/useAuth.ts` → `useDisplayAuth()`
+fills in the "test" fixtures when signed out, so every page stays populated at
+any auth state. Connected mode is untouched.
+
+| Data | Where to edit | Notes |
+| --- | --- | --- |
+| Signed-in admin, organization, members, pending requests, inventory | `src/data/demoState.ts` → `SEED` | Bump `DEMO_VERSION` after editing so existing browsers reload the new fixture. |
+| Demo profile fields (employee ID, designation, department, phone, joined, location) | `src/data/demoState.ts` → `DEMO_ADMIN.profile` | Optional `AuthUser.profile`; the backend does not send it. |
+| Always-present "test" fixtures for signed-out pages | `src/data/demoState.ts` → `DEMO_TEST_USER`, `DEMO_TEST_ORGANIZATION`, `DEMO_TEST_ROLE`, `DEMO_TEST_MEMBERS`, `DEMO_TEST_REQUESTS`, `DEMO_TEST_INVENTORY` | `useDisplayAuth()` supplies the user/org/role/members; `api/admin.ts` and `api/inventory.ts` supply requests and stock when the signed-out fixture is empty. |
+| Charts, state baselines, seasonality | `src/data/demoAnalytics.ts` | Also supplies the local Calculator estimate's seasonal shape. |
+| States → districts sample list | `src/data/districts.ts` | Static form options. |
+| Browser-local stock removals | `src/lib/localStock.ts` (`medicast.inventoryAdjustments`) | Used in both modes; the API has no remove endpoint. |
+| Local Calculator estimate | `src/lib/localCalculate.ts` | Only used when `POST /api/calculate` fails or times out. |
+| Dev page navigation | `src/components/PageDock.tsx` | Dev-only; guard bypasses live in `src/App.tsx` and `src/pages/OrganizationPage.tsx`. |
 
 ---
 

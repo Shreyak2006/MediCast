@@ -2,7 +2,7 @@
 
 This guide covers the React frontend in `frontend/src/`: what each page does, how the routes are guarded, and the end-to-end workflows a user can follow. For the backend/data side, see [`README.md`](README.md); for notebooks, see [`dataProcessing_README.md`](dataProcessing_README.md).
 
-> **Scope note:** authentication, organizations, members, and join requests are backed by the FastAPI backend and PostgreSQL. React context holds server state; only the opaque session token is stored in `localStorage`. Dashboard, Inventory, and Calculator still call the unchanged in-memory inventory/calculation endpoints; their charts, cover estimates, and demo datasets are frontend-only.
+> **Scope note:** the frontend runs standalone by default — authentication, organizations, members, join requests, and inventory all come from a browser-local fixture in `data/demoState.ts`, with no backend or database needed. Setting `VITE_BACKEND_CONNECTED=true` switches them to the FastAPI backend and PostgreSQL (React context then holds server state and `localStorage` holds the opaque session token). The Calculator always tries `POST /api/calculate` first and falls back to a labeled local estimate. Charts, cover estimates, and demo datasets remain frontend-only. See `README.md` section 4.8 for the full dummy-data reference.
 
 ---
 
@@ -136,7 +136,7 @@ Loads medicines from `GET /api/inventory` for the dropdown. A two-column layout 
 > The UI does not send `state`, `month`, or `rain_prev_departure`, so web calculations never use state-specific baselines or the rainfall adjustment. Direct API calls can supply them.
 
 ### ProfilePage (`/profile`)
-Read-only display of the current user's name, email, organization name, and role.
+Read-only display of the current user's name, email, organization name, and role. In standalone mode it also shows demo profile fields (employee ID, designation, department, phone, joined date, location) from `data/demoState.ts`. When nobody is signed in, `useDisplayAuth()` falls back to the always-present "test" fixtures so the page still shows dummy values — useful with the dev page dock, which can open every page at any auth state. The same fallback keeps Organization info, Admin, Inventory, Dashboard, and the nav bar populated when signed out; pending requests and stock fall back in `api/admin.ts` and `api/inventory.ts`. Connected mode is unchanged.
 
 ### OrganizationInfoPage (`/organization-info`)
 Read-only organization name, code, and member table from the API. Members see a **Leave Organization** button, which posts to `/api/organizations/me/leave` and returns to `/organization`; admins do not.

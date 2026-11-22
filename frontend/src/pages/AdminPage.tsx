@@ -6,10 +6,10 @@ import {
 } from '../api/admin'
 import type { PendingRequest } from '../context/auth'
 import type { AuthMember } from '../context/auth'
-import { useAuth } from '../context/useAuth'
+import { useDisplayAuth } from '../context/useAuth'
 
 function AdminPage() {
-  const { organization, user, members, refresh, removeMember } = useAuth()
+  const { organization, user, members, refresh, removeMember } = useDisplayAuth()
 
   const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([])
   const [busyRequestIds, setBusyRequestIds] = useState<string[]>([])

@@ -2,10 +2,21 @@ import { createContext } from 'react'
 
 export type Role = 'admin' | 'member'
 
+/** Extra fields supplied only by the standalone demo fixture. */
+export type UserProfile = {
+  employeeId: string
+  designation: string
+  department: string
+  phone: string
+  joinedAt: string
+  location: string
+}
+
 export type AuthUser = {
   id: string
   name: string
   email: string
+  profile?: UserProfile
 }
 
 export type HospitalType = 'government' | 'private' | 'clinic'

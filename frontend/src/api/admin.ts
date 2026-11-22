@@ -1,12 +1,14 @@
 import { backendConnected } from '../config'
-import { readDemoState, updateDemoState } from '../data/demoState'
+import { DEMO_TEST_REQUESTS, readDemoState, updateDemoState } from '../data/demoState'
 import type { PendingRequest } from '../context/auth'
 import { apiRequest } from './http'
 import type { BackendPendingRequest } from './types'
 
 export async function fetchPendingRequests(): Promise<PendingRequest[]> {
   if (!backendConnected) {
-    return readDemoState().pendingRequests
+    const state = readDemoState()
+    if (state.pendingRequests.length > 0) return state.pendingRequests
+    return state.signedOut ? DEMO_TEST_REQUESTS : []
   }
 
   const requests =

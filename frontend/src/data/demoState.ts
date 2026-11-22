@@ -15,7 +15,7 @@ import type {
 } from '../context/auth'
 
 export const DEMO_STORAGE_KEY = 'medicast.demo'
-const DEMO_VERSION = 2
+const DEMO_VERSION = 3
 
 export type DemoState = {
   version: number
@@ -33,7 +33,79 @@ const DEMO_ADMIN: AuthUser = {
   id: 'demo-admin',
   name: 'Demo Admin',
   email: 'admin@demo.medicast.local',
+  profile: {
+    employeeId: 'MC-1042',
+    designation: 'Pharmacist-in-Charge',
+    department: 'Pharmacy & Logistics',
+    phone: '+91 471 250 0142',
+    joinedAt: '2019-06-03',
+    location: 'Thiruvananthapuram, Kerala',
+  },
 }
+
+/**
+ * Always-present demo profile named "test". The Profile page falls back to it
+ * when nobody is signed in, so the page still shows dummy values in dev.
+ */
+export const DEMO_TEST_USER: AuthUser = {
+  id: 'demo-test',
+  name: 'test',
+  email: 'test@demo.medicast.local',
+  profile: {
+    employeeId: 'MC-TEST',
+    designation: 'Test Pharmacist',
+    department: 'Pharmacy & Logistics',
+    phone: '+91 471 250 0000',
+    joinedAt: '2024-01-01',
+    location: 'Thiruvananthapuram, Kerala',
+  },
+}
+
+export const DEMO_TEST_ORGANIZATION: AuthOrganization = {
+  id: 'demo-org',
+  name: 'Demo City Hospital',
+  code: 'DEMO-2026',
+  state: 'Kerala',
+  district: 'Thiruvananthapuram',
+  pincode: '695001',
+  hospital_type: 'government',
+}
+
+export const DEMO_TEST_ROLE: Role = 'admin'
+
+/** Members shown when signed out; includes the always-present "test" entry. */
+export const DEMO_TEST_MEMBERS: AuthMember[] = [
+  { id: 'demo-test', name: 'test', email: 'test@demo.medicast.local', role: 'admin' },
+  {
+    id: 'demo-test-meera',
+    name: 'Meera Sharma',
+    email: 'meera.sharma@demo.medicast.local',
+    role: 'member',
+  },
+  {
+    id: 'demo-test-arjun',
+    name: 'Arjun Patel',
+    email: 'arjun.patel@demo.medicast.local',
+    role: 'member',
+  },
+]
+
+/** Join request shown when signed out, so the admin table is never empty. */
+export const DEMO_TEST_REQUESTS: PendingRequest[] = [
+  {
+    id: 'demo-test-request',
+    name: 'test request',
+    email: 'test.request@demo.medicast.local',
+    requestedAt: '2026-11-22',
+  },
+]
+
+/** Stock shown when signed out, so inventory and the dashboard stay populated. */
+export const DEMO_TEST_INVENTORY: InventoryItem[] = [
+  { medicine: 'TB medicines', quantity: 90 },
+  { medicine: 'Dengue medicines', quantity: 30 },
+  { medicine: 'Malaria medicines', quantity: 75 },
+]
 
 const DEMO_MEMBERS: AuthMember[] = [
   {
@@ -77,9 +149,14 @@ const SEED: DemoState = {
     hospital_type: 'government',
   },
   role: 'admin',
-  members: [{ ...DEMO_ADMIN, role: 'admin' }, ...DEMO_MEMBERS],
+  members: [
+    { ...DEMO_ADMIN, role: 'admin' },
+    ...DEMO_TEST_MEMBERS,
+    ...DEMO_MEMBERS,
+  ],
   pendingJoinCode: null,
   pendingRequests: [
+    ...DEMO_TEST_REQUESTS,
     {
       id: 'demo-request-1',
       name: 'Asha Nair',
