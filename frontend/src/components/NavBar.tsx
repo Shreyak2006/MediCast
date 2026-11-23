@@ -77,7 +77,7 @@ function NavBar() {
           </NavLink>
 
           {organization && (
-            <div className="flex items-center gap-1 rounded-xl bg-slate-100/70 p-1">
+            <div className="flex flex-wrap items-center gap-1 rounded-xl bg-slate-100/70 p-1">
               <NavLink to="/dashboard" className={({ isActive }) => linkClass(isActive)}>
                 Dashboard
               </NavLink>
