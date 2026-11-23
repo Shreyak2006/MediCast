@@ -15,11 +15,6 @@ import SignupPage from './pages/SignupPage'
 function RequireAuth() {
   const { user, isLoading } = useAuth()
 
-  // The dev-only page dock must be able to open every page directly.
-  if (import.meta.env.DEV) {
-    return <Outlet />
-  }
-
   if (isLoading) {
     return <p className="px-6 py-10 text-slate-600">Loading…</p>
   }
@@ -33,21 +28,17 @@ function RequireAuth() {
 
 function AuthLayout() {
   return (
-    <>
+    <div className="min-h-screen">
       <NavBar />
-      <main className="mx-auto max-w-4xl px-6 py-10">
+      <main className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
         <Outlet />
       </main>
-    </>
+    </div>
   )
 }
 
 function RequireOrganization() {
   const { organization } = useAuth()
-
-  if (import.meta.env.DEV) {
-    return <Outlet />
-  }
 
   if (!organization) {
     return <Navigate to="/organization" replace />
@@ -59,10 +50,6 @@ function RequireOrganization() {
 function AdminOnly() {
   const { role } = useAuth()
 
-  if (import.meta.env.DEV) {
-    return <Outlet />
-  }
-
   if (role !== 'admin') {
     return <Navigate to="/dashboard" replace />
   }
@@ -72,7 +59,7 @@ function AdminOnly() {
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen text-ink">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />

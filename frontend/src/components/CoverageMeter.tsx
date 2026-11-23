@@ -45,16 +45,10 @@ function CoverageMeter({ current, target, shortfall }: CoverageMeterProps) {
         aria-valuemax={target}
         aria-valuenow={Math.min(current, target)}
         aria-valuetext={`${formatNumber(current)} of ${formatNumber(target)} target units on hand`}
-        className="mt-3 flex h-3 overflow-hidden rounded-sm bg-slate-100"
+        className="mt-3 flex h-3 overflow-hidden rounded-full bg-slate-100"
       >
-        <div
-          className="h-full bg-brand-500"
-          style={{ width: `${covered * 100}%` }}
-        />
-        <div
-          className="h-full bg-signal-low"
-          style={{ width: `${short * 100}%` }}
-        />
+        <div className="h-full bg-brand-600/80" style={{ width: `${covered * 100}%` }} />
+        <div className="h-full bg-amber-500/80" style={{ width: `${short * 100}%` }} />
       </div>
 
       <div className="mt-2 flex items-baseline justify-between text-xs text-muted">

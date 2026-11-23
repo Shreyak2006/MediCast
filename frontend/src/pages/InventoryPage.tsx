@@ -1,18 +1,12 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { addInventory, getInventory } from '../api/inventory'
+import { addInventory, getInventory, removeInventory } from '../api/inventory'
 import type { InventoryItem } from '../api/inventory'
 import CoverStatus from '../components/CoverStatus'
 import StockLedger from '../components/StockLedger'
 import type { StockAction } from '../components/StockLedger'
-import { useDisplayAuth } from '../context/useAuth'
-import { backendConnected } from '../config'
+import { useAuth } from '../context/useAuth'
 import { getCoverInfo } from '../lib/cover'
-import {
-  applyLocalAdjustment,
-  applyLocalAdjustments,
-  removeLocalStock,
-} from '../lib/localStock'
 import { formatNumber } from '../lib/format'
 
 const POSITIVE_WHOLE_NUMBER = /^\d+$/
@@ -48,7 +42,7 @@ function MinusIcon() {
 }
 
 function InventoryPage() {
-  const { role } = useDisplayAuth()
+  const { role } = useAuth()
   const isAdmin = role === 'admin'
 
   const [medicines, setMedicines] = useState<InventoryItem[]>([])
@@ -72,7 +66,7 @@ function InventoryPage() {
       try {
         const items = await getInventory()
         if (!cancelled) {
-          setMedicines(applyLocalAdjustments(items))
+          setMedicines(items)
           setMedicine(items[0]?.medicine ?? '')
         }
       } catch {
@@ -131,36 +125,28 @@ function InventoryPage() {
     setIsSubmitting(true)
 
     try {
-      if (isAdding) {
-        const updated = await addInventory({ medicine, quantity: amount })
-        const item = applyLocalAdjustment(updated)
-        setMedicines((current) =>
-          current.map((entry) =>
-            entry.medicine === item.medicine ? item : entry,
-          ),
-        )
-        setConfirmation(`Added ${amount} units to ${medicine}.`)
-      } else {
-        const item = removeLocalStock(
-          medicine,
-          amount,
-          selectedItem?.quantity ?? 0,
-        )
-        setMedicines((current) =>
-          current.map((entry) =>
-            entry.medicine === item.medicine ? item : entry,
-          ),
-        )
-        setConfirmation(
-          `Removed ${amount} units from ${medicine}. Saved in this browser only.`,
-        )
-      }
+      const item = isAdding
+        ? await addInventory({ medicine, quantity: amount })
+        : await removeInventory({ medicine, quantity: amount })
+
+      setMedicines((current) =>
+        current.map((entry) =>
+          entry.medicine === item.medicine ? item : entry,
+        ),
+      )
+      setConfirmation(
+        `${isAdding ? 'Added' : 'Removed'} ${amount} units ${
+          isAdding ? 'to' : 'from'
+        } ${medicine}.`,
+      )
       setQuantity('')
-    } catch {
+    } catch (error) {
       setError(
-        isAdding
-          ? 'Could not add stock. Please try again.'
-          : 'Could not remove stock. Please try again.',
+        error instanceof Error
+          ? error.message
+          : isAdding
+            ? 'Could not add stock. Please try again.'
+            : 'Could not remove stock. Please try again.',
       )
     } finally {
       setIsSubmitting(false)
@@ -218,11 +204,17 @@ function InventoryPage() {
   )
 
   return (
-    <section>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight text-ink">
-          Inventory entry
-        </h1>
+    <section className="space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand-800">Stock management</p>
+          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Inventory</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+            {isAdmin
+              ? 'Add incoming stock or record stock issued for a medicine.'
+              : 'View current stock and cover estimates. Only admins can change stock.'}
+          </p>
+        </div>
         {isAdmin ? (
           <div className="flex gap-2">
             <button
@@ -230,7 +222,7 @@ function InventoryPage() {
               onClick={() => openModal(undefined, 'add')}
               aria-label="Add stock"
               title="Add stock"
-              className="inline-flex items-center rounded-lg bg-brand-600 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-700 focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-brand-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm shadow-brand-900/10 transition-colors hover:bg-brand-800 focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
             >
               <PlusIcon /> Add stock
             </button>
@@ -239,115 +231,103 @@ function InventoryPage() {
               onClick={() => openModal(undefined, 'remove')}
               aria-label="Remove stock"
               title="Remove stock"
-              className="inline-flex items-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white/80 px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-white focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
             >
               <MinusIcon /> Remove stock
             </button>
           </div>
         ) : (
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-muted ring-1 ring-inset ring-slate-200">
+          <span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-muted ring-1 ring-inset ring-slate-200">
             Read only
           </span>
         )}
       </div>
-      <p className="mt-1 text-muted">
-        {isAdmin
-          ? 'Add incoming stock or record stock issued for a medicine.'
-          : 'View current stock and cover estimates. Only admins can change stock.'}
-      </p>
 
       {!isAdmin && (
-        <p className="mt-4 rounded-lg bg-canvas px-4 py-3 text-sm text-muted ring-1 ring-slate-200">
-          Inventory is read-only for members. Contact an admin to add or remove
-          stock.
+        <p className="rounded-2xl border border-slate-200/70 bg-white/70 px-4 py-3 text-sm text-muted shadow-panel">
+          Inventory is read-only for members. Contact an admin to add or remove stock.
         </p>
       )}
 
       {!isLoadingMedicines && medicinesError && (
-        <p
-          role="alert"
-          className="mt-6 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200"
-        >
+        <p role="alert" className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 ring-1 ring-red-200">
           {medicinesError}
         </p>
       )}
 
       {!isLoadingMedicines && !medicinesError && (
         <>
-          <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 pb-3">
-            <p className="text-sm text-muted">Stock ledger</p>
-            <p className="tabular-data text-sm font-medium text-ink">
-              {formatNumber(totalUnits)} units across {medicines.length}{' '}
-              {medicines.length === 1 ? 'medicine' : 'medicines'}
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <StockLedger
-              items={medicines}
-              onAction={isAdmin ? openModal : undefined}
-              showCoverage
-              emptyMessage="No medicines yet"
-            />
-            <p className="mt-2 text-xs text-muted">
-              Cover is estimated from demo last-month usage. Green: 30+ days ·
-              Amber: 14–29 days · Red: under 14 days.
-            </p>
-            {isAdmin && (
-              <p className="mt-1 text-xs text-muted">
-                {backendConnected
-                  ? 'Admin removals are saved in this browser only; admin additions sync to the server.'
-                  : 'Demo mode: all stock changes are saved in this browser only.'}
-              </p>
-            )}
-          </div>
-
-          <div className="mt-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
-              <div>
-                <p className="text-xs font-medium text-muted">
-                  Restock to 30-day target
-                </p>
-                <h2 className="mt-1 text-base font-semibold text-ink">
-                  How much medicine is needed
-                </h2>
-              </div>
-              <p className="tabular-data text-2xl font-semibold tracking-tight text-ink">
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-panel">
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Tracked medicines</p>
+              <p className="tabular-data mt-3 text-3xl font-semibold tracking-tight text-ink">{medicines.length}</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-panel">
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Units on hand</p>
+              <p className="tabular-data mt-3 text-3xl font-semibold tracking-tight text-ink">{formatNumber(totalUnits)}</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-panel">
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Restock needed</p>
+              <p className={`tabular-data mt-3 text-3xl font-semibold tracking-tight ${totalNeeded > 0 ? 'text-amber-700' : 'text-brand-800'}`}>
                 {formatNumber(totalNeeded)}
-                <span className="ml-1 text-sm font-normal text-muted">
-                  units total
-                </span>
               </p>
+              <p className="mt-1 text-sm text-muted">Units to reach 30-day cover</p>
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold tracking-tight text-ink">Stock ledger</h2>
+              <p className="text-xs text-muted">Cover estimates use demo last-month use</p>
+            </div>
+            <StockLedger items={medicines} onAction={isAdmin ? openModal : undefined} showCoverage emptyMessage="No medicines yet" />
+          </div>
+
+          <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-panel sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-brand-800">Planning</p>
+                <h2 className="mt-1 text-lg font-semibold text-ink">How much medicine is needed</h2>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-muted">
+                  Based on frontend demo last-month use, this is the extra stock needed to reach a 30-day target. No order is sent.
+                </p>
+              </div>
+              <div className="rounded-xl bg-amber-50 px-3.5 py-2.5 ring-1 ring-inset ring-amber-200">
+                <p className="text-xs text-amber-800">Total needed</p>
+                <p className="tabular-data mt-0.5 text-lg font-semibold text-amber-800">{formatNumber(totalNeeded)} units</p>
+              </div>
             </div>
 
             {restockItems.length > 0 ? (
-              <ul className="mt-4 divide-y divide-slate-100 border-t border-slate-200">
+              <ul className="mt-4 divide-y divide-slate-100">
                 {restockItems.map(({ item, cover }) => (
-                  <li
-                    key={item.medicine}
-                    className="flex items-center justify-between gap-3 py-2.5 text-sm"
-                  >
-                    <span className="min-w-0 truncate text-ink">
-                      {item.medicine}
-                      <span className="tabular-data ml-2 text-xs text-muted">
-                        {cover.days} days left
-                      </span>
-                    </span>
-                    <span className="tabular-data shrink-0 font-medium text-signal-low">
-                      +{formatNumber(cover.neededUnits)} units
-                    </span>
+                  <li key={item.medicine} className="flex flex-wrap items-center justify-between gap-3 py-3.5">
+                    <div className="min-w-0">
+                      <p className="font-medium text-ink">{item.medicine}</p>
+                      <p className="tabular-data mt-0.5 text-xs text-muted">
+                        {cover.days === 0 ? 'No cover left' : `${formatNumber(cover.days, 1)} days cover`} · add {formatNumber(cover.neededUnits)} units for 30 days
+                      </p>
+                    </div>
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openModal(item.medicine, 'add')
+                          setQuantity(String(cover.neededUnits))
+                        }}
+                        className="rounded-xl border border-slate-300/80 bg-white px-3 py-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
+                      >
+                        Fill to 30 days
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 border-t border-slate-200 pt-4 text-sm text-emerald-700">
+              <p className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-inset ring-emerald-200">
                 All medicines meet the 30-day target.
               </p>
             )}
-            <p className="mt-3 text-xs text-muted">
-              Based on demo last-month usage. This is a planning suggestion, not
-              an order placed through the backend.
-            </p>
           </div>
         </>
       )}
@@ -355,7 +335,7 @@ function InventoryPage() {
       {isAdmin && isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
-            className="absolute inset-0 bg-slate-900/40"
+            className="absolute inset-0 bg-slate-900/30 backdrop-blur-[2px]"
             onClick={closeModal}
             aria-hidden="true"
           />
@@ -365,7 +345,7 @@ function InventoryPage() {
             aria-modal="true"
             aria-labelledby="stock-modal-title"
             aria-describedby="stock-modal-description"
-            className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-xl ring-1 ring-slate-200"
+            className="glass-panel relative w-full max-w-md rounded-2xl border border-slate-200/70 p-6 shadow-panel"
           >
             <h2
               id="stock-modal-title"
@@ -397,7 +377,7 @@ function InventoryPage() {
                     setQuantity('')
                   }}
                   disabled={formDisabled}
-                  className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+                  className="mt-1.5 w-full rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-ink focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
                 >
                   {isLoadingMedicines && (
                     <option value="">Loading medicines…</option>
@@ -447,7 +427,7 @@ function InventoryPage() {
                           ? 'stock-preview'
                           : undefined
                   }
-                  className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+                  className="tabular-data mt-1.5 w-full rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-ink focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
                 />
                 {isAdding && currentCover && currentCover.neededUnits > 0 && (
                   <button
@@ -473,7 +453,7 @@ function InventoryPage() {
                 {previewQuantity !== null && selectedItem && (
                   <p
                     id="stock-preview"
-                    className="mt-3 flex items-baseline justify-between gap-3 rounded-lg bg-canvas px-3 py-2 text-sm"
+                    className="mt-3 flex items-baseline justify-between gap-3 rounded-xl bg-slate-50 px-3.5 py-2.5 text-sm ring-1 ring-slate-200/70"
                   >
                     <span className="text-muted">
                       {isAdding ? 'Stock after entry' : 'Stock after removal'}
@@ -488,7 +468,7 @@ function InventoryPage() {
                 {selectedItem && currentCover && (
                   <div
                     id="stock-cover"
-                    className="mt-3 rounded-lg border border-slate-200 px-3 py-2.5"
+                    className="mt-3 rounded-xl border border-slate-200/70 bg-white/70 px-3.5 py-3"
                   >
                     <p className="text-xs font-medium text-muted">
                       Cover outlook · demo usage
@@ -516,7 +496,7 @@ function InventoryPage() {
               <button
                 type="submit"
                 disabled={isSubmitting || formDisabled}
-                className="w-full rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+                className="w-full rounded-xl bg-brand-700 px-4 py-2.5 font-medium text-white shadow-sm shadow-brand-900/10 transition-colors hover:bg-brand-800 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
               >
                 {isSubmitting
                   ? isAdding

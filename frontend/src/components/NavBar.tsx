@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useDisplayAuth } from '../context/useAuth'
+import { useAuth } from '../context/useAuth'
 
 function linkClass(isActive: boolean) {
-  return `rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+  return `rounded-lg px-3 py-2 text-sm font-medium transition-colors motion-reduce:transition-none ${
     isActive
-      ? 'bg-brand-100 text-brand-800'
-      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+      ? 'bg-brand-100/80 text-brand-800'
+      : 'text-slate-600 hover:bg-white/80 hover:text-slate-900'
   }`
 }
 
@@ -23,7 +23,7 @@ function getInitials(name: string | undefined) {
 }
 
 function NavBar() {
-  const { user, role, logout } = useDisplayAuth()
+  const { user, organization, role, logout } = useAuth()
   const menuRef = useRef<HTMLDivElement>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -64,36 +64,39 @@ function NavBar() {
   }
 
   return (
-    <header className="relative z-20 border-b border-slate-200 bg-white">
-      <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-        <div className="flex items-center gap-4">
-          <NavLink
-            to="/dashboard"
-            className="text-lg font-semibold tracking-tight text-brand-700"
-          >
-            MediCast
+    <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/75 backdrop-blur-xl">
+      <nav className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-4 sm:gap-6">
+          <NavLink to="/dashboard" className="group flex items-center gap-2.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-700 text-sm font-bold text-white shadow-sm shadow-brand-900/10">
+              M
+            </span>
+            <span className="text-lg font-semibold tracking-tight text-ink">
+              MediCast
+            </span>
           </NavLink>
 
-          <div className="flex items-center gap-1">
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) => linkClass(isActive)}
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/inventory"
-              className={({ isActive }) => linkClass(isActive)}
-            >
-              Inventory
-            </NavLink>
-            <NavLink
-              to="/calculator"
-              className={({ isActive }) => linkClass(isActive)}
-            >
-              Calculate
-            </NavLink>
-          </div>
+          {organization && (
+            <div className="flex items-center gap-1 rounded-xl bg-slate-100/70 p-1">
+              <NavLink to="/dashboard" className={({ isActive }) => linkClass(isActive)}>
+                Dashboard
+              </NavLink>
+              <NavLink to="/inventory" className={({ isActive }) => linkClass(isActive)}>
+                Inventory
+              </NavLink>
+              <NavLink to="/calculator" className={({ isActive }) => linkClass(isActive)}>
+                Calculate
+              </NavLink>
+              <NavLink to="/organization-info" className={({ isActive }) => linkClass(isActive)}>
+                Organization
+              </NavLink>
+              {role === 'admin' && (
+                <NavLink to="/admin" className={({ isActive }) => linkClass(isActive)}>
+                  Admin
+                </NavLink>
+              )}
+            </div>
+          )}
         </div>
 
         <div ref={menuRef} className="relative">
@@ -103,10 +106,13 @@ function NavBar() {
             aria-label="Open profile menu"
             aria-haspopup="menu"
             aria-expanded={isMenuOpen}
-            className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-slate-100 focus:ring-2 focus:ring-brand-200 focus:outline-none"
+            className="flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white/70 p-1 pr-2.5 transition-colors hover:bg-white focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-sm font-semibold text-brand-800">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-100 text-xs font-semibold text-brand-800">
               {getInitials(user?.name)}
+            </span>
+            <span className="hidden max-w-28 truncate text-sm font-medium text-slate-700 sm:block">
+              {user?.name?.split(/\s+/)[0] || 'Account'}
             </span>
             <svg
               viewBox="0 0 20 20"
@@ -123,12 +129,10 @@ function NavBar() {
           {isMenuOpen && (
             <div
               role="menu"
-              className="absolute right-0 mt-2 w-56 rounded-xl bg-white py-1 shadow-lg ring-1 ring-slate-200"
+              className="absolute right-0 mt-2 w-60 rounded-2xl border border-slate-200/80 bg-white/95 p-1.5 shadow-panel backdrop-blur-xl"
             >
-              <div className="border-b border-slate-100 px-4 py-2">
-                <p className="truncate text-sm font-medium text-slate-900">
-                  {user?.name}
-                </p>
+              <div className="mb-1 rounded-xl bg-slate-50 px-3 py-2.5">
+                <p className="truncate text-sm font-medium text-slate-900">{user?.name}</p>
                 <p className="truncate text-xs text-slate-500">{user?.email}</p>
               </div>
 
@@ -136,36 +140,25 @@ function NavBar() {
                 to="/profile"
                 role="menuitem"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-100"
+                className="block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-100 motion-reduce:transition-none"
               >
                 Profile
               </NavLink>
-
               <NavLink
                 to="/organization-info"
                 role="menuitem"
                 onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-100"
+                className="block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-100 motion-reduce:transition-none"
               >
-                Organization
+                Settings
               </NavLink>
 
-              {role === 'admin' && (
-                <NavLink
-                  to="/admin"
-                  role="menuitem"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-4 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-100"
-                >
-                  Admin Panel
-                </NavLink>
-              )}
-
+              <div className="my-1 border-t border-slate-100" />
               <button
                 type="button"
                 role="menuitem"
                 onClick={handleLogout}
-                className="block w-full px-4 py-2 text-left text-sm text-slate-700 transition-colors hover:bg-slate-100"
+                className="block w-full rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition-colors hover:bg-slate-100 motion-reduce:transition-none"
               >
                 Logout
               </button>

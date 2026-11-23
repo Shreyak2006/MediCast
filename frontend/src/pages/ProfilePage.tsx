@@ -1,90 +1,42 @@
-import { useDisplayAuth } from '../context/useAuth'
+import { useAuth } from '../context/useAuth'
 
 function ProfilePage() {
-  const { user, organization, role } = useDisplayAuth()
-  const profile = user?.profile
+  const { user, organization, role } = useAuth()
 
   return (
-    <section>
-      <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-        Profile
-      </h1>
-      <p className="mt-1 text-slate-600">
-        Account details for this session.
-      </p>
+    <section className="space-y-6">
+      <div>
+        <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand-800">Account</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Profile</h1>
+        <p className="mt-2 text-sm leading-6 text-muted">Your account details for this session.</p>
+      </div>
 
-      <dl className="mt-6 max-w-md rounded-xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-        <div className="flex items-center justify-between gap-4 border-b border-slate-100 pb-4">
-          <dt className="text-sm text-slate-500">Name</dt>
-          <dd className="text-sm font-medium text-slate-900">{user?.name}</dd>
-        </div>
-        <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-          <dt className="text-sm text-slate-500">Email</dt>
-          <dd className="text-sm font-medium text-slate-900">{user?.email}</dd>
+      <div className="max-w-2xl rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-panel sm:p-7">
+        <div className="flex items-center gap-4 border-b border-slate-200/70 pb-6">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-100 text-lg font-semibold text-brand-800">
+            {(user?.name || '?')
+              .split(/\s+/)
+              .slice(0, 2)
+              .map((part) => part.charAt(0).toUpperCase())
+              .join('')}
+          </div>
+          <div>
+            <p className="text-lg font-semibold text-ink">{user?.name}</p>
+            <p className="text-sm text-muted">{user?.email}</p>
+          </div>
         </div>
 
-        {profile && (
-          <>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-              <dt className="text-sm text-slate-500">Employee ID</dt>
-              <dd className="text-sm font-medium text-slate-900">
-                {profile.employeeId}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-              <dt className="text-sm text-slate-500">Designation</dt>
-              <dd className="text-sm font-medium text-slate-900">
-                {profile.designation}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-              <dt className="text-sm text-slate-500">Department</dt>
-              <dd className="text-sm font-medium text-slate-900">
-                {profile.department}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-              <dt className="text-sm text-slate-500">Phone</dt>
-              <dd className="text-sm font-medium text-slate-900">
-                {profile.phone}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-              <dt className="text-sm text-slate-500">Joined</dt>
-              <dd className="text-sm font-medium text-slate-900">
-                {profile.joinedAt}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-              <dt className="text-sm text-slate-500">Location</dt>
-              <dd className="text-sm font-medium text-slate-900">
-                {profile.location}
-              </dd>
-            </div>
-          </>
-        )}
-
-        <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-4">
-          <dt className="text-sm text-slate-500">Organization</dt>
-          <dd className="text-sm font-medium text-slate-900">
-            {organization?.name}
-          </dd>
-        </div>
-        <div className="flex items-center justify-between gap-4 pt-4">
-          <dt className="text-sm text-slate-500">Role</dt>
-          <dd className="text-sm font-medium capitalize text-slate-900">
-            {role}
-          </dd>
-        </div>
-      </dl>
-
-      <p className="mt-3 max-w-md text-xs text-muted">
-        Demo profile data — edit it in{' '}
-        <code className="rounded bg-slate-100 px-1 py-0.5">
-          src/data/demoState.ts
-        </code>
-        .
-      </p>
+        <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-xl bg-slate-50/80 p-4 ring-1 ring-slate-200/70">
+            <dt className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Organization</dt>
+            <dd className="mt-2 text-sm font-medium text-ink">{organization?.name || '—'}</dd>
+          </div>
+          <div className="rounded-xl bg-slate-50/80 p-4 ring-1 ring-slate-200/70">
+            <dt className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Role</dt>
+            <dd className="mt-2 text-sm font-medium capitalize text-ink">{role || '—'}</dd>
+          </div>
+        </dl>
+      </div>
     </section>
   )
 }

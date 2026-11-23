@@ -16,10 +16,10 @@ function ShareBar({ share }: { share: number }) {
   return (
     <div
       aria-hidden="true"
-      className="h-1.5 min-w-8 flex-1 overflow-hidden rounded-sm bg-slate-100"
+      className="h-1.5 min-w-8 flex-1 overflow-hidden rounded-full bg-slate-100"
     >
       <div
-        className="h-full rounded-sm bg-brand-500"
+        className="h-full rounded-full bg-brand-600/80"
         style={{ width: `${share}%` }}
       />
     </div>
@@ -95,7 +95,7 @@ function ActionButton({
       type="button"
       onClick={() => onAction(medicine, action)}
       aria-label={`${label} stock for ${medicine}`}
-      className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-100 focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
+      className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white/80 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-white hover:text-ink focus:ring-2 focus:ring-brand-200 focus:outline-none motion-reduce:transition-none"
     >
       {action === 'add' ? <PlusIcon /> : <MinusIcon />} {label}
     </button>
@@ -112,7 +112,7 @@ function StockLedger({
 
   if (items.length === 0) {
     return (
-      <p className="rounded-lg border border-slate-200 bg-white px-4 py-5 text-sm text-muted">
+      <p className="rounded-2xl border border-slate-200/70 bg-white/70 px-4 py-6 text-sm text-muted shadow-panel">
         {emptyMessage}
       </p>
     )
@@ -120,9 +120,9 @@ function StockLedger({
 
   return (
     <>
-      <div className="hidden overflow-hidden rounded-lg border border-slate-200 bg-white sm:block">
+      <div className="hidden overflow-hidden rounded-2xl border border-slate-200/70 bg-white/80 shadow-panel sm:block">
         <table className="w-full border-collapse text-sm">
-          <thead className="bg-slate-50 text-left text-xs font-medium text-muted">
+          <thead className="bg-slate-50/80 text-left text-xs font-medium uppercase tracking-[0.08em] text-muted">
             <tr>
               <th scope="col" className="px-4 py-3 font-medium">
                 Medicine
@@ -145,24 +145,24 @@ function StockLedger({
               )}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-slate-200/70">
             {items.map((item) => {
               const share = total > 0 ? (item.quantity / total) * 100 : 0
 
               return (
-                <tr key={item.medicine}>
-                  <td className="px-4 py-3 font-medium text-ink">
+                <tr key={item.medicine} className="transition-colors hover:bg-slate-50/50 motion-reduce:transition-none">
+                  <td className="px-4 py-3.5 font-medium text-ink">
                     <MedicineButton medicine={item.medicine} onAction={onAction} />
                   </td>
-                  <td className="tabular-data px-4 py-3 text-right text-ink">
+                  <td className="tabular-data px-4 py-3.5 text-right text-ink">
                     {formatNumber(item.quantity)}
                   </td>
                   {showCoverage && (
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <CoverStatus info={getCoverInfo(item.medicine, item.quantity)} />
                     </td>
                   )}
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <div className="flex items-center gap-3">
                       <ShareBar share={share} />
                       <span className="tabular-data w-10 text-right text-xs text-muted">
@@ -171,18 +171,10 @@ function StockLedger({
                     </div>
                   </td>
                   {onAction && (
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3.5 text-right">
                       <div className="flex justify-end gap-2">
-                        <ActionButton
-                          medicine={item.medicine}
-                          action="add"
-                          onAction={onAction}
-                        />
-                        <ActionButton
-                          medicine={item.medicine}
-                          action="remove"
-                          onAction={onAction}
-                        />
+                        <ActionButton medicine={item.medicine} action="add" onAction={onAction} />
+                        <ActionButton medicine={item.medicine} action="remove" onAction={onAction} />
                       </div>
                     </td>
                   )}
@@ -193,12 +185,12 @@ function StockLedger({
         </table>
       </div>
 
-      <ul className="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white sm:hidden">
+      <ul className="divide-y divide-slate-200/70 rounded-2xl border border-slate-200/70 bg-white/80 shadow-panel sm:hidden">
         {items.map((item) => {
           const share = total > 0 ? (item.quantity / total) * 100 : 0
 
           return (
-            <li key={item.medicine} className="px-4 py-3">
+            <li key={item.medicine} className="px-4 py-3.5">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-medium text-ink">
                   <MedicineButton medicine={item.medicine} onAction={onAction} />
@@ -208,7 +200,7 @@ function StockLedger({
                   <span className="ml-1 text-xs font-normal text-muted">units</span>
                 </span>
               </div>
-              <div className="mt-2 flex items-center gap-3">
+              <div className="mt-2.5 flex items-center gap-3">
                 <ShareBar share={share} />
                 <span className="tabular-data w-10 text-right text-xs text-muted">
                   {formatPercent(share)}

@@ -143,19 +143,20 @@ function CalculatorPage() {
         current_stock: Number(stockValue),
         yearly_sales: Number(salesValue),
         days: Number(daysValue),
+        state: organization?.state,
       })
       setResult(val)
       setStatus({
         type: 'success',
-        message:
-          val.source === 'local'
-            ? 'Local estimate ready — the calculation backend is unavailable.'
-            : 'Calculation ready from the backend.',
+        message: 'Calculation ready from the backend.',
       })
-    } catch {
+    } catch (error) {
       setStatus({
         type: 'error',
-        message: 'Could not send data. Please try again.',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'Could not send data. Please try again.',
       })
     } finally {
       setIsSubmitting(false)
@@ -166,20 +167,20 @@ function CalculatorPage() {
   const formDisabled = isLoadingMedicines || !hasMedicines
 
   return (
-    <section>
-      <h1 className="text-2xl font-semibold tracking-tight text-ink">
-        Calculator
-      </h1>
-      <p className="mt-1 text-muted">
-        Send stock and sales data for a medicine. The calculation backend is
-        tried first; a labeled local estimate is used if it is unavailable.
-      </p>
+    <section className="space-y-6">
+      <div>
+        <p className="text-xs font-medium uppercase tracking-[0.16em] text-brand-800">Demand forecast</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">Calculator</h1>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted">
+          Estimate target stock from current inventory, yearly sales, and your organization's state pattern.
+        </p>
+      </div>
 
-      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <form
           onSubmit={handleSubmit}
           noValidate
-          className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+          className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-panel"
         >
           <div>
             <label
@@ -196,7 +197,7 @@ function CalculatorPage() {
                 clearResult()
               }}
               disabled={formDisabled}
-              className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+              className="mt-1.5 w-full rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-ink focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
             >
               {isLoadingMedicines && <option value="">Loading medicines…</option>}
               {!isLoadingMedicines && !hasMedicines && (
@@ -241,24 +242,17 @@ function CalculatorPage() {
               aria-describedby={
                 errors.currentStock ? 'current-stock-error' : undefined
               }
-              className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+              className="tabular-data mt-1.5 w-full rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-ink focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
             />
             {errors.currentStock && (
-              <p
-                id="current-stock-error"
-                role="alert"
-                className="mt-2 text-sm text-red-600"
-              >
+              <p id="current-stock-error" role="alert" className="mt-2 text-sm text-red-600">
                 {errors.currentStock}
               </p>
             )}
           </div>
 
           <div className="mt-4">
-            <label
-              htmlFor="yearly-sales"
-              className="block text-sm font-medium text-slate-700"
-            >
+            <label htmlFor="yearly-sales" className="block text-sm font-medium text-slate-700">
               Average sold per year
             </label>
             <input
@@ -276,27 +270,18 @@ function CalculatorPage() {
               }}
               disabled={formDisabled}
               aria-invalid={Boolean(errors.yearlySales)}
-              aria-describedby={
-                errors.yearlySales ? 'yearly-sales-error' : undefined
-              }
-              className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+              aria-describedby={errors.yearlySales ? 'yearly-sales-error' : undefined}
+              className="tabular-data mt-1.5 w-full rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-ink focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
             />
             {errors.yearlySales && (
-              <p
-                id="yearly-sales-error"
-                role="alert"
-                className="mt-2 text-sm text-red-600"
-              >
+              <p id="yearly-sales-error" role="alert" className="mt-2 text-sm text-red-600">
                 {errors.yearlySales}
               </p>
             )}
           </div>
 
           <div className="mt-4">
-            <label
-              htmlFor="days"
-              className="block text-sm font-medium text-slate-700"
-            >
+            <label htmlFor="days" className="block text-sm font-medium text-slate-700">
               Days of stock to cover
             </label>
             <input
@@ -314,7 +299,7 @@ function CalculatorPage() {
               disabled={formDisabled}
               aria-invalid={Boolean(errors.days)}
               aria-describedby={errors.days ? 'days-error' : undefined}
-              className="tabular-data mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-ink focus:border-brand-600 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
+              className="tabular-data mt-1.5 w-full rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-ink focus:border-brand-500 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:bg-slate-100 disabled:text-muted"
             />
             {errors.days && (
               <p id="days-error" role="alert" className="mt-2 text-sm text-red-600">
@@ -326,7 +311,7 @@ function CalculatorPage() {
           <button
             type="submit"
             disabled={isSubmitting || formDisabled}
-            className="mt-6 w-full rounded-lg bg-brand-600 px-4 py-2 font-medium text-white transition-colors hover:bg-brand-700 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
+            className="mt-6 w-full rounded-xl bg-brand-700 px-4 py-2.5 font-medium text-white shadow-sm shadow-brand-900/10 transition-colors hover:bg-brand-800 focus:ring-2 focus:ring-brand-200 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none"
           >
             {isSubmitting ? 'Calculating…' : 'Calculate'}
           </button>
@@ -334,8 +319,10 @@ function CalculatorPage() {
           {status && (
             <p
               role={status.type === 'error' ? 'alert' : 'status'}
-              className={`mt-4 text-sm ${
-                status.type === 'error' ? 'text-red-600' : 'text-brand-800'
+              className={`mt-4 rounded-xl px-3.5 py-2.5 text-sm ${
+                status.type === 'error'
+                  ? 'bg-red-50 text-red-700 ring-1 ring-red-200'
+                  : 'bg-brand-50 text-brand-800 ring-1 ring-brand-100'
               }`}
             >
               {status.message}
@@ -343,41 +330,30 @@ function CalculatorPage() {
           )}
         </form>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-panel">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-medium text-muted">Forecast result</p>
-              <h2 className="mt-1 text-lg font-semibold text-ink">{medicine}</h2>
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Forecast result</p>
+              <h2 className="mt-1 text-lg font-semibold text-ink">{medicine || 'Select a medicine'}</h2>
             </div>
-            <div className="flex flex-col items-end gap-2">
-              {result && <StatusPill status={result.status} />}
-              {result && (
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-[11px] font-medium ring-1 ring-inset ${
-                    result.source === 'local'
-                      ? 'bg-amber-50 text-signal-low ring-amber-200'
-                      : 'bg-slate-50 text-muted ring-slate-200'
-                  }`}
-                >
-                  {result.source === 'local' ? 'Local estimate' : 'Backend result'}
-                </span>
-              )}
-            </div>
+            {result && <StatusPill status={result.status} />}
           </div>
 
           {result && result.target_stock !== undefined ? (
             <>
-              <div className="mt-6">
-                <p className="text-xs text-muted">Target stock</p>
-                <p className="tabular-data mt-1 text-4xl font-semibold tracking-tight text-ink">
+              <div className="mt-6 rounded-2xl bg-slate-50/80 p-5 ring-1 ring-slate-200/70">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted">Target stock</p>
+                <p className="tabular-data mt-2 text-4xl font-semibold tracking-tight text-ink">
                   {formatNumber(result.target_stock)}
-                  <span className="ml-2 text-sm font-normal text-muted">
-                    units
-                  </span>
+                  <span className="ml-2 text-sm font-normal text-muted">units</span>
+                </p>
+                <p className="mt-2 text-sm text-muted">
+                  For {days || '—'} days of cover
+                  {organization?.state ? ` in ${organization.state}` : ''}.
                 </p>
               </div>
 
-              <div className="mt-6 border-t border-slate-200 pt-5">
+              <div className="mt-6 border-t border-slate-200/70 pt-5">
                 <CoverageMeter
                   current={Number(currentStock)}
                   target={result.target_stock}
@@ -385,33 +361,23 @@ function CalculatorPage() {
                 />
               </div>
 
-              <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-slate-200 pt-5">
-                <Derivation
-                  label="Daily average"
-                  value={formatNumber(result.daily_average ?? 0, 1)}
-                />
-                <Derivation
-                  label="Seasonal factor"
-                  value={`×${formatNumber(result.seasonal_factor ?? 0, 2)}`}
-                />
-                <Derivation
-                  label="Expected daily use"
-                  value={formatNumber(result.expected_daily_use ?? 0, 2)}
-                />
+              <dl className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-slate-200/70 pt-5">
+                <Derivation label="Daily average" value={formatNumber(result.daily_average ?? 0, 1)} />
+                <Derivation label="Seasonal factor" value={`×${formatNumber(result.seasonal_factor ?? 0, 2)}`} />
+                <Derivation label="Expected daily use" value={formatNumber(result.expected_daily_use ?? 0, 2)} />
                 <Derivation label="Cover period" value={`${days} days`} />
               </dl>
 
-              <div className="mt-6 space-y-1 border-t border-slate-200 pt-4 text-xs text-muted">
+              <div className="mt-6 space-y-1.5 rounded-xl bg-slate-50/70 px-4 py-3 text-xs text-muted ring-1 ring-slate-200/70">
                 <p>Baseline: {formatSource(result.baseline_source)}</p>
                 <p>
-                  Rainfall adjustment{' '}
-                  {result.adjustment_applied ? 'applied' : 'not applied'}
+                  Rainfall adjustment {result.adjustment_applied ? 'applied' : 'not applied'}
                   {result.capped ? ' · seasonal factor capped' : ''}
                 </p>
               </div>
             </>
           ) : (
-            <div className="mt-6 rounded-lg bg-canvas px-4 py-5 text-sm text-muted">
+            <div className="mt-6 rounded-2xl border border-dashed border-slate-300/80 bg-slate-50/50 px-4 py-8 text-sm text-muted">
               {result
                 ? 'Request received. No calculation details were returned.'
                 : 'Enter stock and sales figures, then calculate to see the target.'}
@@ -420,7 +386,7 @@ function CalculatorPage() {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div>
         <SeasonalityChart state={organization?.state} />
       </div>
     </section>
