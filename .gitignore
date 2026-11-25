@@ -1,2 +1,6 @@
 # Large raw datasets
 dataProcessing/original/daily-rainfall-data-district-level.csv
+
+# Python cache files
+__pycache__/
+*.py[cod]

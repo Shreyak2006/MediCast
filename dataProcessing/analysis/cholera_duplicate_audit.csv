@@ -1,0 +1,96 @@
+source_row,state_ut,district,day,mon,year,week_of_outbreak,Cases,Deaths,duplicate_group_size
+8906,Assam,Barpeta,28,9,2009,42nd week,640,12.0,2
+8924,Assam,Barpeta,28,9,2009,44th week,1010,13.0,2
+8681,Assam,Bongaigaon,12,6,2009,26th week,9,2.0,2
+8705,Assam,Bongaigaon,12,6,2009,27th week,15,2.0,2
+2675,Assam,Cachar,9,2,2016,6th week,16,,2
+2676,Assam,Cachar,9,2,2016,6th week,3,,2
+7041,Assam,Jorhat,19,12,2010,1st week,5,1.0,2
+8654,Assam,Jorhat,19,12,2010,53rd week,5,1.0,2
+5023,Assam,Lakhimpur,4,9,2014,36th week,59,1.0,3
+5069,Assam,Lakhimpur,4,9,2014,37th week,110,3.0,3
+5089,Assam,Lakhimpur,4,9,2014,38th week,132,4.0,3
+8564,Assam,Sibsagar,22,10,2010,44th week,13,1.0,2
+8581,Assam,Sibsagar,22,10,2010,45th week,32,1.0,2
+8573,Assam,Sonitpur,3,10,2010,44th week,180,17.0,2
+8580,Assam,Sonitpur,3,10,2010,45th week,887,22.0,2
+7327,Assam,Udalguri,14,6,2011,24th week,140,3.0,4
+6551,Assam,Udalguri,14,6,2011,25th week,404,,4
+7367,Assam,Udalguri,14,6,2011,25th week,404,6.0,4
+7416,Assam,Udalguri,14,6,2011,27th week,404,6.0,4
+355,Chandigarh,Chandigarh,1,8,2021,31st week,8,,2
+418,Chandigarh,Chandigarh,1,8,2021,37th week,11,,2
+4168,Chandigarh,Chandigarh,8,8,2015,32nd week,16,,2
+4213,Chandigarh,Chandigarh,8,8,2015,33rd week,43,,2
+2951,Chandigarh,Chandigarh,9,6,2016,23rd week,31,,3
+3020,Chandigarh,Chandigarh,9,6,2016,24th week,40,,3
+3056,Chandigarh,Chandigarh,9,6,2016,25th week,51,,3
+2785,Gujarat,Gandhi Nagar,25,4,2016,17th week,21,,2
+2826,Gujarat,Gandhi Nagar,25,4,2016,18th week,34,,2
+3922,Gujarat,Gandhi Nagar,25,5,2015,22nd week,9,,2
+3923,Gujarat,Gandhi Nagar,25,5,2015,22nd week,1,,2
+5537,Gujarat,Gandhinagar,20,6,2013,25th week,17,,2
+5538,Gujarat,Gandhinagar,20,6,2013,25th week,7,,2
+8260,Haryana,Karnal,3,7,2010,27th week,10,,2
+8307,Haryana,Karnal,3,7,2010,28th week,46,,2
+8288,Haryana,Kurukshetra,12,7,2010,28th week,5,,2
+8314,Haryana,Kurukshetra,12,7,2010,29th week,5,,2
+5964,Haryana,Kurukshetra,29,9,2013,39th week,61,,2
+5984,Haryana,Kurukshetra,29,9,2013,40th week,13,,2
+330,Haryana,Panchkula,13,7,2021,28th week,440,1.0,2
+339,Haryana,Panchkula,13,7,2021,29th week,511,1.0,2
+4997,Haryana,Panchkula,29,8,2014,35th week,761,,2
+5045,Haryana,Panchkula,29,8,2014,36th week,791,,2
+8853,Haryana,Panipat,16,9,2009,38th week,373,7.0,2
+8869,Haryana,Panipat,16,9,2009,39th week,447,7.0,2
+8287,Himachal Pradesh,Shimla,13,7,2010,28th week,40,1.0,3
+8313,Himachal Pradesh,Shimla,13,7,2010,29th week,40,1.0,3
+8348,Himachal Pradesh,Shimla,13,7,2010,31st week,235,1.0,3
+2804,Karnataka,Belagavi,4,5,2016,18th week,5,,2
+2805,Karnataka,Belagavi,4,5,2016,18th week,3,,2
+2710,Karnataka,Mysuru,4,3,2016,10th week,40,,2
+2734,Karnataka,Mysuru,4,3,2016,12th week,40,,2
+6378,Kerala,Wayanad,3,5,2012,19th week,8,1.0,2
+6422,Kerala,Wayanad,3,5,2012,20th week,25,1.0,2
+6541,Kerala,Wayanad,20,6,2011,25th week,74,,2
+7357,Kerala,Wayanad,20,6,2011,25th week,74,6.0,2
+3181,Madhya Pradesh,Ratlam,14,7,2016,29th week,744,1.0,2
+3373,Madhya Pradesh,Ratlam,14,7,2016,33rd week,1614,1.0,2
+7473,Maharashtra,Raigad,11,7,2011,29th week,67,0.0,2
+7520,Maharashtra,Raigad,11,7,2011,30th week,94,0.0,2
+8245,Puducherry,Puducherry,22,6,2010,26th week,4,,2
+7933,Puducherry,Puducherry,22,6,2010,48th week,7,0.0,2
+8274,Puducherry,Puducherry,29,6,2010,27th week,7,,2
+8332,Puducherry,Puducherry,29,6,2010,30th week,6,,2
+8295,Rajasthan,Jaipur,16,7,2010,28th week,766,,3
+8321,Rajasthan,Jaipur,16,7,2010,29th week,766,,3
+8333,Rajasthan,Jaipur,16,7,2010,30th week,984,,3
+5804,Telangana,Medak,16,8,2013,34th week,93,3.0,2
+5868,Telangana,Medak,16,8,2013,35th week,201,3.0,2
+3534,Telangana,Medak,19,9,2016,38th week,44,,2
+3705,Telangana,Medak,19,9,2016,46th week,59,,2
+3243,Telangana,Medak,27,7,2016,30th week,202,1.0,2
+3544,Telangana,Medak,27,7,2016,38th week,250,1.0,2
+2851,West Bengal,Bankura,2,5,2016,19th week,122,,2
+2874,West Bengal,Bankura,2,5,2016,20th week,122,,2
+7604,West Bengal,Bankura,11,8,2011,33rd week,165,0.0,2
+7696,West Bengal,Bankura,11,8,2011,36th week,189,0.0,2
+3043,West Bengal,Bankura,19,6,2016,25th week,56,,2
+3088,West Bengal,Bankura,19,6,2016,26th week,56,,2
+6104,West Bengal,Bankura,25,10,2013,44th week,50,,3
+6105,West Bengal,Bankura,25,10,2013,44th week,86,,3
+6129,West Bengal,Bankura,25,10,2013,45th week,110,,3
+6614,West Bengal,Birbhum,6,7,2012,28th week,53,,2
+6615,West Bengal,Birbhum,6,7,2012,28th week,21,,2
+7594,West Bengal,Birbhum,14,8,2011,33rd week,155,0.0,3
+7639,West Bengal,Birbhum,14,8,2011,34th week,179,0.0,3
+7699,West Bengal,Birbhum,14,8,2011,36th week,206,0.0,3
+8121,West Bengal,Howrah,10,5,2010,20th week,90,,2
+8153,West Bengal,Howrah,10,5,2010,21st week,90,3.0,2
+464,West Bengal,North 24 Parganas,7,9,2021,40th week,1027,1.0,2
+475,West Bengal,North 24 Parganas,7,9,2021,41st week,1027,1.0,2
+4930,West Bengal,North 24 Parganas,18,7,2014,31st week,290,,3
+4950,West Bengal,North 24 Parganas,18,7,2014,32nd week,445,,3
+5019,West Bengal,North 24 Parganas,18,7,2014,35th week,477,,3
+5949,West Bengal,North 24 Parganas,22,9,2013,38th week,190,1.0,2
+6004,West Bengal,North 24 Parganas,22,9,2013,40th week,248,1.0,2

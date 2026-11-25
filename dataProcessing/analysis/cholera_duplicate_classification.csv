@@ -1,0 +1,12 @@
+state,district,outbreak_start_date,classification,provisional_handling,evidence_note
+Assam,Cachar,09-02-2016,Separate outbreaks,Preserve both,Different outbreak IDs
+Chandigarh,Chandigarh,09-06-2016,Same outbreak; cumulative updates,Latest count: 51,Same outbreak ID across weeks 23-25
+Gujarat,Gandhi Nagar,25-04-2016,Unresolved,Preserve both,Week 18 count not independently verified
+Gujarat,Gandhi Nagar,25-05-2015,Separate outbreaks,Preserve both,Different villages: Ghamij and Adlaj
+Karnataka,Belagavi,04-05-2016,Unresolved,Preserve both,Same reporting week; IDs not verified
+Karnataka,Mysuru,04-03-2016,Unresolved,Preserve both,Different reporting-week IDs; late-report status needs verification
+Madhya Pradesh,Ratlam,14-07-2016,Likely same outbreak; follow-up,Do not sum counts,Week 33 report identifies a late report; ID relationship needs reconciliation
+Telangana,Medak,27-07-2016,Same outbreak; cumulative updates,Latest count: 250,Same outbreak ID
+Telangana,Medak,19-09-2016,Same outbreak; cumulative updates,Latest count: 59,Same outbreak ID
+West Bengal,Bankura,02-05-2016,Same outbreak; late report,Count: 122,Same outbreak ID
+West Bengal,Bankura,19-06-2016,Unresolved,Preserve both,Different outbreak IDs despite matching date and location
