@@ -3,7 +3,6 @@ import type { ReactNode } from 'react'
 import * as authApi from '../api/auth'
 import { getToken, setToken } from '../api/http'
 import * as organizationApi from '../api/organizations'
-import { backendConnected } from '../config'
 import { AuthContext } from './auth'
 import type { AuthState, CreateOrganizationInput } from './auth'
 
@@ -20,12 +19,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   const refresh = useCallback(async (): Promise<AuthState> => {
-    if (!backendConnected) {
-      const nextState = await authApi.getMe()
-      setState(nextState)
-      return nextState
-    }
-
     if (!getToken()) {
       setState(EMPTY_STATE)
       return EMPTY_STATE
@@ -44,18 +37,6 @@ function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false
-
-    if (!backendConnected) {
-      authApi.getMe().then((restored) => {
-        if (!cancelled) {
-          setState(restored)
-          setIsLoading(false)
-        }
-      })
-      return () => {
-        cancelled = true
-      }
-    }
 
     async function restoreSession() {
       if (!getToken()) {

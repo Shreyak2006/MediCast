@@ -1,2 +1,9 @@
 # Large raw datasets
 dataProcessing/original/daily-rainfall-data-district-level.csv
+.neon
+node_modules/
+
+# Local environment / secrets
+.env
+.env.local
+.env.*.local

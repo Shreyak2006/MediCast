@@ -2,7 +2,7 @@
 
 This guide covers the React frontend in `frontend/src/`: what each page does, how the routes are guarded, and the end-to-end workflows a user can follow. For the backend/data side, see [`README.md`](README.md); for notebooks, see [`dataProcessing_README.md`](dataProcessing_README.md).
 
-> **Scope note:** the frontend runs standalone by default — authentication, organizations, members, join requests, and inventory all come from a browser-local fixture in `data/demoState.ts`, with no backend or database needed. Setting `VITE_BACKEND_CONNECTED=true` switches them to the FastAPI backend and PostgreSQL (React context then holds server state and `localStorage` holds the opaque session token). The Calculator always tries `POST /api/calculate` first and falls back to a labeled local estimate. Charts, cover estimates, and demo datasets remain frontend-only. See `README.md` section 4.8 for the full dummy-data reference.
+> **Scope note:** the frontend is connected to the backend. Authentication, organizations, members, join requests, inventory, and calculations all call the FastAPI API; React context holds server state and `localStorage` holds only the opaque session token. Charts, cover estimates, and demo datasets remain labeled frontend-only visuals. See `README.md` section 4.8 for details.
 
 ---
 
@@ -20,7 +20,7 @@ npm run lint     # oxlint
 npm run preview  # serve the production build
 ```
 
-- The API base URL comes from `VITE_API_BASE_URL` (see `frontend/.env.example`) and defaults to `http://localhost:8000`. The backend must be running for inventory and calculator pages to work.
+- The API base URL comes from `VITE_API_BASE_URL` (see `frontend/.env.example`) and defaults to `http://localhost:8000`. The backend and PostgreSQL must be running for the app to work.
 
 ---
 
@@ -34,7 +34,7 @@ frontend/src/
 │   ├── auth.ts               # signup, login, getMe, logout
 │   ├── organizations.ts      # create, join request, leave, remove member
 │   ├── admin.ts              # pending join requests, accept/reject
-│   └── inventory.ts          # Inventory + calculation helpers (unchanged pages)
+│   └── inventory.ts          # Inventory + calculation API helpers
 ├── components/
 │   ├── NavBar.tsx            # Shared nav + profile dropdown
 │   ├── StockLedger.tsx       # Stock table with share bars and admin add/remove actions
@@ -52,8 +52,7 @@ frontend/src/
 │   └── demoAnalytics.ts      # Frontend-only demo usage, state baselines, seasonality
 ├── lib/
 │   ├── cover.ts              # Days of cover + units needed for a 30-day target
-│   ├── format.ts             # Shared number and percent formatting
-│   └── localStock.ts         # Browser-local adjustment layer for admin removals
+│   └── format.ts             # Shared number and percent formatting
 ├── types/svg-maps-india.d.ts # Local type shim for @svg-maps/india
 ├── pages/
 │   ├── LandingPage.tsx
@@ -128,15 +127,15 @@ Three states, all rendered by this one page:
 Loads `GET /api/inventory` on mount. A compact summary line shows the medicine count, total units, and the number of units needed to reach a 30-day cover target; `StockLedger` renders each medicine with its quantity and a bar for its share of tracked stock. Below it, a **Demand intelligence** panel adds a month selector, `MonthlyUseChart` for demo medicine use, and `IndiaDengueMap` for demo state-level dengue data. The organization's state is outlined on the map. Loading, error, and empty states are unchanged.
 
 ### InventoryPage (`/inventory`)
-Shows the same `StockLedger` with a **Stock ledger** summary and a `CoverStatus` estimate per medicine. Below the ledger, a **How much medicine is needed** panel totals the units required to bring every medicine up to the 30-day target and lists each shortfall. Admins get **Add stock** and **Remove stock** buttons globally and two actions per row; clicking a medicine name opens the add modal. The modal previews `current → after` units and cover status, and offers a **Use suggested N units** shortcut when stock is below target. Adds call `POST /api/inventory`; removals are applied through the browser-local adjustment layer because the API has no remove endpoint. Members see a read-only ledger with no mutation controls. The `addMedicine()` helper exists but is not used by any page yet.
+Shows the same `StockLedger` with a **Stock ledger** summary and a `CoverStatus` estimate per medicine. Below the ledger, a **How much medicine is needed** panel totals the units required to bring every medicine up to the 30-day target and lists each shortfall. Admins get **Add stock** and **Remove stock** buttons globally and two actions per row; clicking a medicine name opens the add modal. The modal previews `current → after` units and cover status, and offers a **Use suggested N units** shortcut when stock is below target. Adds call `POST /api/inventory`; removals call `POST /api/inventory/remove`. Members see a read-only ledger with no mutation controls. The `addMedicine()` helper exists but is not used by any page yet.
 
 ### CalculatorPage (`/calculator`)
-Loads medicines from `GET /api/inventory` for the dropdown. A two-column layout puts the validated input form on the left and the forecast result on the right. The form collects current stock, average yearly sales, and days of stock to cover (default 30), then posts `medicine`, `current_stock`, `yearly_sales`, `days` to `POST /api/calculate`. The result panel leads with target stock, uses `CoverageMeter` to show current stock against that target plus any shortfall or surplus, and lists the derivation and provenance. Changing any input clears the previous result. A `SeasonalityChart` below the result shows a 12-month demo dengue pattern for the organization's state, falling back to the national demo average. Non-dengue medicines return only a status and get a plain "Request received" message.
+Loads medicines from `GET /api/inventory` for the dropdown. A two-column layout puts the validated input form on the left and the forecast result on the right. The form collects current stock, average yearly sales, and days of stock to cover (default 30), then posts `medicine`, `current_stock`, `yearly_sales`, `days`, and the organization's state to `POST /api/calculate`. The result panel leads with target stock, uses `CoverageMeter` to show current stock against that target plus any shortfall or surplus, and lists the derivation and provenance. Changing any input clears the previous result. A `SeasonalityChart` below the result shows a 12-month demo dengue pattern for the organization's state, falling back to the national demo average. Non-dengue medicines return only a status and get a plain "Request received" message.
 
-> The UI does not send `state`, `month`, or `rain_prev_departure`, so web calculations never use state-specific baselines or the rainfall adjustment. Direct API calls can supply them.
+> The UI sends the organization's state, so the backend uses state-month baselines and automatic rainfall lookup. It leaves `month` to the backend default; direct API calls can override `month` or `rain_prev_departure`.
 
 ### ProfilePage (`/profile`)
-Read-only display of the current user's name, email, organization name, and role. In standalone mode it also shows demo profile fields (employee ID, designation, department, phone, joined date, location) from `data/demoState.ts`. When nobody is signed in, `useDisplayAuth()` falls back to the always-present "test" fixtures so the page still shows dummy values — useful with the dev page dock, which can open every page at any auth state. The same fallback keeps Organization info, Admin, Inventory, Dashboard, and the nav bar populated when signed out; pending requests and stock fall back in `api/admin.ts` and `api/inventory.ts`. Connected mode is unchanged.
+Read-only display of the current user's name, email, organization name, and role, all from the API-backed session. Route guards keep the page available only to signed-in users with an organization.
 
 ### OrganizationInfoPage (`/organization-info`)
 Read-only organization name, code, and member table from the API. Members see a **Leave Organization** button, which posts to `/api/organizations/me/leave` and returns to `/organization`; admins do not.
@@ -180,7 +179,7 @@ The three feature pages share a quiet clinical visual language, with charts used
 1. Go to `/inventory`. Members see a read-only ledger and no action buttons.
 2. Click **Add stock** / **Remove stock**, or use the **Add** / **Remove** action in a ledger row.
 3. Enter a positive whole-number quantity, or use **Use suggested N units** to fill the 30-day gap. Removal is capped at the displayed quantity. The modal previews `current → after` units and cover status.
-4. Submit → an add calls `POST /api/inventory` and updates the server's in-memory store; a removal updates the browser-local adjustment key and refreshes the displayed ledger. The restock panel and dashboard summary update with the new shortfall.
+4. Submit → an add calls `POST /api/inventory` and a removal calls `POST /api/inventory/remove`; both update the server's in-memory store and refresh the displayed ledger. The restock panel and dashboard summary update with the new shortfall.
 
 ### 5.4 Run a calculation
 1. Go to `/calculator`.
@@ -207,7 +206,7 @@ Open the profile dropdown → **Logout**. `POST /api/auth/logout` deletes the se
 
 `AuthProvider` holds `user`, `organization`, `role`, `members`, and `pendingJoinCode`, all returned by the API. Only the opaque session token is persisted under `medicast.token` in `localStorage`; on page load the session is restored with `GET /api/auth/me`, so refreshes keep the session without trusting locally cached state.
 
-A second, unrelated `localStorage` key, `medicast.inventoryAdjustments`, stores admin-only stock removals as negative per-medicine deltas. They are applied on top of the API response after every fetch. This keeps the demo frontend-only, but removals are not shared between users or persisted on the server.
+There is no browser-local stock state: inventory is read from and written to the backend's in-memory store on every change.
 
 - `login(email, password)` and `signup(name, email, password)` store the returned token and adopt the server's auth state.
 - `createOrganization(input)` has the server create the hospital, returns its generated `ORG-XXXXX` code, and makes the creator an admin.
@@ -225,6 +224,7 @@ Inventory and calculation helpers live in `api/inventory.ts`; auth, organization
 |---|---|---|
 | `getInventory()` | `GET /api/inventory` | inventory.ts |
 | `addInventory(input)` | `POST /api/inventory` | inventory.ts |
+| `removeInventory(input)` | `POST /api/inventory/remove` | inventory.ts |
 | `addMedicine(name)` | `POST /api/medicines` | inventory.ts |
 | `sendCalculation(input)` | `POST /api/calculate` | inventory.ts |
 | `signup(name, email, password)` | `POST /api/auth/signup` | auth.ts |
@@ -244,8 +244,8 @@ Inventory and calculation helpers live in `api/inventory.ts`; auth, organization
 ## 8. Known placeholders
 
 - **State/district data is sample data** in `src/data/districts.ts`; the create-organization form submits it as text and the backend stores it on the hospital row.
-- **Calculator sends no `state` or `month`**, so it never exercises the backend's state-aware baseline or rainfall adjustment (unchanged page).
+- **Calculator sends the organization's state** but not `month`, so the backend chooses the current month and handles the rainfall lookup.
 - **Demand charts and the India map use static demo data** from `src/data/demoAnalytics.ts`; they are not live usage or surveillance data.
 - **Cover estimates and suggested order quantities use the demo dataset** because the API supplies current stock but no dispensing history.
-- **Inventory remains in memory** and resets when the backend restarts. Admin removals are browser-local adjustments and are not synced to the server.
+- **Inventory remains in memory** and resets when the backend restarts. All admin stock changes are synced to the server.
 - **No automated frontend tests** are configured yet; `npm run build` (TypeScript + Vite) and `npm run lint` are the current checks.

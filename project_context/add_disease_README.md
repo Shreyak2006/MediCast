@@ -119,9 +119,9 @@ Loads `GET /api/inventory` on mount and renders one `MedicineCard` per medicine 
 Lists medicines and their stock. An **Add medicine** button opens a modal with a medicine select and quantity input; submitting posts to `POST /api/inventory` via `addInventory()` and updates the local list. The `addMedicine()` helper exists but is not used by any page yet.
 
 ### CalculatorPage (`/calculator`)
-Loads medicines from `GET /api/inventory` for the dropdown. The form collects current stock, average yearly sales, and days of stock to cover (default 30), validates them client-side, and posts `medicine`, `current_stock`, `yearly_sales`, `days` to `POST /api/calculate`. The result card shows status, target stock, shortfall, daily average, expected daily use, seasonal factor, baseline source, and rainfall/capping badges. Non-dengue medicines return only a status and get a plain "Request received" message.
+Loads medicines from `GET /api/inventory` for the dropdown. The form collects current stock, average yearly sales, and days of stock to cover (default 30), validates them client-side, and posts `medicine`, `current_stock`, `yearly_sales`, `days`, and the organization's state to `POST /api/calculate`. The result card shows status, target stock, shortfall, daily average, expected daily use, seasonal factor, baseline source, and rainfall/capping badges. Non-dengue medicines return only a status and get a plain "Request received" message.
 
-> The UI does not send `state`, `month`, or `rain_prev_departure`, so web calculations never use state-specific baselines or the rainfall adjustment. Direct API calls can supply them.
+> The UI sends the organization's state, so the backend uses state-month baselines and automatic rainfall lookup. Direct API calls can override `month` or supply `rain_prev_departure`.
 
 ### ProfilePage (`/profile`)
 Read-only display of the current user's name, email, organization name, and role.

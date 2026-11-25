@@ -37,3 +37,20 @@ def add_inventory(update: InventoryUpdate):
 
     inventory_data[medicine] = inventory_data.get(medicine, 0) + update.quantity
     return InventoryItem(medicine=medicine, quantity=inventory_data[medicine])
+
+
+@router.post("/inventory/remove", response_model=InventoryItem)
+def remove_inventory(update: InventoryUpdate):
+    medicine = update.medicine.strip()
+
+    if not medicine:
+        raise HTTPException(status_code=422, detail="Medicine is required")
+
+    if medicine not in inventory_data:
+        raise HTTPException(status_code=404, detail="Medicine not found")
+
+    if update.quantity > inventory_data[medicine]:
+        raise HTTPException(status_code=409, detail="Not enough stock to remove")
+
+    inventory_data[medicine] -= update.quantity
+    return InventoryItem(medicine=medicine, quantity=inventory_data[medicine])
