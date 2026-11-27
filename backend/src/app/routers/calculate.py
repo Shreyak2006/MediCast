@@ -14,8 +14,13 @@ def calculate_request(payload: CalculationRequest):
     today = date.today()
     month = payload.month if payload.month is not None else today.month
 
+    # Cholera uses no rainfall signal; keep the Dengue lookup untouched.
     rain_prev_departure = payload.rain_prev_departure
-    if rain_prev_departure is None and payload.state:
+    if (
+        rain_prev_departure is None
+        and payload.state
+        and payload.medicine != "Cholera medicines"
+    ):
         rain_prev_departure = get_rain_prev_departure(payload.state, today.year, month)
 
     return calculate(

@@ -1,0 +1,1310 @@
+{
+    "source":  "dataProcessing/cholera/processed/cholera_state_month.csv",
+    "baseline_kind":  "per_state_mean_monthly",
+    "schema_version":  "1",
+    "generated_at":  "2026-11-25T00:13:43",
+    "thresholds":  {
+                       "min_total_observed_state_months":  5,
+                       "min_monthly_observations":  2
+                   },
+    "target":  "monthly_reported_cholera_burden_per_state",
+    "states":  [
+                   {
+                       "last_observed_year":  2015,
+                       "state":  "Andhra Pradesh",
+                       "total_observed_state_months":  2,
+                       "first_observed_year":  2012,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  2,
+                       "coverage_pct":  16.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2019,
+                       "state":  "Assam",
+                       "total_observed_state_months":  29,
+                       "first_observed_year":  2009,
+                       "status":  "complete",
+                       "distinct_calendar_months":  12,
+                       "coverage_pct":  100,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  2,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  21,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2011,
+                                                 "observations":  1,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  4,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  180,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  4,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  355.5,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  2,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  21,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  2,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  19,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  6,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  348.66666666666669,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  3,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  399.33333333333331,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  2,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  10.5,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2010,
+                                                 "observations":  1,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  null,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2014,
+                       "state":  "Bihar",
+                       "total_observed_state_months":  2,
+                       "first_observed_year":  2014,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  2,
+                       "coverage_pct":  16.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  1,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  1,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  null,
+                                                 "month":  10
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2021,
+                       "state":  "Chandigarh",
+                       "total_observed_state_months":  8,
+                       "first_observed_year":  2011,
+                       "status":  "partial",
+                       "distinct_calendar_months":  4,
+                       "coverage_pct":  33.33,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  3,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  43.666666666666664,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  27.666666666666668,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2017,
+                       "state":  "Chhattisgarh",
+                       "total_observed_state_months":  10,
+                       "first_observed_year":  2011,
+                       "status":  "partial",
+                       "distinct_calendar_months":  5,
+                       "coverage_pct":  41.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2011,
+                                                 "observations":  1,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  null,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  2,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  26.5,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  29,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  106.33333333333333,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  10
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2019,
+                       "state":  "Dadra and Nagar Haveli",
+                       "total_observed_state_months":  5,
+                       "first_observed_year":  2013,
+                       "status":  "partial",
+                       "distinct_calendar_months":  3,
+                       "coverage_pct":  25,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  1,
+                                                 "year_min":  2019,
+                                                 "mean_cases":  null,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  3,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  5.666666666666667,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  8
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2019,
+                       "state":  "Delhi",
+                       "total_observed_state_months":  6,
+                       "first_observed_year":  2013,
+                       "status":  "partial",
+                       "distinct_calendar_months":  3,
+                       "coverage_pct":  25,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  1,
+                                                 "year_min":  2019,
+                                                 "mean_cases":  null,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  3,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  27,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  2,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  31,
+                                                 "month":  8
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2013,
+                       "state":  "Goa",
+                       "total_observed_state_months":  1,
+                       "first_observed_year":  2013,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  1,
+                       "coverage_pct":  8.33,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  5
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2021,
+                       "state":  "Gujarat",
+                       "total_observed_state_months":  40,
+                       "first_observed_year":  2010,
+                       "status":  "partial",
+                       "distinct_calendar_months":  11,
+                       "coverage_pct":  91.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  5,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  83.8,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  8,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  89.25,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  8,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  130,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  5,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  48.4,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  3,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  24.666666666666668,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  5,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  46.8,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  1,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  null,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  2,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  198,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2021,
+                       "state":  "Haryana",
+                       "total_observed_state_months":  16,
+                       "first_observed_year":  2009,
+                       "status":  "partial",
+                       "distinct_calendar_months":  6,
+                       "coverage_pct":  50,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  2,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  97.5,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  3,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  352.33333333333331,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  4,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  427.75,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  4,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  270.25,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  2,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  50.5,
+                                                 "month":  10
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2010,
+                       "state":  "Himachal Pradesh",
+                       "total_observed_state_months":  1,
+                       "first_observed_year":  2010,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  1,
+                       "coverage_pct":  8.33,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2010,
+                                                 "observations":  1,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  null,
+                                                 "month":  7
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2019,
+                       "state":  "Jammu and Kashmir",
+                       "total_observed_state_months":  3,
+                       "first_observed_year":  2010,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  2,
+                       "coverage_pct":  16.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  2,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  1237.5,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2022,
+                       "state":  "Karnataka",
+                       "total_observed_state_months":  62,
+                       "first_observed_year":  2009,
+                       "status":  "complete",
+                       "distinct_calendar_months":  12,
+                       "coverage_pct":  100,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  2,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  50,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  32.333333333333336,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  4,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  80.5,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  6,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  127.5,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2022,
+                                                 "observations":  8,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  106.375,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  8,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  67.875,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  5,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  70.4,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  8,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  53.75,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  7,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  43.142857142857146,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  4,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  105.25,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2020,
+                                                 "observations":  5,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  46.8,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  2,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  12,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2021,
+                       "state":  "Kerala",
+                       "total_observed_state_months":  12,
+                       "first_observed_year":  2011,
+                       "status":  "partial",
+                       "distinct_calendar_months":  8,
+                       "coverage_pct":  66.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  2,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  30.5,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  2,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  169,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  60,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  1,
+                                                 "year_min":  2017,
+                                                 "mean_cases":  null,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  1,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  null,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  1,
+                                                 "year_min":  2021,
+                                                 "mean_cases":  null,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2018,
+                       "state":  "Madhya Pradesh",
+                       "total_observed_state_months":  14,
+                       "first_observed_year":  2010,
+                       "status":  "partial",
+                       "distinct_calendar_months":  6,
+                       "coverage_pct":  50,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  3,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  48,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  1138,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  4,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  101,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2010,
+                                                 "observations":  1,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  2,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  21.5,
+                                                 "month":  10
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2021,
+                       "state":  "Maharashtra",
+                       "total_observed_state_months":  36,
+                       "first_observed_year":  2009,
+                       "status":  "partial",
+                       "distinct_calendar_months":  11,
+                       "coverage_pct":  91.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2010,
+                                                 "observations":  1,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  null,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  21.666666666666668,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  4,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  143.25,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2020,
+                                                 "observations":  5,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  62.6,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  5,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  305.2,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  4,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  87.75,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  3,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  61,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  3,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  171.66666666666666,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  5,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  1221.4,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  2,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  65.5,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2022,
+                       "state":  "Odisha",
+                       "total_observed_state_months":  14,
+                       "first_observed_year":  2010,
+                       "status":  "partial",
+                       "distinct_calendar_months":  6,
+                       "coverage_pct":  50,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  1,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  null,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2022,
+                                                 "observations":  1,
+                                                 "year_min":  2022,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  4,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  32.75,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  4,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  218,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  3,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  35.666666666666664,
+                                                 "month":  10
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2020,
+                       "state":  "Puducherry",
+                       "total_observed_state_months":  3,
+                       "first_observed_year":  2010,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  3,
+                       "coverage_pct":  25,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2020,
+                                                 "observations":  1,
+                                                 "year_min":  2020,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2010,
+                                                 "observations":  1,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  null,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2010,
+                                                 "observations":  1,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  null,
+                                                 "month":  11
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2019,
+                       "state":  "Punjab",
+                       "total_observed_state_months":  36,
+                       "first_observed_year":  2009,
+                       "status":  "partial",
+                       "distinct_calendar_months":  9,
+                       "coverage_pct":  75,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2017,
+                                                 "observations":  1,
+                                                 "year_min":  2017,
+                                                 "mean_cases":  null,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  2,
+                                                 "year_min":  2017,
+                                                 "mean_cases":  116.5,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  4,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  383.25,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  8,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  201.25,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  9,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  164.88888888888889,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  7,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  71.714285714285708,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  239.66666666666666,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  11
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2016,
+                       "state":  "Rajasthan",
+                       "total_observed_state_months":  11,
+                       "first_observed_year":  2010,
+                       "status":  "partial",
+                       "distinct_calendar_months":  5,
+                       "coverage_pct":  41.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  2,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  63,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  3,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  911.33333333333337,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  4,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  249.25,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2022,
+                       "state":  "Tamil Nadu",
+                       "total_observed_state_months":  18,
+                       "first_observed_year":  2010,
+                       "status":  "partial",
+                       "distinct_calendar_months":  11,
+                       "coverage_pct":  91.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  2,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  40.5,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  1,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  null,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  2,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  53.5,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2011,
+                                                 "observations":  1,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  null,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2012,
+                                                 "observations":  2,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  59.5,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2022,
+                                                 "observations":  3,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  19,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2014,
+                                                 "observations":  1,
+                                                 "year_min":  2014,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2011,
+                                                 "observations":  1,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  null,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2011,
+                                                 "observations":  1,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  null,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  3,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  25.333333333333332,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2016,
+                       "state":  "Telangana",
+                       "total_observed_state_months":  7,
+                       "first_observed_year":  2013,
+                       "status":  "partial",
+                       "distinct_calendar_months":  6,
+                       "coverage_pct":  50,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  1,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  null,
+                                                 "month":  2
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  2,
+                                                 "year_min":  2015,
+                                                 "mean_cases":  137.5,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  11
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2021,
+                       "state":  "Uttar Pradesh",
+                       "total_observed_state_months":  4,
+                       "first_observed_year":  2016,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  4,
+                       "coverage_pct":  33.33,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  1,
+                                                 "year_min":  2021,
+                                                 "mean_cases":  null,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  1,
+                                                 "year_min":  2021,
+                                                 "mean_cases":  null,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  1,
+                                                 "year_min":  2021,
+                                                 "mean_cases":  null,
+                                                 "month":  10
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2011,
+                       "state":  "Uttarakhand",
+                       "total_observed_state_months":  2,
+                       "first_observed_year":  2009,
+                       "status":  "insufficient_history",
+                       "distinct_calendar_months":  2,
+                       "coverage_pct":  16.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2011,
+                                                 "observations":  1,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  null,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2009,
+                                                 "observations":  1,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  null,
+                                                 "month":  12
+                                             }
+                                         ]
+                   },
+                   {
+                       "last_observed_year":  2022,
+                       "state":  "West Bengal",
+                       "total_observed_state_months":  49,
+                       "first_observed_year":  2009,
+                       "status":  "partial",
+                       "distinct_calendar_months":  11,
+                       "coverage_pct":  91.67,
+                       "monthly_stats":  [
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  1
+                                             },
+                                             {
+                                                 "year_max":  2016,
+                                                 "observations":  1,
+                                                 "year_min":  2016,
+                                                 "mean_cases":  null,
+                                                 "month":  3
+                                             },
+                                             {
+                                                 "year_max":  2022,
+                                                 "observations":  6,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  53.833333333333336,
+                                                 "month":  4
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  8,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  7773.25,
+                                                 "month":  5
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  4,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  204.5,
+                                                 "month":  6
+                                             },
+                                             {
+                                                 "year_max":  2019,
+                                                 "observations":  7,
+                                                 "year_min":  2009,
+                                                 "mean_cases":  284.14285714285717,
+                                                 "month":  7
+                                             },
+                                             {
+                                                 "year_max":  2015,
+                                                 "observations":  5,
+                                                 "year_min":  2011,
+                                                 "mean_cases":  318.2,
+                                                 "month":  8
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  5,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  735,
+                                                 "month":  9
+                                             },
+                                             {
+                                                 "year_max":  2021,
+                                                 "observations":  6,
+                                                 "year_min":  2010,
+                                                 "mean_cases":  267.83333333333331,
+                                                 "month":  10
+                                             },
+                                             {
+                                                 "year_max":  2018,
+                                                 "observations":  5,
+                                                 "year_min":  2012,
+                                                 "mean_cases":  55.4,
+                                                 "month":  11
+                                             },
+                                             {
+                                                 "year_max":  2013,
+                                                 "observations":  1,
+                                                 "year_min":  2013,
+                                                 "mean_cases":  null,
+                                                 "month":  12
+                                             }
+                                         ]
+                   }
+               ]
+}

@@ -47,6 +47,10 @@ class CalculationResult(BaseModel):
     baseline_source: str | None = None
     adjustment_applied: bool | None = None
     capped: bool | None = None
+    predicted_cases: float | None = None
+    observations: int | None = None
+    coverage_pct: float | None = None
+    fallback_reason: str | None = None
 
 
 class UserResponse(BaseModel):

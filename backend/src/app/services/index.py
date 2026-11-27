@@ -1,5 +1,6 @@
 from datetime import date
 
+from .cholera import calculate_cholera
 from .dengue_data import calculate_dengue
 
 
@@ -18,8 +19,13 @@ def calculate(
             current_stock=current_stock,
             yearly_sales=yearly_sales,
             days=days,
-            state=state, 
+            state=state,
             month=month if month is not None else date.today().month,
             rain_prev_departure=rain_prev_departure,
+        )
+    if medicine == "Cholera medicines":
+        return calculate_cholera(
+            state=state,
+            month=month if month is not None else date.today().month,
         )
     return {"status": "received"}
