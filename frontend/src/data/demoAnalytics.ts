@@ -49,15 +49,6 @@ const MONTH_LABELS = [
 // Synthetic seasonal shape: a monsoon peak and a smaller spring bump.
 const MONTH_FACTORS = [0.72, 0.66, 0.82, 1.02, 1.24, 1.48, 1.82, 2.08, 1.72, 1.26, 0.92, 0.76]
 
-const AVERAGE_MONTH_FACTOR =
-  MONTH_FACTORS.reduce((sum, factor) => sum + factor, 0) / MONTH_FACTORS.length
-
-/** Normalized seasonal multiplier used by the Calculator's local estimate. */
-export function getDemoSeasonalFactor(month: number): number {
-  const index = Math.min(11, Math.max(0, Math.round(month) - 1))
-  return MONTH_FACTORS[index] / AVERAGE_MONTH_FACTOR
-}
-
 const MEDICINE_PATTERNS: Record<string, number[]> = {
   'TB medicines': [96, 108, 101, 118, 112, 124, 116, 130, 122, 128, 119, 126],
   'Dengue medicines': [44, 38, 52, 70, 96, 132, 168, 184, 152, 114, 78, 56],

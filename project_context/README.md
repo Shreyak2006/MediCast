@@ -214,7 +214,7 @@ backend/src/app/
 │   ├── 002_hospital_details.sql / .down.sql
 │   └── 003_auth_join_requests.sql / .down.sql
 ├── routers/
-│   ├── inventory.py           # Inventory endpoints (unchanged)
+│   ├── inventory.py           # Inventory endpoints (add, remove, list)
 │   ├── calculate.py           # /api/calculate endpoint (unchanged)
 │   ├── auth.py                # Signup, login, logout, /me
 │   ├── organizations.py       # Create, join, read, leave
@@ -450,6 +450,7 @@ Inventory endpoints are unchanged and use in-memory storage in `store.py`:
 - `GET /api/inventory`
 - `POST /api/medicines`
 - `POST /api/inventory`
+- `POST /api/inventory/remove` — validates that the medicine exists and that enough stock is available (404 / 409 otherwise)
 
 The inventory resets when the backend restarts. Dengue calculations read `current_stock` from the request body; they do not read inventory storage directly. The auth, organization, and admin endpoints are documented separately in section 3.9.
 
@@ -566,25 +567,23 @@ The backend reads the connection string from the `DATABASE_URL` environment vari
 
 The frontend is a React + Vite + TypeScript application under `frontend/src/`. It renders stock data, calculation results, and demo analytics. It contains no model or rainfall logic of its own; the demand charts and India map use static demo fixtures under `src/data/demoAnalytics.ts`.
 
-**Connection mode (section 4.8):** the frontend is standalone by default. Auth, organizations, members, admin actions, and inventory all use a browser-local demo fixture, so no backend or database is needed to run it. Setting `VITE_BACKEND_CONNECTED=true` switches those areas back to the API and PostgreSQL (section 4.6). The Calculator is the exception: it always tries `POST /api/calculate` first and falls back to a labeled local estimate when the backend is unreachable.
+**Connection mode (section 4.8):** the frontend is connected to the backend. Auth, organizations, members, admin actions, inventory (including removals), and calculations all call the FastAPI API; only the session token is kept in `localStorage`. Charts, the India map, cover estimates, and seasonality use labeled frontend-only demo data.
 
 ### 4.1 Structure
 
 ```text
 frontend/src/
-├── config.ts                # backendConnected switch + API base URL
+├── config.ts                # API base URL
 ├── api/
 │   ├── http.ts              # Shared fetch client with bearer token and error mapping
 │   ├── types.ts             # Backend shapes -> frontend auth types
-│   ├── auth.ts              # Signup, login, session restore, logout (demo or API)
-│   ├── organizations.ts     # Create, join request, leave, remove member (demo or API)
-│   ├── admin.ts             # Pending join requests, accept/reject (demo or API)
-│   └── inventory.ts         # Inventory helpers (demo or API) + backend-first calculator call
+│   ├── auth.ts              # Signup, login, session restore, logout
+│   ├── organizations.ts     # Create, join request, leave, remove member
+│   ├── admin.ts             # Pending join requests, accept/reject
+│   └── inventory.ts         # Inventory + calculation API calls
 ├── lib/
 │   ├── cover.ts             # Days of cover + units needed for a 30-day target
-│   ├── format.ts            # Shared number and percent formatting
-│   ├── localCalculate.ts    # Offline calculator fallback estimate
-│   └── localStock.ts        # Browser-local adjustment layer for admin removals
+│   └── format.ts            # Shared number and percent formatting
 ├── components/
 │   ├── NavBar.tsx           # Shared nav bar and profile dropdown
 │   ├── StockLedger.tsx      # Stock table with share bars and admin actions
@@ -596,11 +595,10 @@ frontend/src/
 ├── context/
 │   ├── auth.ts              # Auth context, user/organization/member types
 │   ├── AuthProvider.tsx     # Server-backed auth state; token in localStorage
-│   └── useAuth.ts           # Context hook + useDisplayAuth() signed-out demo fallback
+│   └── useAuth.ts           # Context hook
 ├── data/
 │   ├── districts.ts         # Static state -> districts map (sample data)
-│   ├── demoAnalytics.ts     # Frontend-only demo usage, state baselines, seasonality
-│   └── demoState.ts         # Browser-local auth/org/member/request/inventory/profile fixture
+│   └── demoAnalytics.ts     # Frontend-only demo usage, state baselines, seasonality
 ├── types/svg-maps-india.d.ts # Local type shim for @svg-maps/india
 ├── pages/
 │   ├── LandingPage.tsx      # Public hero page
@@ -611,23 +609,23 @@ frontend/src/
 │   ├── DashboardPage.tsx    # Stock ledger + demo demand charts (GET /api/inventory)
 │   ├── InventoryPage.tsx    # Read-only ledger for members; admin add/remove
 │   ├── CalculatorPage.tsx   # Forecast result + demo seasonality chart
-│   ├── ProfilePage.tsx      # Profile details (API fields + demo profile fields)
+│   ├── ProfilePage.tsx      # Profile details from the session
 │   └── AdminPage.tsx        # Admin member management
-├── medicines.ts             # Static medicine list ("TB medicines", "Dengue medicines")
 ├── App.tsx                  # Routes, guards, and authenticated layout
 └── main.tsx                 # Entry point and AuthProvider wrapper
 ```
 
 ### 4.2 API client
 
-HTTP calls are grouped by feature under `frontend/src/api/`. `inventory.ts` keeps the unchanged inventory/calculation calls; `auth.ts`, `organizations.ts`, and `admin.ts` cover the newly connected pages:
+HTTP calls are grouped by feature under `frontend/src/api/`. Every helper calls the backend:
 
 | Function | Endpoint | Use |
 |---|---|---|
 | `getInventory()` | `GET /api/inventory` | Medicine list and stock levels |
 | `addMedicine()` | `POST /api/medicines` | Register a new medicine |
 | `addInventory()` | `POST /api/inventory` | Add stock for a medicine |
-| `sendCalculation()` | `POST /api/calculate` | Submit a calculation |
+| `removeInventory()` | `POST /api/inventory/remove` | Remove stock for a medicine |
+| `sendCalculation()` | `POST /api/calculate` | Submit a calculation with the organization's state |
 | `signup()` / `login()` | `POST /api/auth/signup` / `/login` | Create a session |
 | `getMe()` | `GET /api/auth/me` | Restore the current session |
 | `logout()` | `POST /api/auth/logout` | End the session |
@@ -638,7 +636,7 @@ HTTP calls are grouped by feature under `frontend/src/api/`. `inventory.ts` keep
 | `fetchPendingRequests()` | `GET /api/admin/join-requests` | Admin pending list |
 | `acceptRequest()` / `rejectRequest()` | `POST /api/admin/join-requests/{id}/accept` / `/reject` | Resolve a request |
 
-All calls share `api/http.ts`, which attaches the bearer token and surfaces backend error messages. The backend base URL comes from the `VITE_API_BASE_URL` environment variable and defaults to `http://localhost:8000`. A second variable, `VITE_BACKEND_CONNECTED`, defaults to `false`; in that mode the helpers above return demo data from `data/demoState.ts` instead of making a request (see `frontend/.env.example` and section 4.8). `sendCalculation()` is the exception: it always posts to `/api/calculate` and only calls `lib/localCalculate.ts` if the request fails or times out.
+All calls share `api/http.ts`, which attaches the bearer token and surfaces backend error messages. The backend base URL comes from the `VITE_API_BASE_URL` environment variable and defaults to `http://localhost:8000`.
 
 The `CalculationResponse` type mirrors the backend's `CalculationResult`. Every field except `status` is optional because non-dengue medicines return only a status.
 
@@ -653,7 +651,7 @@ The `CalculationResponse` type mirrors the backend's `CalculationResult`. Every 
    - average sold per year (positive whole number)
    - days of stock to cover (positive whole number, defaults to 30)
 3. Inputs are validated client-side before submitting.
-4. On submit, it posts only `medicine`, `current_stock`, `yearly_sales`, and `days` to `POST /api/calculate`.
+4. On submit, it posts `medicine`, `current_stock`, `yearly_sales`, `days`, and the organization's `state` (when set) to `POST /api/calculate`.
 5. The result panel shows:
    - a status badge (teal for `Stock sufficient`, amber otherwise)
    - target stock as the lead figure
@@ -665,15 +663,9 @@ The `CalculationResponse` type mirrors the backend's `CalculationResult`. Every 
 7. For non-dengue medicines, the backend returns only `{"status": "received"}`; the panel then shows a plain "Request received" message with no calculation details.
 8. A `SeasonalityChart` below the result shows a 12-month demo dengue pattern for the organization's state, falling back to the national demo average. It is static frontend data and does not change the calculation request.
 
-### 4.4 Current limitation
+### 4.4 Calculation inputs
 
-The UI does not send `state`, `month`, or `rain_prev_departure`. Dengue calculations made from the web UI therefore:
-
-- use the current calendar month (the backend defaults `month` to today's month),
-- run without a state, so the baseline comes from the month-level fallback rather than a state-month entry,
-- never apply the rainfall adjustment (`adjustment_applied` is always `false`).
-
-State-aware baselines and the automatic rainfall lookup only take effect on direct API calls that include a `state`.
+The UI sends the organization's state with every calculation. The backend uses the current calendar month when `month` is omitted, looks up the state-month baseline, and fills `rain_prev_departure` automatically from the rainfall artifact when possible. Direct API calls can still override `month` or pass an explicit `rain_prev_departure`. Without an organization state (for example, an account that has not joined one) the baseline falls back to the month-level or overall pattern.
 
 ### 4.5 CORS
 
@@ -694,7 +686,7 @@ Routes and access rules:
 | `/dashboard` | Logged in + organization | Stock ledger + demo demand charts |
 | `/inventory` | Logged in + organization | Read-only for members; admin add/remove stock |
 | `/calculator` | Logged in + organization | Forecast result + demo seasonality chart |
-| `/profile` | Logged in + organization | Name, email, organization, role, and demo profile fields (falls back to the "test" profile when signed out) |
+| `/profile` | Logged in + organization | Name, email, organization, and role from the session |
 | `/organization-info` | Logged in + organization | Read-only organization details and member list |
 | `/admin` | Logged in + organization + admin role | Admin member management |
 
@@ -758,62 +750,29 @@ The visual additions are entirely frontend-side and use `frontend/src/data/demoA
 
 Inventory mutation is role-gated:
 
-- **Admins** see **Add stock** and **Remove stock** buttons plus both actions in every ledger row. Additions call `POST /api/inventory`. Because the API has no remove operation, removals are stored as negative per-medicine deltas in `localStorage` under `medicast.inventoryAdjustments` and applied on top of fetched stock.
+- **Admins** see **Add stock** and **Remove stock** buttons plus both actions in every ledger row. Additions call `POST /api/inventory`; removals call `POST /api/inventory/remove`, which validates the medicine and available quantity. Both update the backend's in-memory store.
 - **Members** see a read-only ledger with no mutation controls and a notice directing them to an admin.
 
-The browser-local adjustment layer is a deliberate demo compromise: removals persist across refreshes in that browser only and are not shared with other users or the server.
+### 4.8 Connected mode and demo visuals
 
-### 4.8 Standalone mode and reconnection
+The frontend has no standalone/demo mode. `frontend/src/config.ts` only defines
+the API base URL (`VITE_API_BASE_URL`, default `http://localhost:8000`). All
+helpers in `src/api/` call the backend, `AuthProvider` restores the session from
+`GET /api/auth/me` using the token in `localStorage`, and route guards in
+`App.tsx` apply in both development and production. Start the backend and
+PostgreSQL before using the app.
 
-The frontend is standalone by default. `frontend/src/config.ts` reads
-`VITE_BACKEND_CONNECTED`, which defaults to `false`. In that mode the helpers in
-`src/api/` return a browser-local fixture from `src/data/demoState.ts` instead
-of calling the API: a seeded admin, organization, members, pending request, and
-inventory. `AuthProvider` restores that state on startup, so the app opens on
-the dashboard with no backend or database running. Login/signup, create/join
-organization, admin actions, and stock changes all update this fixture in
-`localStorage` (`medicast.demo` plus the existing `medicast.inventoryAdjustments`
-and `medicast.token` keys).
+Only the opaque session token is persisted (`medicast.token`); auth state,
+membership, inventory, and join requests are always read from the server.
+Inventory lives in the backend's in-memory store, so it resets when the backend
+restarts.
 
-The Calculator is the one page that stays connected in both modes:
-`sendCalculation()` always posts to `/api/calculate` with a 2.5-second timeout.
-If the request fails, it uses `src/lib/localCalculate.ts`, which mirrors the
-backend arithmetic with the demo seasonal shape. Results carry a `source`
-field and the UI shows a **Local estimate** or **Backend result** badge so the
-two are never confused. Non-dengue medicines still return only
-`{"status": "received"}` in either mode.
-
-To reconnect:
-
-1. Start the backend on `http://localhost:8000` (root README).
-2. `cp frontend/.env.example frontend/.env` and set
-   `VITE_BACKEND_CONNECTED=true` (`VITE_API_BASE_URL` stays as needed).
-3. Restart Vite — `.env` is read only at startup — and sign in with a real
-   account. The demo token is not a server session, so the first API call clears
-   it and returns the user to `/login`.
-
-Setting the flag back to `false` (or deleting `.env`) restores standalone mode;
-no code changes are needed. See `frontend/README.md` for the full checklist and
-the localStorage reset snippet.
-
-#### Where to change the dummy data
-
-Everything shown in standalone mode lives under `frontend/src/data/` (plus a few
-small helper modules), so design work never requires a backend change. The dev
-page dock bypasses route guards, and `src/context/useAuth.ts` → `useDisplayAuth()`
-fills in the "test" fixtures when signed out, so every page stays populated at
-any auth state. Connected mode is untouched.
+The remaining demo data is visual only and lives under `frontend/src/data/`:
 
 | Data | Where to edit | Notes |
 | --- | --- | --- |
-| Signed-in admin, organization, members, pending requests, inventory | `src/data/demoState.ts` → `SEED` | Bump `DEMO_VERSION` after editing so existing browsers reload the new fixture. |
-| Demo profile fields (employee ID, designation, department, phone, joined, location) | `src/data/demoState.ts` → `DEMO_ADMIN.profile` | Optional `AuthUser.profile`; the backend does not send it. |
-| Always-present "test" fixtures for signed-out pages | `src/data/demoState.ts` → `DEMO_TEST_USER`, `DEMO_TEST_ORGANIZATION`, `DEMO_TEST_ROLE`, `DEMO_TEST_MEMBERS`, `DEMO_TEST_REQUESTS`, `DEMO_TEST_INVENTORY` | `useDisplayAuth()` supplies the user/org/role/members; `api/admin.ts` and `api/inventory.ts` supply requests and stock when the signed-out fixture is empty. |
-| Charts, state baselines, seasonality | `src/data/demoAnalytics.ts` | Also supplies the local Calculator estimate's seasonal shape. |
-| States → districts sample list | `src/data/districts.ts` | Static form options. |
-| Browser-local stock removals | `src/lib/localStock.ts` (`medicast.inventoryAdjustments`) | Used in both modes; the API has no remove endpoint. |
-| Local Calculator estimate | `src/lib/localCalculate.ts` | Only used when `POST /api/calculate` fails or times out. |
-| Dev page navigation | `src/components/PageDock.tsx` | Dev-only; guard bypasses live in `src/App.tsx` and `src/pages/OrganizationPage.tsx`. |
+| Charts, state baselines, seasonality | `src/data/demoAnalytics.ts` | Static sample data for the Dashboard charts, cover estimates, and Calculator seasonality line. |
+| States → districts sample list | `src/data/districts.ts` | Static form options sent to the backend as text. |
 
 ---
 
